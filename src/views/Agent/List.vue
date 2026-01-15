@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, h, type VNode } from 'vue'
+import { onMounted, h, ref, type VNode } from 'vue'
 import { 
     NCard, NBreadcrumb, NBreadcrumbItem, NDataTable, 
     NButton, NTag, NSpace 
@@ -7,11 +7,33 @@ import {
 import type { DataTableColumns } from 'naive-ui'
 import { useAgentList } from '../../composables/useAgentList'
 import type { Agent } from '../../types/agent'
+import AgentFormModal from './components/AgentFormModal.vue'
 
 const { 
     loading, agents, breadcrumbs, 
     fetchAgents, handleDrillDown, handleBreadcrumbClick 
 } = useAgentList()
+
+// Modal State
+const showModal = ref(false)
+const modalType = ref<'create' | 'edit'>('create')
+const modalParent = ref<Agent | null>(null)
+const modalEditData = ref<Agent | null>(null)
+
+const handleAddSub = (parent: Agent) => {
+    modalType.value = 'create'
+    modalParent.value = parent
+    modalEditData.value = null
+    showModal.value = true
+}
+
+const handleEdit = (agent: Agent) => {
+    modalType.value = 'edit'
+    // Simplified: For edit, we relax parent validation or rely on backend
+    modalParent.value = null 
+    modalEditData.value = agent
+    showModal.value = true
+}
 
 // Columns
 const columns: DataTableColumns<Agent> = [
@@ -68,11 +90,27 @@ const columns: DataTableColumns<Agent> = [
                     },
                     { default: () => 'View Subs' }
                 ))
+                 
+                // Add Sub-Agent Button
+                actions.push(h(
+                    NButton,
+                    { 
+                        size: 'small', 
+                        type: 'info', 
+                        quaternary: true,
+                        onClick: () => handleAddSub(row)
+                    },
+                    { default: () => 'Add Sub' }
+                ))
             }
 
             actions.push(h(
                 NButton,
-                { size: 'small', quaternary: true },
+                { 
+                    size: 'small', 
+                    quaternary: true,
+                    onClick: () => handleEdit(row)
+                },
                 { default: () => 'Edit' }
             ))
 
@@ -84,6 +122,14 @@ const columns: DataTableColumns<Agent> = [
 onMounted(() => {
     fetchAgents()
 })
+
+const handleRefresh = () => {
+    // Refresh current level
+    const lastCrumb = breadcrumbs.value[breadcrumbs.value.length - 1]
+    if (lastCrumb) {
+        fetchAgents(lastCrumb.id, lastCrumb.level)
+    }
+}
 </script>
 
 <template>
@@ -114,5 +160,14 @@ onMounted(() => {
                 class="bg-[#18181c] rounded-lg"
             />
         </n-card>
+
+        <!-- Modal -->
+        <AgentFormModal 
+            v-model:show="showModal"
+            :type="modalType"
+            :parent-agent="modalParent"
+            :edit-data="modalEditData"
+            @refresh="handleRefresh"
+        />
     </div>
 </template>

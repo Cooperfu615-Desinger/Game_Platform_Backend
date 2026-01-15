@@ -275,4 +275,23 @@ export const handlers = [
             }
         })
     }),
+
+    // Create Agent
+    http.post('/api/v2/agent/create', async () => {
+        await delay(1000)
+        return HttpResponse.json({
+            code: 0,
+            msg: 'Agent Created Successfully',
+            data: { id: faker.number.int({ min: 10000, max: 99999 }) }
+        })
+    }),
+
+    // Update Agent
+    http.post('/api/v2/agent/update', async () => {
+        await delay(800)
+        return HttpResponse.json({
+            code: 0,
+            msg: 'Agent Updated Successfully'
+        })
+    }),
 ]
