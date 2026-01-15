@@ -2,8 +2,8 @@
 import { h, ref, computed } from 'vue'
 import { useRouter, useRoute, RouterLink } from 'vue-router'
 import { 
-  NLayout, NLayoutSider, NLayoutHeader, NLayoutContent, 
-  NMenu, NButton, NAvatar, NDropdown
+  NLayout, NLayoutSider, NLayoutHeader, NLayoutContent, NLayoutFooter,
+  NMenu, NButton, NAvatar, NDropdown, NTag
 } from 'naive-ui'
 import type { MenuOption } from 'naive-ui'
 import { 
@@ -70,6 +70,10 @@ const handleUserSelect = (key: string) => {
         router.push('/login')
     }
 }
+
+const handleVersionClick = () => {
+    window.alert('System Ready')
+}
 </script>
 
 <template>
@@ -123,9 +127,14 @@ const handleUserSelect = (key: string) => {
          </div>
       </n-layout-header>
       
-      <n-layout-content content-style="padding: 24px;">
+      <n-layout-content content-style="padding: 24px; min-height: 85vh;">
          <router-view></router-view>
       </n-layout-content>
+      <n-layout-footer bordered class="p-4 text-center">
+          <n-tag :bordered="false" size="small" class="cursor-pointer opacity-50 hover:opacity-100 transition-opacity" @click="handleVersionClick">
+             Version: v0.1.0 (Prototype)
+          </n-tag>
+      </n-layout-footer>
     </n-layout>
   </n-layout>
 </template>
