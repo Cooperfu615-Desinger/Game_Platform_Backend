@@ -30,4 +30,8 @@ app.use(naive)
 // Ensure MSW starts before mounting
 prepareApp().then(() => {
     app.mount('#app')
+}).catch(e => {
+    console.error('Failed to start MSW:', e)
+    // Mount anyway to show UI errors
+    app.mount('#app')
 })
