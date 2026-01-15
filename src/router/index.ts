@@ -21,6 +21,11 @@ const router = createRouter({
             path: '/merchant/config/:id',
             name: 'merchant-config',
             component: () => import('../views/Merchant/Configuration.vue')
+        },
+        {
+            path: '/datacenter/round-search',
+            name: 'round-search',
+            component: () => import('../views/DataCenter/RoundSearch.vue')
         }
     ]
 })

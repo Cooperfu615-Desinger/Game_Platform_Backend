@@ -106,4 +106,54 @@ export const handlers = [
             }
         })
     }),
+
+    // Get Bet Logs (Round Search)
+    http.post('/api/v2/report/bet-logs', async () => {
+        await delay(800)
+        // const body = await request.json() // In real app, filter by body
+
+        const generateGameDetail = () => {
+            const symbols = ['WILD', 'SCATTER', 'A', 'K', 'Q', 'J', '10', '9']
+            const matrix = Array.from({ length: 3 }, () =>
+                Array.from({ length: 5 }, () => faker.helpers.arrayElement(symbols))
+            )
+            return {
+                round_id: faker.string.uuid(),
+                matrix,
+                lines_won: faker.helpers.multiple(() => ({
+                    line_id: faker.number.int({ min: 1, max: 25 }),
+                    win: faker.number.float({ min: 10, max: 500, fractionDigits: 2 }),
+                    symbols: [faker.helpers.arrayElement(symbols), faker.helpers.arrayElement(symbols), faker.helpers.arrayElement(symbols)]
+                }), { count: { min: 0, max: 3 } }),
+                free_games_triggered: faker.datatype.boolean(0.1),
+                multiplier: faker.helpers.arrayElement([1, 2, 5, 10]),
+                currency: 'USD'
+            }
+        }
+
+        const list = faker.helpers.multiple(() => {
+            const bet = faker.number.float({ min: 1, max: 100, fractionDigits: 2 })
+            const win = faker.number.float({ min: 0, max: 200, fractionDigits: 2 })
+            return {
+                id: faker.string.numeric(12),
+                created_at: faker.date.recent().toISOString(),
+                player_account: faker.internet.username(),
+                game_name: faker.helpers.arrayElement(['Fortune Tiger', 'Super Ace', 'Golden Empire', 'Crazy 777']),
+                bet_amount: bet,
+                win_amount: win,
+                profit: Number((win - bet).toFixed(2)),
+                currency: 'USD',
+                game_detail: generateGameDetail()
+            }
+        }, { count: 20 })
+
+        return HttpResponse.json({
+            code: 0,
+            msg: 'success',
+            data: {
+                list,
+                total: 100
+            }
+        })
+    }),
 ]
