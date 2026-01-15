@@ -134,7 +134,7 @@ const columns: DataTableColumns<Game> = [
         title: 'Status',
         key: 'status',
         width: 100,
-        sorter: (row1, row2) => (row1.status === 'active' ? 1 : 0) - (row2.status === 'active' ? 1 : 0),
+        // sorter removed as per request
         render: (row) => h(
             NSwitch,
             {

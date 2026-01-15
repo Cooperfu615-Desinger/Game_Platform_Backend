@@ -46,7 +46,7 @@ const columns: DataTableColumns<Agent> = [
     { 
         title: 'Site Code', 
         key: 'site_code', 
-        width: 100,
+        width: 130,
         sorter: (row1, row2) => row1.site_code.localeCompare(row2.site_code)
     },
     { 
@@ -76,7 +76,7 @@ const columns: DataTableColumns<Agent> = [
     { 
         title: 'Percent', 
         key: 'percent', 
-        width: 80,
+        width: 120,
         sorter: (row1, row2) => row1.percent - row2.percent,
         render: (row) => `${row.percent}%` 
     },
