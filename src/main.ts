@@ -13,16 +13,11 @@ import App from './App.vue'
 // Note: We need to define the worker first.
 
 async function prepareApp() {
-    if (
-        import.meta.env.DEV ||
-        import.meta.env.VITE_USE_MOCK === 'true' ||
-        import.meta.env.MODE === 'production' // "Force Mock in Prod" for prototype
-    ) {
-        const { worker } = await import('./mocks/browser')
-        return worker.start({
-            onUnhandledRequest: 'bypass',
-        })
-    }
+    // CRITICAL: Always start MSW for Vercel/Production Demo
+    const { worker } = await import('./mocks/browser')
+    await worker.start({
+        onUnhandledRequest: 'bypass',
+    })
 }
 
 const app = createApp(App)
