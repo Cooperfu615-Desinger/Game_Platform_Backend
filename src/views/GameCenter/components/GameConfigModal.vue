@@ -77,6 +77,7 @@ const handleSave = async () => {
             message.error(data.msg || 'Update failed')
         }
     } catch (e) {
+        console.error('API Error Details:', e)
         message.error('An error occurred while saving')
     } finally {
         loading.value = false

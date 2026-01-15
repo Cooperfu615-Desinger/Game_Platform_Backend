@@ -60,6 +60,16 @@ export const handlers = [
         })
     }),
 
+    // Update Game Config
+    http.post('/api/v2/game/update', async () => {
+        await delay(1000)
+        return HttpResponse.json({
+            code: 0,
+            msg: 'success',
+            data: null
+        })
+    }),
+
     // Update Merchant
     http.post('/api/v2/agent/update', async () => {
         await delay(800)
