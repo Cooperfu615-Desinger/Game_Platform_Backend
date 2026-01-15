@@ -30,7 +30,16 @@ const handleLogin = async () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(model.value)
         })
-        const data = await res.json()
+
+        const text = await res.text()
+        let data
+        try {
+            data = JSON.parse(text)
+        } catch (e) {
+            console.error('Failed to parse JSON:', text)
+            message.error(`API Error: ${res.status} ${res.statusText}`)
+            return
+        }
 
         if (data.code === 0) {
             message.success('Login Successful')
@@ -40,8 +49,12 @@ const handleLogin = async () => {
             message.error(data.msg || 'Login Failed')
         }
     } catch (e) {
-        message.error('Network or Validation Error')
-        console.error(e)
+        if (e instanceof Error) {
+            console.error(e)
+            message.error(`System Error: ${e.message}`)
+        } else {
+             message.error('Unknown System Error')
+        }
     } finally {
         loading.value = false
     }
