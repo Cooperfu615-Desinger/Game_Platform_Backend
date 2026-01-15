@@ -21,18 +21,20 @@ const filter = ref({
 
 // Options
 const providerOptions = [
+    { label: 'All', value: 'all' },
     { label: 'PGSoft', value: 'PGSoft' },
     { label: 'JILI', value: 'JILI' },
-    { label: 'PragmaticPlay', value: 'PragmaticPlay' }
+    { label: 'PragmaticPlay', value: 'PragmaticPlay' },
+    { label: 'Habanero', value: 'Habanero' }
 ]
 
 const statusOptions = [
+    { label: 'All', value: 'all' },
     { label: 'Active', value: 'active' },
     { label: 'Maintenance', value: 'maintenance' }
 ]
 
 // Data Fetching
-// (Logic inline directly for this task to show self-contained code, though composable is better practice for complex modules)
 const fetchGames = async () => {
     loading.value = true
     try {
@@ -41,10 +43,10 @@ const fetchGames = async () => {
         if (data.code === 0) {
             games.value = data.data.list
             // Client-side filtering simulation
-            if (filter.value.provider) {
+            if (filter.value.provider && filter.value.provider !== 'all') {
                 games.value = games.value.filter(g => g.provider === filter.value.provider)
             }
-            if (filter.value.status) {
+            if (filter.value.status && filter.value.status !== 'all') {
                 games.value = games.value.filter(g => g.status === filter.value.status)
             }
              if (filter.value.keyword) {
