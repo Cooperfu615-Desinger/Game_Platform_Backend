@@ -6,11 +6,14 @@ import {
 } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
 import type { Game } from '../../types/game'
+import GameConfigModal from './components/GameConfigModal.vue'
 
 // State
 const message = useMessage()
 const loading = ref(false)
 const games = ref<Game[]>([])
+const showConfigModal = ref(false)
+const selectedGame = ref<Game | null>(null)
 
 // Filter
 const filter = ref({
@@ -69,7 +72,12 @@ const handleStatusChange = (row: Game, value: boolean) => {
 }
 
 const handleConfig = (row: Game) => {
-    message.info(`Open Config for ${row.name_en}`)
+    selectedGame.value = row
+    showConfigModal.value = true
+}
+
+const handleRefresh = () => {
+    fetchGames()
 }
 
 // Columns
@@ -192,6 +200,12 @@ onMounted(() => {
         :loading="loading"
         :pagination="{ pageSize: 10 }"
         class="bg-[#18181c] rounded-lg"
+    />
+
+    <GameConfigModal
+        v-model:show="showConfigModal"
+        :game="selectedGame"
+        @refresh="handleRefresh"
     />
   </div>
 </template>
