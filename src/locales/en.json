@@ -9,7 +9,11 @@
         "action": "Action",
         "status": "Status",
         "all": "All",
-        "sync": "Sync"
+        "sync": "Sync",
+        "refresh": "Refresh",
+        "viewDetail": "View Detail",
+        "exportCSV": "Export CSV",
+        "analyze": "Analyze"
     },
     "menu": {
         "dashboard": "Dashboard",
@@ -99,6 +103,39 @@
         "active": "Active",
         "disabled": "Disabled",
         "inactive": "Inactive",
-        "maintenance": "Maintenance"
+        "maintenance": "Maintenance",
+        "win": "Win",
+        "loss": "Loss",
+        "refund": "Refund"
+    },
+    "betLog": {
+        "title": "Bet Log Query System",
+        "timeRange": "Time Range (Default 24h)",
+        "playerAccount": "Player Account (Fuzzy)",
+        "roundId": "Round ID",
+        "selectGame": "Select Game",
+        "searchLogs": "Search Logs",
+        "time": "Time",
+        "game": "Game",
+        "bet": "Bet",
+        "win": "Win",
+        "payout": "Payout",
+        "roundDetail": "Round Detail",
+        "summary": "Summary",
+        "bigWin": "Big Win!",
+        "freeGame": "Free Game Triggered"
+    },
+    "report": {
+        "title": "Financial Report",
+        "byDate": "By Date",
+        "byAgent": "By Agent",
+        "exportStarted": "Export CSV started...",
+        "revenueTrend": "Revenue Trend (GGR vs Traffic)",
+        "totalBet": "Total Bet",
+        "totalWin": "Total Win",
+        "betCount": "Bet Count",
+        "rounds": "Rounds",
+        "agentName": "Agent Name",
+        "date": "Date"
     }
 }

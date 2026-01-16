@@ -4,11 +4,14 @@ import {
   NCard, NInput, NDatePicker, NSelect, NButton,
   NDataTable, NTag, NModal, NCode, NSpace
 } from 'naive-ui'
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { DataTableColumns } from 'naive-ui'
 import { useRoundSearch } from '../../composables/useRoundSearch'
 import type { BetLog } from '../../types/report'
 
 // Reusing composable logic but will enhance local UI state
+const { t } = useI18n()
 const { loading, searchModel, logs, handleSearch } = useRoundSearch()
 
 // Initialize Search Model
@@ -17,20 +20,20 @@ onMounted(() => {
 })
 
 // Detailed Filters
-const gameOptions = [
-    { label: 'All Games', value: '' },
+const gameOptions = computed(() => [
+    { label: t('common.all'), value: '' },
     { label: 'Fortune Tiger', value: 'Fortune Tiger' },
     { label: 'Super Ace', value: 'Super Ace' },
     { label: 'Gates of Olympus', value: 'Gates of Olympus' },
     { label: 'Sugar Rush', value: 'Sugar Rush' }
-]
+])
 
-const statusOptions = [
-    { label: 'All Status', value: '' },
-    { label: 'Win', value: 'win' },
-    { label: 'Loss', value: 'loss' },
-    { label: 'Refund', value: 'refund' }
-]
+const statusOptions = computed(() => [
+    { label: t('common.all'), value: '' },
+    { label: t('status.win'), value: 'win' },
+    { label: t('status.loss'), value: 'loss' },
+    { label: t('status.refund'), value: 'refund' }
+])
 
 // Modal State
 const showDetail = ref(false)
@@ -44,16 +47,17 @@ const openDetail = (row: BetLog) => {
 }
 
 // Columns
-const columns: DataTableColumns<BetLog> = [
+// Columns
+const columns = computed<DataTableColumns<BetLog>>(() => [
     { 
-        title: 'Time', 
+        title: t('betLog.time'), 
         key: 'created_at', 
         width: 180,
         sorter: (row1, row2) => new Date(row1.created_at).getTime() - new Date(row2.created_at).getTime(),
         render: (row) => new Date(row.created_at).toLocaleString() 
     },
     { 
-        title: 'Round ID', 
+        title: t('betLog.roundId'), 
         key: 'id', 
         width: 140, 
         ellipsis: true,
@@ -66,17 +70,17 @@ const columns: DataTableColumns<BetLog> = [
             row.id
         ) 
     },
-    { title: 'Account', key: 'player_account', width: 120 },
-    { title: 'Game', key: 'game_name', width: 140 },
+    { title: t('columns.account'), key: 'player_account', width: 120 },
+    { title: t('betLog.game'), key: 'game_name', width: 140 },
     { 
-        title: 'Bet', 
+        title: t('betLog.bet'), 
         key: 'bet_amount', 
         width: 100,
         sorter: (row1, row2) => row1.bet_amount - row2.bet_amount,
         render: (row) => row.bet_amount.toFixed(2)
     },
     { 
-        title: 'Win', 
+        title: t('betLog.win'), 
         key: 'win_amount', 
         width: 100,
         sorter: (row1, row2) => row1.win_amount - row2.win_amount,
@@ -87,7 +91,7 @@ const columns: DataTableColumns<BetLog> = [
         )
     },
     { 
-        title: 'Payout', 
+        title: t('betLog.payout'), 
         key: 'payout', 
         width: 100,
         sorter: (row1, row2) => row1.payout - row2.payout,
@@ -102,7 +106,7 @@ const columns: DataTableColumns<BetLog> = [
         }
     },
     {
-        title: 'Status',
+        title: t('common.status'),
         key: 'status',
         width: 100,
         render: (row) => {
@@ -114,28 +118,28 @@ const columns: DataTableColumns<BetLog> = [
             return h(
                 NTag,
                 { type: map[row.status] || 'default', bordered: false, size: 'small' },
-                { default: () => row.status.toUpperCase() }
+                { default: () => t(`status.${row.status}`).toUpperCase() }
             )
         }
     },
     {
-        title: 'Action',
+        title: t('common.action'),
         key: 'actions',
         width: 100,
         render: (row) => h(
             NButton,
             { size: 'small', secondary: true, onClick: () => openDetail(row) },
-            { default: () => 'View Detail' }
+            { default: () => t('common.viewDetail') }
         )
     }
-]
+])
 </script>
 
 <template>
   <div class="p-6 space-y-4">
     <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold">Bet Log Query System</h1>
-        <n-button type="primary" dashed @click="handleSearch">Refresh</n-button>
+        <h1 class="text-2xl font-bold">{{ t('betLog.title') }}</h1>
+        <n-button type="primary" dashed @click="handleSearch">{{ t('common.refresh') }}</n-button>
     </div>
 
     <!-- Advanced Filter Bar -->
@@ -146,35 +150,35 @@ const columns: DataTableColumns<BetLog> = [
                     v-model:value="searchModel.timeRange" 
                     type="datetimerange" 
                     clearable 
-                    placeholder="Time Range (Default 24h)"
+                    :placeholder="t('betLog.timeRange')"
                     style="width: 340px"
                 />
                 <n-input 
                     v-model:value="searchModel.playerId" 
-                    placeholder="Player Account (Fuzzy)" 
+                    :placeholder="t('betLog.playerAccount')" 
                     style="width: 200px"
                 />
                  <n-input 
                     v-model:value="searchModel.roundId" 
-                    placeholder="Round ID" 
+                    :placeholder="t('betLog.roundId')" 
                     style="width: 160px"
                 />
             </n-space>
             <n-space>
                 <n-select 
-                    placeholder="Select Game" 
+                    :placeholder="t('betLog.selectGame')" 
                     :options="gameOptions" 
                     clearable 
                     style="width: 200px" 
                 />
                 <n-select 
-                    placeholder="Status" 
+                    :placeholder="t('common.status')" 
                     :options="statusOptions" 
                     clearable 
                     style="width: 150px" 
                 />
                  <n-button type="primary" @click="handleSearch" :loading="loading">
-                    Search Logs
+                    {{ t('betLog.searchLogs') }}
                 </n-button>
             </n-space>
         </n-space>
@@ -190,33 +194,33 @@ const columns: DataTableColumns<BetLog> = [
     />
 
     <!-- JSON Inspector Modal -->
-    <n-modal v-model:show="showDetail" preset="card" :title="`Round Detail: ${detailedLog?.id}`" style="width: 800px">
+    <n-modal v-model:show="showDetail" preset="card" :title="`${t('betLog.roundDetail')}: ${detailedLog?.id}`" style="width: 800px">
         <div class="grid grid-cols-3 gap-4 h-[500px]">
             <!-- Left: Info Panel -->
             <div class="col-span-1 bg-gray-800 p-4 rounded space-y-4">
-                <h3 class="font-bold text-lg border-b pb-2 border-gray-700">Summary</h3>
+                <h3 class="font-bold text-lg border-b pb-2 border-gray-700">{{ t('betLog.summary') }}</h3>
                 
                 <div class="grid grid-cols-2 gap-2 text-sm">
-                    <span class="text-gray-400">Game:</span>
+                    <span class="text-gray-400">{{ t('betLog.game') }}:</span>
                     <span>{{ detailedLog?.game_name }}</span>
                     
-                    <span class="text-gray-400">Bet:</span>
+                    <span class="text-gray-400">{{ t('betLog.bet') }}:</span>
                     <span>{{ detailedLog?.bet_amount }}</span>
                     
-                    <span class="text-gray-400">Win:</span>
+                    <span class="text-gray-400">{{ t('betLog.win') }}:</span>
                     <span :class="detailedLog?.win_amount! > 0 ? 'text-green-400' : ''">
                         {{ detailedLog?.win_amount }}
                     </span>
 
-                    <span class="text-gray-400">Payout:</span>
+                    <span class="text-gray-400">{{ t('betLog.payout') }}:</span>
                     <span>{{ detailedLog?.payout }}x</span>
                 </div>
                 
                 <div v-if="detailedLog?.payout! >= 100" class="bg-red-900/30 p-2 rounded text-center border border-red-900">
-                    <span class="text-xl">🔥 Big Win!</span>
+                    <span class="text-xl">🔥 {{ t('betLog.bigWin') }}</span>
                 </div>
                 <div v-if="detailedLog?.game_detail.free_games_triggered" class="bg-blue-900/30 p-2 rounded text-center border border-blue-900">
-                    <span class="text-blue-300">Free Game Triggered</span>
+                    <span class="text-blue-300">{{ t('betLog.freeGame') }}</span>
                 </div>
             </div>
 

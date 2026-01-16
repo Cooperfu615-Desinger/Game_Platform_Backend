@@ -9,7 +9,11 @@
         "action": "操作",
         "status": "狀態",
         "all": "全部",
-        "sync": "同步"
+        "sync": "同步",
+        "refresh": "重新整理",
+        "viewDetail": "查看詳情",
+        "exportCSV": "匯出 CSV",
+        "analyze": "分析"
     },
     "menu": {
         "dashboard": "儀表板",
@@ -99,6 +103,39 @@
         "active": "啟用",
         "disabled": "停用",
         "inactive": "停用",
-        "maintenance": "維護中"
+        "maintenance": "維護中",
+        "win": "贏",
+        "loss": "輸",
+        "refund": "退款"
+    },
+    "betLog": {
+        "title": "投注記錄查詢",
+        "timeRange": "時間範圍 (預設 24h)",
+        "playerAccount": "玩家帳號 (模糊搜尋)",
+        "roundId": "局號",
+        "selectGame": "選擇遊戲",
+        "searchLogs": "查詢記錄",
+        "time": "時間",
+        "game": "遊戲",
+        "bet": "投注",
+        "win": "贏分",
+        "payout": "賠率",
+        "roundDetail": "注單詳情",
+        "summary": "摘要",
+        "bigWin": "大獎!",
+        "freeGame": "觸發免費遊戲"
+    },
+    "report": {
+        "title": "財務報表",
+        "byDate": "依日期",
+        "byAgent": "依代理",
+        "exportStarted": "開始匯出 CSV...",
+        "revenueTrend": "營收走勢 (GGR vs 流量)",
+        "totalBet": "總投注",
+        "totalWin": "總派彩",
+        "betCount": "注數",
+        "rounds": "局數",
+        "agentName": "代理名稱",
+        "date": "日期"
     }
 }

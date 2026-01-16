@@ -4,6 +4,7 @@ import {
   NCard, NDatePicker, NButton, NRadioGroup, NRadioButton,
   NDataTable, useMessage, NTag
 } from 'naive-ui'
+import { useI18n } from 'vue-i18n'
 import type { DataTableColumns } from 'naive-ui'
 import VChart from 'vue-echarts'
 import { use } from 'echarts/core'
@@ -16,6 +17,7 @@ import type { FinancialReportItem } from '../../types/report'
 use([CanvasRenderer, LineChart, BarChart, GridComponent, TooltipComponent, LegendComponent, DataZoomComponent])
 
 const message = useMessage()
+const { t } = useI18n()
 const loading = ref(false)
 const reportData = ref<FinancialReportItem[]>([])
 
@@ -63,7 +65,7 @@ const chartOption = computed(() => {
             axisPointer: { type: 'shadow' }
         },
         legend: {
-            data: ['GGR', 'Bet Count']
+            data: [t('dashboard.totalGGR'), t('report.betCount')]
         },
         grid: {
             left: '3%',
@@ -81,12 +83,12 @@ const chartOption = computed(() => {
         yAxis: [
             {
                 type: 'value',
-                name: 'GGR',
+                name: t('dashboard.totalGGR'),
                 axisLabel: { formatter: '{value}' }
             },
             {
                 type: 'value',
-                name: 'Bet Count',
+                name: t('report.betCount'),
                 position: 'right',
                 alignTicks: true,
                 axisLine: { show: true, lineStyle: { color: '#91cc75' } }
@@ -94,7 +96,7 @@ const chartOption = computed(() => {
         ],
         series: [
             {
-                name: 'GGR',
+                name: t('dashboard.totalGGR'),
                 type: 'bar',
                 data: reportData.value.map(i => i.ggr),
                 itemStyle: {
@@ -104,7 +106,7 @@ const chartOption = computed(() => {
                 }
             },
             {
-                name: 'Bet Count',
+                name: t('report.betCount'),
                 type: 'line',
                 yAxisIndex: 1,
                 data: reportData.value.map(i => i.round_count),
@@ -115,28 +117,28 @@ const chartOption = computed(() => {
 })
 
 // Columns
-const columns: DataTableColumns<FinancialReportItem> = [
+const columns = computed<DataTableColumns<FinancialReportItem>>(() => [
     { 
-        title: (_: any) => filter.groupBy === 'date' ? 'Date' : 'Agent Name', 
+        title: (_: any) => filter.groupBy === 'date' ? t('report.date') : t('report.agentName'), 
         key: 'key',
         sorter: (a, b) => a.key.localeCompare(b.key)
     },
     { 
-        title: 'Total Bet', 
+        title: t('report.totalBet'), 
         key: 'total_bet', 
         align: 'right',
         sorter: (a, b) => a.total_bet - b.total_bet,
         render: row => row.total_bet.toLocaleString()
     },
     { 
-        title: 'Total Win', 
+        title: t('report.totalWin'), 
         key: 'total_win', 
         align: 'right',
         sorter: (a, b) => a.total_win - b.total_win,
         render: row => row.total_win.toLocaleString()
     },
     { 
-        title: 'GGR', 
+        title: t('dashboard.totalGGR'), 
         key: 'ggr', 
         align: 'right',
         sorter: (a, b) => a.ggr - b.ggr,
@@ -147,7 +149,7 @@ const columns: DataTableColumns<FinancialReportItem> = [
         )
     },
     { 
-        title: 'RTP %', 
+        title: t('game.rtp'), 
         key: 'rtp', 
         align: 'center',
         sorter: (a, b) => a.rtp - b.rtp,
@@ -158,31 +160,31 @@ const columns: DataTableColumns<FinancialReportItem> = [
         )
     },
     { 
-        title: 'Rounds', 
+        title: t('report.rounds'), 
         key: 'round_count', 
         align: 'right',
         sorter: (a, b) => a.round_count - b.round_count,
         render: row => row.round_count.toLocaleString()
     }
-]
+])
 
 const handleExport = () => {
-    message.success('Export CSV started...')
+    message.success(t('report.exportStarted'))
 }
 </script>
 
 <template>
     <div class="p-6 space-y-4">
         <div class="flex justify-between items-center">
-            <h1 class="text-2xl font-bold">Financial Report</h1>
-            <n-button type="info" dashed @click="handleExport">Export CSV</n-button>
+            <h1 class="text-2xl font-bold">{{ t('report.title') }}</h1>
+            <n-button type="info" dashed @click="handleExport">{{ t('common.exportCSV') }}</n-button>
         </div>
 
         <n-card size="small">
             <div class="flex items-center gap-4 flex-wrap">
                 <n-radio-group v-model:value="filter.groupBy">
-                    <n-radio-button value="date">By Date</n-radio-button>
-                    <n-radio-button value="agent">By Agent</n-radio-button>
+                    <n-radio-button value="date">{{ t('report.byDate') }}</n-radio-button>
+                    <n-radio-button value="agent">{{ t('report.byAgent') }}</n-radio-button>
                 </n-radio-group>
                 <div class="w-[1px] h-[24px] bg-gray-700 mx-2"></div>
                 <n-date-picker 
@@ -191,13 +193,13 @@ const handleExport = () => {
                     clearable 
                 />
                 <n-button type="primary" @click="fetchData" :loading="loading">
-                    Analyze
+                    {{ t('common.analyze') }}
                 </n-button>
             </div>
         </n-card>
 
         <!-- Chart -->
-        <n-card title="Revenue Trend (GGR vs Traffic)" size="small">
+        <n-card :title="t('report.revenueTrend')" size="small">
              <div class="h-[350px] w-full">
                  <v-chart :option="chartOption" autoresize />
              </div>
