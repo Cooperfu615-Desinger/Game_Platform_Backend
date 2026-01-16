@@ -69,7 +69,8 @@
         "basicInfo": "Basic Information",
         "financeConfig": "Finance Configuration",
         "siteCodePlaceholder": "e.g. ABC",
-        "siteCodeLabel": "Site Code (3 Uppercase Letters)",
+        "siteCodeLabel": "Merchant Code (3 Uppercase Letters)",
+        "merchantId": "Merchant ID",
         "displayName": "Display Name",
         "adminAccount": "Admin Account",
         "loginAccount": "Login Account",
@@ -77,7 +78,8 @@
         "profitShare": "Profit Share (Percent)",
         "noteInherit": "Note: The created merchant will inherit games from the parent agent by default.",
         "initialState": "Initial State",
-        "currencyType": "Currency"
+        "currencyType": "Currency",
+        "viewSubs": "View Subs"
     },
     "merchantConfig": {
         "title": "Merchant Configuration",
@@ -89,9 +91,9 @@
         "apiKey": "API Key",
         "secretKey": "Secret Key",
         "callbackUrl": "Callback URL",
-        "allowedIps": "Allowed IPs",
-        "regenerate": "Regenerate",
-        "confirmRegenerate": "Are you sure you want to regenerate the secret key?",
+        "allowedIps": "IP Whitelist",
+        "regenerate": "Reset Secret",
+        "confirmRegenerate": "Are you sure you want to reset the secret key?",
         "regenerateSuccess": "New secret key generated via mock",
         "saveSuccess": "Configuration saved successfully",
         "enterIp": "Enter allowed IP and press Enter"

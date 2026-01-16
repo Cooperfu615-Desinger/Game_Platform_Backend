@@ -16,7 +16,8 @@ export function useMerchantCreate() {
         name: '',
         currency_type: 'TWD',
         percent: 80, // Default sensible value
-        game_id_list: [1, 2, 3] // Mock all games selected
+        game_id_list: [1, 2, 3], // Mock all games selected
+        level: 1 // Force Level 1 as per Phase 1 Refactor
     })
 
     // QA Challenge: Strict Validation Rules

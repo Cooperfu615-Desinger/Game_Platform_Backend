@@ -22,8 +22,16 @@ const openConfig = (id: number) => {
     showConfig.value = true
 }
 
+const handleViewSubs = (merchantId: number) => {
+    // Navigate to sub-list or refetch with parent_id
+    // Here we simply refetch with level=2 and parent_id for demo/simplicity
+    // In a real app we might want breadcrumbs or drill-down UI
+    // For this task Requirement: "Click View Subs -> Fetch Level 2+"
+    fetchList({ level: 2, parent_id: merchantId })
+}
+
 onMounted(() => {
-  fetchList()
+  fetchList({ level: 1 }) // Default Level 1
 })
 
 const columns = computed<DataTableColumns<Merchant>>(() => [
@@ -34,13 +42,13 @@ const columns = computed<DataTableColumns<Merchant>>(() => [
       sorter: (row1, row2) => row1.id - row2.id
     },
     {
-      title: t('agent.siteCode'),
+      title: t('merchant.siteCodeLabel'), // Merchant Code
       key: 'site_code',
       width: 130,
       sorter: (row1, row2) => row1.site_code.localeCompare(row2.site_code)
     },
     {
-      title: t('columns.account'),
+      title: t('merchant.merchantId'), // Merchant ID
       key: 'account',
       width: 150,
       sorter: (row1, row2) => row1.account.localeCompare(row2.account)
@@ -97,16 +105,28 @@ const columns = computed<DataTableColumns<Merchant>>(() => [
       title: t('agent.actions'),
       key: 'actions',
       render(row) {
-        return h(
-          NButton,
-          {
-            size: 'small',
-            type: 'primary',
-            secondary: true,
-            onClick: () => openConfig(row.id)
-          },
-          { default: () => t('merchant.config') }
-        )
+        return [
+          h(
+            NButton,
+            {
+              size: 'small',
+              type: 'default',
+              class: 'mr-2',
+              onClick: () => handleViewSubs(row.id)
+            },
+            { default: () => t('merchant.viewSubs') }
+          ),
+          h(
+            NButton,
+            {
+              size: 'small',
+              type: 'primary',
+              secondary: true,
+              onClick: () => openConfig(row.id)
+            },
+            { default: () => t('merchant.config') }
+          )
+        ]
       }
     }
 ])

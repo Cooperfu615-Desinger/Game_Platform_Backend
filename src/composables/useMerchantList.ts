@@ -14,12 +14,17 @@ export function useMerchantList() {
         pageCount: 1
     })
 
-    async function fetchList() {
+    async function fetchList(params: { level?: number, parent_id?: number } = { level: 1 }) {
         loading.value = true
         error.value = null
         try {
+            // Build query params
+            const query = new URLSearchParams()
+            if (params.level) query.append('level', params.level.toString())
+            if (params.parent_id) query.append('parent_id', params.parent_id.toString())
+
             // Using fetch as requested (no axios)
-            const response = await fetch('/api/v2/agent/list')
+            const response = await fetch(`/api/v2/agent/list?${query.toString()}`)
 
             if (!response.ok) {
                 throw new Error(`HTTP Error: ${response.status}`)
