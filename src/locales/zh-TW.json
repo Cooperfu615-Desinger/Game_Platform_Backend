@@ -14,7 +14,9 @@
         "viewDetail": "查看詳情",
         "exportCSV": "匯出 CSV",
         "analyze": "分析",
-        "back": "返回 / 取消"
+        "back": "返回 / 取消",
+        "copy": "複製",
+        "copied": "已複製!"
     },
     "menu": {
         "dashboard": "儀表板",
@@ -76,6 +78,23 @@
         "noteInherit": "注意：建立的商戶將預設繼承上級代理的遊戲。",
         "initialState": "初始狀態",
         "currencyType": "幣種"
+    },
+    "merchantConfig": {
+        "title": "商戶配置",
+        "integration": "對接資訊",
+        "security": "安全設定",
+        "walletMode": "錢包模式",
+        "transfer": "轉帳錢包",
+        "seamless": "單一錢包",
+        "apiKey": "API Key",
+        "secretKey": "Secret Key",
+        "callbackUrl": "回調網址",
+        "allowedIps": "允許 IP 白名單",
+        "regenerate": "重置密鑰",
+        "confirmRegenerate": "確定要重置 Secret Key 嗎？這將會影響現有的對接。",
+        "regenerateSuccess": "已模擬產生新的 Secret Key",
+        "saveSuccess": "配置儲存成功",
+        "enterIp": "輸入允許的 IP 並按下 Enter"
     },
     "game": {
         "title": "遊戲中心",

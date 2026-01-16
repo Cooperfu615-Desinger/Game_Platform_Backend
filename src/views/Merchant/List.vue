@@ -7,10 +7,20 @@ import { useI18n } from 'vue-i18n'
 import type { DataTableColumns } from 'naive-ui'
 import type { Merchant } from '../../types/merchant'
 import { useMerchantList } from '../../composables/useMerchantList'
+import MerchantConfigModal from './components/MerchantConfigModal.vue'
+import { ref } from 'vue'
 
 const { loading, list, error, fetchList } = useMerchantList()
 const router = useRouter()
 const { t } = useI18n()
+
+const showConfig = ref(false)
+const currentMerchantId = ref<number | null>(null)
+
+const openConfig = (id: number) => {
+    currentMerchantId.value = id
+    showConfig.value = true
+}
 
 onMounted(() => {
   fetchList()
@@ -93,7 +103,7 @@ const columns = computed<DataTableColumns<Merchant>>(() => [
             size: 'small',
             type: 'primary',
             secondary: true,
-            onClick: () => router.push(`/merchant/config/${row.id}`)
+            onClick: () => openConfig(row.id)
           },
           { default: () => t('merchant.config') }
         )
@@ -124,6 +134,12 @@ const columns = computed<DataTableColumns<Merchant>>(() => [
       :loading="loading"
       :pagination="false"
       class="mt-4"
+    />
+
+    <merchant-config-modal 
+        v-model:show="showConfig" 
+        :merchant-id="currentMerchantId"
+        @refresh="fetchList"
     />
   </div>
 </template>

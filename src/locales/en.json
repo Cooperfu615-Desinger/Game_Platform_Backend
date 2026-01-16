@@ -14,7 +14,9 @@
         "viewDetail": "View Detail",
         "exportCSV": "Export CSV",
         "analyze": "Analyze",
-        "back": "Back / Cancel"
+        "back": "Back / Cancel",
+        "copy": "Copy",
+        "copied": "Copied!"
     },
     "menu": {
         "dashboard": "Dashboard",
@@ -76,6 +78,23 @@
         "noteInherit": "Note: The created merchant will inherit games from the parent agent by default.",
         "initialState": "Initial State",
         "currencyType": "Currency"
+    },
+    "merchantConfig": {
+        "title": "Merchant Configuration",
+        "integration": "Integration",
+        "security": "Security",
+        "walletMode": "Wallet Mode",
+        "transfer": "Transfer",
+        "seamless": "Seamless",
+        "apiKey": "API Key",
+        "secretKey": "Secret Key",
+        "callbackUrl": "Callback URL",
+        "allowedIps": "Allowed IPs",
+        "regenerate": "Regenerate",
+        "confirmRegenerate": "Are you sure you want to regenerate the secret key?",
+        "regenerateSuccess": "New secret key generated via mock",
+        "saveSuccess": "Configuration saved successfully",
+        "enterIp": "Enter allowed IP and press Enter"
     },
     "game": {
         "title": "Game Center",
