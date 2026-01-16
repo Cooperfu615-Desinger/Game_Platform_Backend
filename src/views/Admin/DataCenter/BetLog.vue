@@ -7,8 +7,8 @@ import {
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { DataTableColumns } from 'naive-ui'
-import { useRoundSearch } from '../../composables/useRoundSearch'
-import type { BetLog } from '../../types/report'
+import { useRoundSearch } from '../../../composables/useRoundSearch'
+import type { BetLog } from '../../../types/report'
 
 // Reusing composable logic but will enhance local UI state
 const { t } = useI18n()

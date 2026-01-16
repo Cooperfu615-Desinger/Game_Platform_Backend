@@ -140,12 +140,12 @@ onMounted(() => {
     <!-- Bottom Row: Quick Nav -->
     <n-grid x-gap="12" cols="1 s:2" responsive="screen">
         <n-grid-item>
-             <n-button block size="large" secondary @click="router.push('/merchant/list')">
+             <n-button block size="large" secondary @click="router.push('/admin/merchant/list')">
                 Manage Merchants
              </n-button>
         </n-grid-item>
         <n-grid-item>
-             <n-button block size="large" secondary @click="router.push('/data-center/bet-log')">
+             <n-button block size="large" secondary @click="router.push('/admin/data-center/bet-log')">
                 Search Round Logs
              </n-button>
         </n-grid-item>

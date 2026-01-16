@@ -5,8 +5,8 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import type { DataTableColumns } from 'naive-ui'
-import type { Merchant } from '../../types/merchant'
-import { useMerchantList } from '../../composables/useMerchantList'
+import type { Merchant } from '../../../types/merchant'
+import { useMerchantList } from '../../../composables/useMerchantList'
 import MerchantConfigModal from './components/MerchantConfigModal.vue'
 import { ref } from 'vue'
 

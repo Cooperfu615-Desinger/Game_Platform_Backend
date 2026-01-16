@@ -6,8 +6,8 @@ import {
   NRadioGroup, NRadio, NDynamicTags, NSpin, NGrid, NGridItem,
   NAlert, useDialog, useMessage
 } from 'naive-ui'
-import { useMerchantDetail } from '../../composables/useMerchantDetail'
-import RTPSelector from '../../components/Business/RTPSelector.vue'
+import { useMerchantDetail } from '../../../composables/useMerchantDetail'
+import RTPSelector from '../../../components/Business/RTPSelector.vue'
 
 const route = useRoute()
 const router = useRouter()

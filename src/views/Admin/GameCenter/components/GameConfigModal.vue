@@ -5,7 +5,7 @@ import {
     NModal, NForm, NFormItem, NInput, NSelect, 
     NSwitch, NInputNumber, NButton, useMessage 
 } from 'naive-ui'
-import type { Game } from '../../../types/game'
+import type { Game } from '../../../../types/game'
 
 const props = defineProps<{
     show: boolean

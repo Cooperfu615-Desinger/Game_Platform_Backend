@@ -77,7 +77,7 @@ export function useMerchantCreate() {
                     }
 
                     message.success('Merchant Created Successfully')
-                    router.push('/merchant/list')
+                    router.push('/admin/merchant/list')
                 } catch (err: any) {
                     console.error(err)
                     message.error(err.message || 'Error creating merchant')

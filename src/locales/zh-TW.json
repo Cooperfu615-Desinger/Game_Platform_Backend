@@ -27,7 +27,11 @@
         "betLogs": "投注記錄",
         "financialReport": "財務報表",
         "profile": "個人資料",
-        "logout": "登出"
+        "logout": "登出",
+        "masterAdmin": "👑 總控後台",
+        "agentView": "💼 代理後台",
+        "organization": "組織管理",
+        "reports": "報表中心"
     },
     "login": {
         "title": "登入",

@@ -5,7 +5,7 @@ import {
 } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { useMerchantCreate } from '../../composables/useMerchantCreate'
+import { useMerchantCreate } from '../../../composables/useMerchantCreate'
 
 const router = useRouter()
 const { t } = useI18n()

@@ -27,7 +27,11 @@
         "betLogs": "Bet Logs",
         "financialReport": "Financial Report",
         "profile": "Profile",
-        "logout": "Logout"
+        "logout": "Logout",
+        "masterAdmin": "👑 Master Admin",
+        "agentView": "💼 Agent View",
+        "organization": "Organization",
+        "reports": "Reports"
     },
     "login": {
         "title": "Sign In",

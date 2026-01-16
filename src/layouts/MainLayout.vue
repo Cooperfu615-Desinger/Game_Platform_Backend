@@ -38,40 +38,68 @@ const renderIcon = (icon: any) => {
 // Menu Options
 const menuOptions = computed<MenuOption[]>(() => [
   {
-    label: () => h(RouterLink, { to: '/dashboard' }, { default: () => t('menu.dashboard') }),
-    key: 'dashboard',
-    icon: renderIcon(DashboardOutlined)
-  },
-  {
-    label: () => h(RouterLink, { to: '/agent/list' }, { default: () => t('menu.agentManagement') }),
-    key: 'agent-list',
-    icon: renderIcon(PeopleAltOutlined)
-  },
-  {
-    label: () => h(RouterLink, { to: '/merchant/list' }, { default: () => t('menu.merchant') }),
-    key: 'merchant-list',
-    icon: renderIcon(PeopleAltOutlined)
-  },
-  {
-    label: () => h(RouterLink, { to: '/game-center/list' }, { default: () => t('menu.gameCenter') }),
-    key: 'game-center',
-    icon: renderIcon(CasinoOutlined)
-  },
-  {
-    label: t('menu.dataCenter'),
-    key: 'data-center',
-    icon: renderIcon(BarChartOutlined),
+    type: 'group',
+    label: t('menu.masterAdmin'),
+    key: 'master-admin',
     children: [
-      {
-        label: () => h(RouterLink, { to: '/data-center/bet-log' }, { default: () => t('menu.betLogs') }),
-        key: 'BetLog',
-        icon: renderIcon(DescriptionOutlined)
-      },
-      {
-        label: () => h(RouterLink, { to: '/data-center/report' }, { default: () => t('menu.financialReport') }),
-        key: 'FinancialReport',
-        icon: renderIcon(AttachMoneyOutlined)
-      }
+        {
+            label: () => h(RouterLink, { to: '/admin/dashboard' }, { default: () => t('menu.dashboard') }),
+            key: 'admin-dashboard',
+            icon: renderIcon(DashboardOutlined)
+        },
+        {
+            label: () => h(RouterLink, { to: '/admin/merchant/list' }, { default: () => t('menu.merchant') }),
+            key: 'merchant-list',
+            icon: renderIcon(PeopleAltOutlined)
+        },
+        {
+            label: () => h(RouterLink, { to: '/admin/game-center/list' }, { default: () => t('menu.gameCenter') }),
+            key: 'game-center',
+            icon: renderIcon(CasinoOutlined)
+        },
+        {
+            label: t('menu.dataCenter'),
+            key: 'data-center',
+            icon: renderIcon(BarChartOutlined),
+            children: [
+              {
+                label: () => h(RouterLink, { to: '/admin/data-center/bet-log' }, { default: () => t('menu.betLogs') }),
+                key: 'BetLog',
+                icon: renderIcon(DescriptionOutlined)
+              },
+              {
+                label: () => h(RouterLink, { to: '/admin/data-center/report' }, { default: () => t('menu.financialReport') }),
+                key: 'FinancialReport',
+                icon: renderIcon(AttachMoneyOutlined)
+              }
+            ]
+        }
+    ]
+  },
+  {
+    type: 'divider',
+    key: 'd1'
+  },
+  {
+    type: 'group',
+    label: t('menu.agentView'),
+    key: 'agent-view',
+    children: [
+        {
+          label: () => h(RouterLink, { to: '/agent/dashboard' }, { default: () => t('menu.dashboard') }),
+          key: 'agent-dashboard',
+          icon: renderIcon(DashboardOutlined)
+        },
+        {
+          label: () => h(RouterLink, { to: '/agent/organization/sub-list' }, { default: () => t('menu.organization') }),
+          key: 'sub-agent-list',
+          icon: renderIcon(PeopleAltOutlined)
+        },
+        {
+          label: () => h(RouterLink, { to: '/agent/reports' }, { default: () => t('menu.reports') }),
+          key: 'agent-reports',
+          icon: renderIcon(BarChartOutlined)
+        }
     ]
   }
 ])

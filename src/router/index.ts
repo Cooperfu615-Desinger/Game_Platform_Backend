@@ -6,50 +6,65 @@ const router = createRouter({
         {
             path: '/',
             component: () => import('../layouts/MainLayout.vue'),
-            redirect: '/dashboard',
+            redirect: '/admin/dashboard',
             children: [
+                // ================== ADMIN ROUTES ==================
                 {
-                    path: 'dashboard',
-                    name: 'dashboard',
-                    component: () => import('../views/Dashboard/Overview.vue')
+                    path: 'admin/dashboard',
+                    name: 'admin-dashboard',
+                    component: () => import('../views/Admin/Dashboard/Overview.vue'),
+                    meta: { title: 'Dashboard', roles: ['admin'] }
                 },
                 {
-                    path: 'merchant/list',
+                    path: 'admin/merchant/list',
                     name: 'merchant-list',
-                    component: () => import('../views/Merchant/List.vue')
+                    component: () => import('../views/Admin/Merchant/List.vue'),
+                    meta: { title: 'Merchant List', roles: ['admin'] }
                 },
                 {
-                    path: 'agent/list',
-                    name: 'agent-list',
-                    component: () => import('../views/Agent/List.vue')
-                },
-                {
-                    path: 'merchant/create',
+                    path: 'admin/merchant/create',
                     name: 'merchant-create',
-                    component: () => import('../views/Merchant/Create.vue')
+                    component: () => import('../views/Admin/Merchant/Create.vue'),
+                    meta: { title: 'Create Merchant', roles: ['admin'] }
                 },
+                // Removed redundant config route as it's now a modal
                 {
-                    path: 'merchant/config/:id',
-                    name: 'merchant-config',
-                    component: () => import('../views/Merchant/Configuration.vue')
-                },
-                {
-                    path: 'data-center/bet-log',
-                    name: 'BetLog',
-                    component: () => import('../views/DataCenter/BetLog.vue'),
-                    meta: { title: 'Bet Log Query' }
-                },
-                {
-                    path: 'data-center/report',
-                    name: 'FinancialReport',
-                    component: () => import('../views/DataCenter/Report.vue'),
-                    meta: { title: 'Financial Report' }
-                },
-                // Placeholder for Game Center
-                {
-                    path: 'game-center/list',
+                    path: 'admin/game-center/list',
                     name: 'game-center',
-                    component: () => import('../views/GameCenter/List.vue')
+                    component: () => import('../views/Admin/GameCenter/List.vue'),
+                    meta: { title: 'Game Center', roles: ['admin'] }
+                },
+                {
+                    path: 'admin/data-center/bet-log',
+                    name: 'BetLog',
+                    component: () => import('../views/Admin/DataCenter/BetLog.vue'),
+                    meta: { title: 'Bet Log Query', roles: ['admin'] }
+                },
+                {
+                    path: 'admin/data-center/report',
+                    name: 'FinancialReport',
+                    component: () => import('../views/Admin/DataCenter/Report.vue'),
+                    meta: { title: 'Financial Report', roles: ['admin'] }
+                },
+
+                // ================== AGENT ROUTES ==================
+                {
+                    path: 'agent/dashboard',
+                    name: 'agent-dashboard',
+                    component: () => import('../views/Agent/Dashboard/Index.vue'),
+                    meta: { title: 'Agent Dashboard', roles: ['agent'] }
+                },
+                {
+                    path: 'agent/organization/sub-list',
+                    name: 'sub-agent-list',
+                    component: () => import('../views/Agent/Organization/SubAgentList.vue'),
+                    meta: { title: 'Sub-Agent List', roles: ['agent'] }
+                },
+                {
+                    path: 'agent/reports',
+                    name: 'agent-reports',
+                    component: () => import('../views/Agent/Reports/Index.vue'),
+                    meta: { title: 'Agent Reports', roles: ['agent'] }
                 }
             ]
         },
