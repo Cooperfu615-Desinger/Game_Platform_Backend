@@ -65,7 +65,9 @@ const chartOption = computed(() => {
             axisPointer: { type: 'shadow' }
         },
         legend: {
-            data: [t('dashboard.totalGGR'), t('report.betCount')]
+            data: [t('dashboard.totalGGR'), t('report.betCount')],
+            top: 0,
+            right: 20
         },
         grid: {
             left: '3%',
