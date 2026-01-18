@@ -233,6 +233,7 @@
         "roundId": "Round ID",
         "selectGame": "Select Game",
         "searchLogs": "Search Logs",
+        "merchant": "Merchant",
         "time": "Time",
         "game": "Game",
         "bet": "Bet",
@@ -240,8 +241,26 @@
         "payout": "Payout",
         "roundDetail": "Round Detail",
         "summary": "Summary",
-        "bigWin": "Big Win!",
-        "freeGame": "Free Game Triggered"
+        "bigWin": "Big Win",
+        "freeGame": "Free Game"
+    },
+    "finance": {
+        "invoiceManager": "Invoice Manager",
+        "invoiceList": "Invoice List",
+        "generateInvoice": "Generate Invoice",
+        "period": "Billing Period",
+        "commission": "Commission",
+        "commissionRate": "Commission Rate (Avg.)",
+        "amountDue": "Amount Due",
+        "totalGGR": "Total GGR",
+        "status": "Status",
+        "pending": "Pending",
+        "paid": "Paid",
+        "markAsPaid": "Mark as Paid",
+        "breakdown": "Cost Breakdown",
+        "merchant": "Merchant",
+        "preview": "Preview Invoices",
+        "confirmGenerate": "Confirm & Generate"
     },
     "report": {
         "title": "Financial Report",

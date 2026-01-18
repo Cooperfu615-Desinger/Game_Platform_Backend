@@ -3,6 +3,7 @@ import { faker } from '@faker-js/faker'
 import type { Merchant, MerchantDetail } from '../types/merchant'
 import type { Agent } from '../types/agent'
 import { mockGames } from './data/games'
+import { financeHandlers } from './finance'
 
 // ... existing code ...
 
@@ -602,4 +603,5 @@ export const handlers = [
         })
     }),
 
+    ...financeHandlers
 ]

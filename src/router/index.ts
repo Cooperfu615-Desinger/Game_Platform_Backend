@@ -52,6 +52,12 @@ const router = createRouter({
                     component: () => import('../views/Admin/DataCenter/Report.vue'),
                     meta: { title: 'Financial Report', roles: ['admin'] }
                 },
+                {
+                    path: 'admin/finance/invoices',
+                    name: 'InvoiceManager',
+                    component: () => import('../views/Admin/Finance/InvoiceManager.vue'),
+                    meta: { title: 'Invoice Manager', roles: ['admin'] }
+                },
 
                 // ================== AGENT ROUTES ==================
                 {
