@@ -5,6 +5,7 @@ import type { Agent } from '../types/agent'
 import { mockGames } from './data/games'
 import { financeHandlers } from './finance'
 import { systemHandlers } from './system'
+import { agentHandlers } from './agent'
 
 // ... existing code ...
 
@@ -605,5 +606,6 @@ export const handlers = [
     }),
 
     ...financeHandlers,
-    ...systemHandlers
+    ...systemHandlers,
+    ...agentHandlers
 ]

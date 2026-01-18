@@ -93,10 +93,16 @@ const router = createRouter({
                     meta: { title: 'Sub-Agent List', roles: ['agent'] }
                 },
                 {
-                    path: 'agent/reports',
-                    name: 'agent-reports',
-                    component: () => import('../views/Agent/Reports/Index.vue'),
-                    meta: { title: 'Agent Reports', roles: ['agent'] }
+                    path: 'agent/reports/win-loss',
+                    name: 'WinLossReport',
+                    component: () => import('../views/Agent/Reports/WinLoss.vue'),
+                    meta: { title: 'Win/Loss Report', roles: ['agent'] }
+                },
+                {
+                    path: 'agent/developer',
+                    name: 'DeveloperCenter',
+                    component: () => import('../views/Agent/Developer/Index.vue'),
+                    meta: { title: 'Developer Center', roles: ['agent'] }
                 }
             ]
         },
