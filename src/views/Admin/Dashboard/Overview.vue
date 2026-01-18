@@ -1,21 +1,19 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { 
-  NCard, NGrid, NGridItem, NStatistic, NButton, 
-  useMessage, NTag, NSkeleton
+  NCard, NGrid, NGridItem, NStatistic, 
+  useMessage, NTag, NSkeleton, NList, NListItem, NProgress
 } from 'naive-ui'
-import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import VChart from 'vue-echarts'
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
-import { LineChart } from 'echarts/charts'
+import { LineChart, PieChart } from 'echarts/charts'
 import { GridComponent, TooltipComponent, LegendComponent } from 'echarts/components'
 
 // ECharts Composition
-use([CanvasRenderer, LineChart, GridComponent, TooltipComponent, LegendComponent])
+use([CanvasRenderer, LineChart, PieChart, GridComponent, TooltipComponent, LegendComponent])
 
-const router = useRouter()
 const message = useMessage()
 const { t } = useI18n()
 const loading = ref(true)
@@ -26,14 +24,20 @@ const stats = ref({
     total_ggr: 0,
     rtp: 0,
     active_players: 0,
-    trend: [] as any[]
+    total_requests: 0,
+    avg_margin: 0,
+    trend: [] as any[],
+    provider_share: [] as any[],
+    top_merchants: [] as any[],
+    top_games: [] as any[],
+    system_health: [] as any[]
 })
 
-// Chart Option Computed
-const chartOption = computed(() => ({
+// Line Chart (Revenue)
+const lineOption = computed(() => ({
     tooltip: { trigger: 'axis' },
-    legend: { data: [t('dashboard.totalGGR'), t('dashboard.totalBet')], textStyle: { color: '#ccc' } },
-    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+    legend: { data: [t('dashboard.totalGGR'), t('dashboard.totalBet')], bottom: 0, textStyle: { color: '#ccc' } },
+    grid: { left: '3%', right: '4%', bottom: '10%', top: '3%', containLabel: true },
     xAxis: { 
         type: 'category', 
         data: stats.value.trend.map(t => t.date),
@@ -63,6 +67,31 @@ const chartOption = computed(() => ({
     ]
 }))
 
+// Pie Chart (Provider Share)
+const pieOption = computed(() => ({
+    tooltip: { trigger: 'item' },
+    legend: { orient: 'horizontal', bottom: 0, textStyle: { color: '#ccc' } },
+    series: [
+        {
+            name: t('dashboard.providerShare'),
+            type: 'pie',
+            radius: ['40%', '70%'],
+            avoidLabelOverlap: false,
+            itemStyle: {
+                borderRadius: 5,
+                borderColor: '#1e1e1e',
+                borderWidth: 2
+            },
+            label: { show: false, position: 'center' },
+            emphasis: {
+                label: { show: true, fontSize: 20, fontWeight: 'bold', color: '#fff' }
+            },
+            labelLine: { show: false },
+            data: stats.value.provider_share
+        }
+    ]
+}))
+
 const fetchDashboard = async () => {
     try {
         const res = await fetch('/api/v2/report/dashboard')
@@ -85,69 +114,127 @@ onMounted(() => {
 <template>
   <div class="p-6 space-y-6">
     <div class="flex items-center justify-between">
-       <h1 class="text-2xl font-bold">{{ t('dashboard.title') }} ({{ t('dashboard.warRoom') }})</h1>
-       <n-tag type="info" size="small" bordered>{{ t('dashboard.realTime') }}</n-tag>
+       <h1 class="text-2xl font-bold flex items-center gap-2">
+           <span>🛸</span> {{ t('dashboard.warRoom') }}
+       </h1>
+       <n-tag type="success" size="small" extract bordered>
+           🟢 {{ t('dashboard.realTime') }}
+       </n-tag>
     </div>
 
-    <!-- Top Row: Metrics -->
+    <!-- Row 1: KPI Cards -->
     <n-grid x-gap="12" y-gap="12" cols="1 s:2 m:4" responsive="screen">
+        <!-- GGR -->
         <n-grid-item>
-            <n-card size="small">
-                <n-statistic :label="t('dashboard.totalBet')" :value="stats.total_bet">
-                    <template #prefix>$</template>
-                </n-statistic>
-            </n-card>
-        </n-grid-item>
-        <n-grid-item>
-             <n-card size="small" class="border-green-500/30">
+             <n-card size="small" class="border-green-500/30 bg-green-500/5">
                 <n-statistic :label="t('dashboard.totalGGR')" :value="stats.total_ggr">
                     <template #prefix>$</template>
-                    <template #suffix>
-                         <span class="text-xs text-green-400 ml-2">({{ t('dashboard.net') }})</span>
-                    </template>
                 </n-statistic>
             </n-card>
         </n-grid-item>
-        <n-grid-item>
-             <n-card size="small">
-                <n-statistic :label="t('dashboard.rtp')" :value="stats.rtp">
-                    <template #suffix>%</template>
-                    <template #prefix>
-                         <div :class="{'text-red-500': stats.rtp > 100, 'text-green-500': stats.rtp < 95, 'text-gray-200': stats.rtp >= 95 && stats.rtp <= 100}">
-                            ●
-                         </div>
-                    </template>
-                </n-statistic>
-            </n-card>
-        </n-grid-item>
+        <!-- Active Players -->
         <n-grid-item>
              <n-card size="small">
                 <n-statistic :label="t('dashboard.activePlayers')" :value="stats.active_players">
-                    <template #suffix>{{ t('dashboard.online') }}</template>
+                    <template #suffix>👤</template>
+                </n-statistic>
+            </n-card>
+        </n-grid-item>
+        <!-- Total Requests -->
+        <n-grid-item>
+             <n-card size="small">
+                <n-statistic :label="t('dashboard.requests')" :value="stats.total_requests">
+                    <template #suffix>Reqs</template>
+                </n-statistic>
+            </n-card>
+        </n-grid-item>
+        <!-- Avg Margin -->
+        <n-grid-item>
+             <n-card size="small">
+                <n-statistic :label="t('dashboard.avgMargin')" :value="stats.avg_margin">
+                    <template #suffix>%</template>
                 </n-statistic>
             </n-card>
         </n-grid-item>
     </n-grid>
 
-    <!-- Middle Row: Charts -->
-    <n-card :title="t('dashboard.revenueTrend')">
-        <div class="h-[350px] w-full">
-            <n-skeleton v-if="loading" text :repeat="5" />
-            <v-chart v-else class="chart" :option="chartOption" autoresize />
-        </div>
-    </n-card>
-
-    <!-- Bottom Row: Quick Nav -->
-    <n-grid x-gap="12" cols="1 s:2" responsive="screen">
-        <n-grid-item>
-             <n-button block size="large" secondary @click="router.push('/admin/merchant/list')">
-                Manage Merchants
-             </n-button>
+    <!-- Row 2: Charts -->
+    <n-grid x-gap="12" y-gap="12" cols="1 m:3" responsive="screen">
+        <!-- Line Chart (2/3 width) -->
+        <n-grid-item span="2">
+            <n-card :title="t('dashboard.revenueTrend')" size="small">
+                <div class="h-[300px] w-full">
+                    <n-skeleton v-if="loading" text :repeat="5" />
+                    <v-chart v-else class="chart" :option="lineOption" autoresize />
+                </div>
+            </n-card>
         </n-grid-item>
+        <!-- Pie Chart (1/3 width) -->
         <n-grid-item>
-             <n-button block size="large" secondary @click="router.push('/admin/data-center/bet-log')">
-                Search Round Logs
-             </n-button>
+            <n-card :title="t('dashboard.providerShare')" size="small">
+                <div class="h-[300px] w-full">
+                    <n-skeleton v-if="loading" circle size="medium" />
+                    <v-chart v-else class="chart" :option="pieOption" autoresize />
+                </div>
+            </n-card>
+        </n-grid-item>
+    </n-grid>
+
+    <!-- Row 3: Top Lists & Health -->
+    <n-grid x-gap="12" y-gap="12" cols="1 m:3" responsive="screen">
+        <!-- Top Merchants -->
+        <n-grid-item>
+            <n-card :title="t('dashboard.topMerchants')" size="small">
+                <n-list hoverable>
+                    <n-list-item v-for="(m, i) in stats.top_merchants" :key="i">
+                        <div class="flex justify-between">
+                            <span>{{ i + 1 }}. {{ m.name }}</span>
+                            <span class="font-mono text-green-400">${{ m.ggr.toLocaleString() }}</span>
+                        </div>
+                    </n-list-item>
+                </n-list>
+            </n-card>
+        </n-grid-item>
+
+        <!-- Top Games -->
+         <n-grid-item>
+            <n-card :title="t('dashboard.topGames')" size="small">
+                 <n-list hoverable>
+                    <n-list-item v-for="(g, i) in stats.top_games" :key="i">
+                        <div class="flex justify-between">
+                            <span>{{ i + 1 }}. {{ g.name }}</span>
+                            <span class="font-mono text-gray-400">{{ g.bet_count.toLocaleString() }}</span>
+                        </div>
+                    </n-list-item>
+                </n-list>
+            </n-card>
+        </n-grid-item>
+
+        <!-- System Health -->
+        <n-grid-item>
+            <n-card :title="t('dashboard.systemHealth')" size="small">
+                <n-list>
+                    <n-list-item v-for="h in stats.system_health" :key="h.provider">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold">{{ h.provider }}</span>
+                            <n-tag 
+                                :type="h.status === 'healthy' ? 'success' : h.status === 'warning' ? 'warning' : 'error'" 
+                                size="small"
+                                round
+                            >
+                                {{ h.latency > 0 ? h.latency + ' ms' : 'TIMEOUT' }}
+                            </n-tag>
+                        </div>
+                        <n-progress 
+                            type="line" 
+                            :percentage="h.status === 'healthy' ? 100 : h.status === 'warning' ? 80 : 30" 
+                            :status="h.status === 'healthy' ? 'success' : h.status === 'warning' ? 'warning' : 'error'"
+                            :show-indicator="false"
+                            processing
+                        />
+                    </n-list-item>
+                </n-list>
+            </n-card>
         </n-grid-item>
     </n-grid>
   </div>

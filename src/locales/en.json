@@ -187,14 +187,21 @@
     "dashboard": {
         "title": "Dashboard",
         "warRoom": "War Room",
-        "realTime": "Real-time Updated",
+        "realTime": "Real-time",
         "totalBet": "Total Bet",
-        "totalGGR": "Total GGR",
+        "totalGGR": "Total GGR (Base)",
         "net": "Net",
-        "rtp": "RTP (Return to Player)",
+        "rtp": "RTP",
         "activePlayers": "Active Players",
         "online": "Online",
-        "revenueTrend": "Revenue Trend (7 Days)"
+        "revenueTrend": "Revenue Trend (24h)",
+        "requests": "Total Requests",
+        "avgMargin": "Avg. Margin",
+        "providerShare": "Provider Market Share",
+        "topMerchants": "Top Merchants (GGR)",
+        "topGames": "Top Games (Bets)",
+        "systemHealth": "System Health (Latency)",
+        "ms": "ms"
     },
     "form": {
         "account": "Account",

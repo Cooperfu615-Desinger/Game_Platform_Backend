@@ -462,11 +462,44 @@ export const handlers = [
             code: 0,
             msg: 'success',
             data: {
+                // KPIs
                 total_bet: Number(totalBet.toFixed(2)),
                 total_ggr: Number(ggr.toFixed(2)),
                 rtp: 96.50,
-                active_players: 342,
-                trend // [ {date, ggr, bet}, ... ]
+                active_players: faker.number.int({ min: 2500, max: 3500 }),
+                total_requests: faker.number.int({ min: 4000000, max: 4500000 }), // ~4.2M
+                avg_margin: 3.5, // 3.5%
+
+                // Charts
+                trend, // [ {date, ggr, bet}, ... ]
+                provider_share: [
+                    { name: 'PG Soft', value: 45 },
+                    { name: 'Evolution', value: 30 },
+                    { name: 'Pragmatic Play', value: 25 }
+                ],
+
+                // Top Lists
+                top_merchants: [
+                    { name: 'Bet365', ggr: 45000 },
+                    { name: '1xbet', ggr: 32000 },
+                    { name: 'K9Win', ggr: 28000 },
+                    { name: 'M88', ggr: 15000 },
+                    { name: 'Fun88', ggr: 12000 }
+                ],
+                top_games: [
+                    { name: 'Mahjong Ways 2', bet_count: 50000 },
+                    { name: 'Super Ace', bet_count: 42000 },
+                    { name: 'Crazy Time', bet_count: 35000 },
+                    { name: 'Fortune Tiger', bet_count: 28000 },
+                    { name: 'Gates of Olympus', bet_count: 25000 }
+                ],
+
+                // System Health
+                system_health: [
+                    { provider: 'PG Soft', status: 'healthy', latency: 45 },
+                    { provider: 'Evolution', status: 'warning', latency: 120 },
+                    { provider: 'Pragmatic Play', status: 'critical', latency: 0 } // 0 = timeout
+                ]
             }
         })
     }),

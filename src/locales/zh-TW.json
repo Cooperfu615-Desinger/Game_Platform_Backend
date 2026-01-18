@@ -187,14 +187,21 @@
     "dashboard": {
         "title": "儀表板",
         "warRoom": "戰情室",
-        "realTime": "即時更新",
-        "totalBet": "總投注",
+        "realTime": "即時監控",
+        "totalBet": "總投注額",
         "totalGGR": "總營收 (GGR)",
         "net": "淨利",
-        "rtp": "殺率 (RTP)",
+        "rtp": "RTP",
         "activePlayers": "活躍玩家",
         "online": "在線",
-        "revenueTrend": "營收走勢 (7天)"
+        "revenueTrend": "營收走勢 (24h)",
+        "requests": "API 請求總量",
+        "avgMargin": "平均毛利率",
+        "providerShare": "供應商佔比",
+        "topMerchants": "熱門商戶 (GGR)",
+        "topGames": "熱門遊戲 (注單量)",
+        "systemHealth": "系統健康度 (延遲)",
+        "ms": "毫秒"
     },
     "form": {
         "account": "帳號",
