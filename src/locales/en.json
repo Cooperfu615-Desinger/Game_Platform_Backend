@@ -12,6 +12,14 @@
         "reset": "Reset",
         "action": "Action",
         "status": "Status",
+        "subscription": {
+            "title": "Provider Subscriptions",
+            "revenueShare": "Revenue Share (%)",
+            "gameExclusion": "Exclude Specific Games",
+            "gameExclusionPlaceholder": "Game Exclusion (Coming Soon)",
+            "enableProvider": "Enable Access",
+            "providerMaintenance": "Provider Maintenance"
+        },
         "syncCplt": "Synced {count} new items",
         "all": "All",
         "sync": "Sync",

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, h, computed } from 'vue'
-import { NDataTable, NTag, NAlert, NButton } from 'naive-ui'
+import { NDataTable, NTag, NAlert, NButton, NSpace } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
@@ -8,26 +8,25 @@ import type { DataTableColumns } from 'naive-ui'
 import type { Merchant } from '../../../types/merchant'
 import { useMerchantList } from '../../../composables/useMerchantList'
 import MerchantConfigModal from './components/MerchantConfigModal.vue'
+import MerchantSubscriptionModal from './components/MerchantSubscriptionModal.vue'
 import { ref } from 'vue'
 
-const { loading, list, error, fetchList } = useMerchantList()
+const { list, loading, error, fetchList } = useMerchantList()
 const router = useRouter()
 const { t } = useI18n()
 
 const showConfig = ref(false)
-const currentMerchantId = ref<number | null>(null)
+const showSubscription = ref(false)
+const currentMerchant = ref<Merchant | null>(null)
 
-const openConfig = (id: number) => {
-    currentMerchantId.value = id
+const handleConfig = (row: Merchant) => {
+    currentMerchant.value = row
     showConfig.value = true
 }
 
-const handleViewSubs = (merchantId: number) => {
-    // Navigate to sub-list or refetch with parent_id
-    // Here we simply refetch with level=2 and parent_id for demo/simplicity
-    // In a real app we might want breadcrumbs or drill-down UI
-    // For this task Requirement: "Click View Subs -> Fetch Level 2+"
-    fetchList({ level: 2, parent_id: merchantId })
+const handleSubscription = (row: Merchant) => {
+    currentMerchant.value = row
+    showSubscription.value = true
 }
 
 onMounted(() => {
@@ -118,32 +117,24 @@ const columns = computed<DataTableColumns<Merchant>>(() => [
       }
     },
     {
-      title: t('agent.actions'),
-      key: 'actions',
-      render(row) {
-        return [
-          h(
-            NButton,
-            {
-              size: 'small',
-              type: 'default',
-              class: 'mr-2',
-              onClick: () => handleViewSubs(row.id)
-            },
-            { default: () => t('merchant.viewSubs') }
-          ),
-          h(
-            NButton,
-            {
-              size: 'small',
-              type: 'primary',
-              secondary: true,
-              onClick: () => openConfig(row.id)
-            },
-            { default: () => t('merchant.config') }
-          )
-        ]
-      }
+        title: t('common.action'),
+        key: 'actions',
+        width: 180,
+        fixed: 'right',
+        render: (row) => h(NSpace, { size: 'small' }, {
+            default: () => [
+                h(NButton, {
+                    size: 'small',
+                    onClick: () => handleConfig(row)
+                }, { default: () => t('merchantConfig.config') }),
+                h(NButton, {
+                    size: 'small',
+                    secondary: true,
+                    type: 'info',
+                    onClick: () => handleSubscription(row)
+                }, { default: () => '🎮' })
+            ]
+        })
     }
 ])
 
@@ -174,8 +165,13 @@ const columns = computed<DataTableColumns<Merchant>>(() => [
 
     <merchant-config-modal 
         v-model:show="showConfig" 
-        :merchant-id="currentMerchantId"
+        :merchant-id="currentMerchant?.id || null"
         @refresh="fetchList"
+    />
+
+    <merchant-subscription-modal
+        v-model:show="showSubscription"
+        :merchant-id="currentMerchant?.id || null"
     />
   </div>
 </template>

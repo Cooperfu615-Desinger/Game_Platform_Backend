@@ -72,7 +72,65 @@ export const mockProviders: any[] = [
     }
 ]
 
+// Merchant Subscription Map: merchantId -> [{ providerId, status, revenueShare, excludedGames }]
+const merchantSubscriptionMap = new Map<number, any[]>()
+
 export const handlers = [
+    // ... existing handlers ...
+
+    // Get Merchant Subscriptions
+    http.get('/api/v2/merchant/:id/providers', async ({ params }) => {
+        await delay(500)
+        const merchantId = Number(params.id)
+
+        let subscriptions = merchantSubscriptionMap.get(merchantId)
+        if (!subscriptions) {
+            // Default: All providers disabled
+            subscriptions = mockProviders.map(p => ({
+                providerId: p.id,
+                status: 'disabled',
+                revenueShare: 0,
+                excludedGames: []
+            }))
+            merchantSubscriptionMap.set(merchantId, subscriptions)
+        }
+
+        // Merge with current provider list to handle new providers
+        const result = mockProviders.map(p => {
+            const sub = subscriptions?.find(s => s.providerId === p.id)
+            return {
+                providerId: p.id,
+                name: p.name,
+                code: p.code,
+                globalStatus: p.status, // Current global status
+                status: sub?.status || 'disabled',
+                revenueShare: sub?.revenueShare || 0,
+                excludedGames: sub?.excludedGames || []
+            }
+        })
+
+        return HttpResponse.json({
+            code: 0,
+            msg: 'success',
+            data: result
+        })
+    }),
+
+    // Update Merchant Subscriptions
+    http.post('/api/v2/merchant/:id/providers', async ({ params, request }) => {
+        await delay(800)
+        const merchantId = Number(params.id)
+        const body = await request.json() as any[]
+
+        // Update map
+        merchantSubscriptionMap.set(merchantId, body)
+
+        return HttpResponse.json({
+            code: 0,
+            msg: 'Subscriptions Updated'
+        })
+    }),
+
     // Game List
     http.get('/api/v2/games', async ({ request }) => {
         await delay(500)
