@@ -19,7 +19,15 @@ export interface BetLog {
     payout: number; // multiplier
     status: 'win' | 'loss' | 'refund';
     game_detail: GameDetail;
-    // New fields
+    // Aggregator fields
+    merchant_code?: string;
+    providerCode?: string;
+    providerName?: string;
+    originalBet?: number;
+    originalWin?: number;
+    exchangeRate?: number;
+
+    // Legacy/Compatibility
     providerId?: number;
     txId?: string;
     currencyBaseAmount?: number;

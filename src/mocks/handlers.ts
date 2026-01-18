@@ -354,22 +354,75 @@ export const handlers = [
         }
 
         const list = faker.helpers.multiple(() => {
-            const bet = faker.number.float({ min: 1, max: 100, fractionDigits: 2 })
-            const win = faker.number.float({ min: 0, max: 200, fractionDigits: 2 })
+            const scenario = faker.helpers.weightedArrayElement([
+                { weight: 60, value: 'PG' },   // 60% PG Soft (THB)
+                { weight: 30, value: 'EVO' },  // 30% Evolution (USD)
+                { weight: 10, value: 'PP' }    // 10% Pragmatic (VND)
+            ])
+
+            let providerCode, providerName, currency, rate, betRange
+
+            switch (scenario) {
+                case 'PG':
+                    providerCode = 'pg'
+                    providerName = 'PG Soft'
+                    currency = 'THB'
+                    rate = 0.03
+                    betRange = { min: 10, max: 500 } // 10-500 THB
+                    break
+                case 'EVO':
+                    providerCode = 'evo'
+                    providerName = 'Evolution'
+                    currency = 'USD'
+                    rate = 1.0
+                    betRange = { min: 1, max: 100 } // 1-100 USD
+                    break
+                case 'PP':
+                    providerCode = 'pp'
+                    providerName = 'Pragmatic Play'
+                    currency = 'VND'
+                    rate = 0.00004
+                    betRange = { min: 10000, max: 500000 } // 10k-500k VND
+                    break
+            }
+
+            const bet = faker.number.float({ min: betRange!.min, max: betRange!.max, fractionDigits: 2 })
+            const win = faker.number.float({ min: 0, max: bet * 5, fractionDigits: 2 })
+
             return {
-                id: faker.string.numeric(12),
+                id: 'PF' + faker.string.numeric(12),  // Platform ID
+                txId: faker.string.uuid(),            // Upstream ID
                 created_at: faker.date.recent().toISOString(),
                 player_account: faker.internet.username(),
-                game_name: faker.helpers.arrayElement(['Fortune Tiger', 'Super Ace', 'Golden Empire', 'Crazy 777']),
-                bet_amount: bet,
-                win_amount: win,
-                profit: Number((win - bet).toFixed(2)),
-                currency: 'USD',
+                merchant_code: faker.helpers.arrayElement(['bet365', '1xbet', 'k9win']),
+                game_name: faker.helpers.arrayElement(['Fortune Tiger', 'Super Ace', 'Crazy Time', 'Sweet Bonanza']),
+
+                // Provider Info
+                providerCode,
+                providerName,
+
+                // Amounts
+                currency,
+                exchangeRate: rate,
+
+                // Original (Native)
+                originalBet: bet,
+                originalWin: win,
+
+                // Base (USD)
+                bet_amount: Number((bet * rate!).toFixed(4)), // Normalized for reporting
+                win_amount: Number((win * rate!).toFixed(4)),
+
+                profit: Number(((win - bet) * rate!).toFixed(4)),
+
+                status: win > 0 ? 'win' : 'loss',
+                payout: win / (bet || 1),
+
                 game_detail: generateGameDetail(),
-                // New fields
-                providerId: faker.helpers.arrayElement([1, 2]),
-                txId: faker.string.uuid(),
-                currencyBaseAmount: bet // simplified for mock
+
+                // Compatibility fields for existing type definition
+                providerId: 1,
+                currencyBaseAmount: Number((bet * rate!).toFixed(4))
             }
         }, { count: 20 })
 

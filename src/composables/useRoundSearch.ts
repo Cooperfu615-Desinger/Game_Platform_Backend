@@ -10,7 +10,11 @@ export function useRoundSearch() {
     const searchModel = reactive({
         timeRange: null as [number, number] | null,
         playerId: '',
-        roundId: ''
+        roundId: '',
+        // Aggregator filters
+        merchantCode: '',
+        provider: '',
+        currency: ''
     })
 
     // Columns definition could be here or in component. 
