@@ -158,7 +158,7 @@ onMounted(async () => {
             <n-card title="📈 GGR Trend (Last 7 Days)">
                 <div class="h-[350px]">
                     <n-skeleton v-if="loading" text :repeat="5" />
-                    <v-chart v-else class="chart" :option="chartOption" autoresize />
+                    <v-chart v-else class="chart" :option="chartOption" theme="dark" :style="{ backgroundColor: 'transparent' }" autoresize />
                 </div>
             </n-card>
 

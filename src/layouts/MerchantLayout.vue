@@ -3,7 +3,8 @@ import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { 
   NLayout, NLayoutSider, NLayoutHeader, NLayoutContent, NLayoutFooter,
-  NMenu, NButton, NAvatar, NDropdown, NTag, NConfigProvider, NDrawer, NDrawerContent
+  NMenu, NButton, NAvatar, NDropdown, NTag, NConfigProvider, NDrawer, NDrawerContent,
+  darkTheme
 } from 'naive-ui'
 import type { MenuOption, GlobalThemeOverrides } from 'naive-ui'
 import { NIcon } from 'naive-ui'
@@ -56,28 +57,19 @@ const themeOverrides: GlobalThemeOverrides = {
     primaryColorHover: '#1d4ed8'
   },
   Layout: {
-    siderColor: '#f8fafc',
-    siderBorderColor: '#e2e8f0',
-    headerColor: '#ffffff',
-    headerBorderColor: '#e2e8f0'
+    siderColor: '#18181c', // Dark Sidebar (Master style)
+    headerColor: '#18181c', // Dark Header
+    headerBorderColor: '#333'
   },
   Menu: {
-    itemTextColor: '#334155',
-    itemIconColor: '#64748b',
-    itemTextColorHover: '#2563eb',
-    itemIconColorHover: '#2563eb',
-    itemTextColorActive: '#2563eb',
-    itemIconColorActive: '#2563eb',
-    itemColorActive: '#eff6ff',
-    itemColorActiveHover: '#dbeafe',
-    groupTextColor: '#94a3b8'
+     // Default dark menu styles usually work well, but can customize if needed
   }
 }
 </script>
 
 <template>
-  <n-config-provider :theme-overrides="themeOverrides">
-    <n-layout has-sider class="h-screen">
+  <n-config-provider :theme="darkTheme" :theme-overrides="themeOverrides">
+    <n-layout has-sider class="h-screen bg-[#101014]">
       <!-- Light Theme Sider for Merchant Portal -->
       <n-layout-sider
         v-if="isDesktop"
@@ -90,11 +82,11 @@ const themeOverrides: GlobalThemeOverrides = {
         @collapse="collapsed = true"
         @expand="collapsed = false"
       >
-          <div class="h-16 flex items-center justify-center overflow-hidden whitespace-nowrap border-b border-slate-200 bg-white">
-             <span v-if="!collapsed" class="text-xl font-bold text-slate-800 tracking-widest pl-4">
+          <div class="h-16 flex items-center justify-center overflow-hidden whitespace-nowrap border-b border-[#333]">
+             <span v-if="!collapsed" class="text-xl font-bold text-white tracking-widest pl-4">
                💼 Merchant
              </span>
-             <span v-else class="text-xl font-bold text-slate-800">💼</span>
+             <span v-else class="text-xl font-bold text-white">💼</span>
           </div>
         <n-menu
           :collapsed="collapsed"
@@ -102,29 +94,31 @@ const themeOverrides: GlobalThemeOverrides = {
           :collapsed-icon-size="22"
           :options="menuOptions"
           :value="activeKey"
+          :inverted="true"
         />
       </n-layout-sider>
 
       <!-- Mobile Drawer -->
-      <n-drawer v-model:show="showMobileMenu" :width="240" placement="left">
+      <n-drawer v-model:show="showMobileMenu" :width="240" placement="left" style="background-color: #18181c;">
           <n-drawer-content body-content-style="padding: 0;">
-              <div class="h-16 flex items-center justify-center border-b border-slate-200 bg-white">
-                  <span class="text-xl font-bold text-slate-800 tracking-widest">💼 Merchant</span>
+              <div class="h-16 flex items-center justify-center border-b border-[#333] bg-[#18181c]">
+                  <span class="text-xl font-bold text-white tracking-widest">💼 Merchant</span>
               </div>
               <n-menu
                   :options="menuOptions"
                   :value="activeKey"
+                  :inverted="true"
                   @update:value="showMobileMenu = false"
               />
           </n-drawer-content>
       </n-drawer>
 
       <n-layout>
-        <n-layout-header bordered class="h-16 flex items-center justify-between px-6 bg-white">
+        <n-layout-header bordered class="h-16 flex items-center justify-between px-6 bg-[#18181c]">
            <div class="flex items-center">
               <n-button quaternary circle @click="isMobile ? showMobileMenu = true : collapsed = !collapsed">
                   <template #icon>
-                      <n-icon size="24" color="#64748b">
+                      <n-icon size="24" color="#ccc">
                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <line x1="3" y1="12" x2="21" y2="12"></line>
                             <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -138,24 +132,24 @@ const themeOverrides: GlobalThemeOverrides = {
            
            <div class="flex items-center gap-4">
                <div class="text-right hidden md:block">
-                   <div class="text-sm font-bold text-slate-800">商戶管理員</div>
-                   <div class="text-xs text-slate-500">Merchant Operator</div>
+                   <div class="text-sm font-bold text-white">商戶管理員</div>
+                   <div class="text-xs text-gray-400">Merchant Operator</div>
                </div>
                <LanguageSwitcher />
                <n-dropdown :options="userOptions" @select="handleUserSelect">
-                  <n-avatar round size="medium" src="https://ui-avatars.com/api/?name=Merchant&background=2563eb&color=fff" class="cursor-pointer" />
+                  <n-avatar round size="medium" src="https://ui-avatars.com/api/?name=Merchant&background=2080f0&color=fff" class="cursor-pointer" />
                </n-dropdown>
            </div>
         </n-layout-header>
         
-        <n-layout-content content-style="padding: 24px; min-height: 85vh; background: #f8fafc;">
+        <n-layout-content content-style="padding: 24px; min-height: 85vh; background: #101014;">
            <router-view v-slot="{ Component }">
               <transition name="fade" mode="out-in">
                 <component :is="Component" />
               </transition>
            </router-view>
         </n-layout-content>
-        <n-layout-footer bordered class="p-4 text-center bg-white">
+        <n-layout-footer bordered class="p-4 text-center">
             <n-tag :bordered="false" size="small" class="cursor-pointer opacity-50 hover:opacity-100 transition-opacity" @click="handleVersionClick">
                Version: v0.1.0 (Merchant Portal)
             </n-tag>
