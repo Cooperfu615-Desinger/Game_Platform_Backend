@@ -1,5 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
+// Configure NProgress
+NProgress.configure({ showSpinner: false })
 
 /**
  * Route Configuration
@@ -163,12 +168,11 @@ const routes: RouteRecordRaw[] = [
 
     // ================== FALLBACK ==================
     {
-        path: '/',
-        redirect: '/admin/dashboard'
-    },
-    {
+        // Catch All -> 404
         path: '/:pathMatch(.*)*',
-        redirect: '/admin/dashboard'
+        name: 'NotFound',
+        component: () => import('../views/Error/404.vue'),
+        meta: { title: '404' }
     }
 ]
 
@@ -188,6 +192,9 @@ const router = createRouter({
  * 4. MASTER users can access all routes (god mode)
  */
 router.beforeEach(async (to, _from, next) => {
+    // Start progress bar
+    NProgress.start()
+
     // Dynamic import to avoid circular dependency
     const { useAuthStore } = await import('../stores/auth')
     const authStore = useAuthStore()
@@ -224,6 +231,15 @@ router.beforeEach(async (to, _from, next) => {
     // No additional check needed - MASTER passes through
 
     next()
+})
+
+router.afterEach((to) => {
+    // Finish progress bar
+    NProgress.done()
+
+    // Update document title
+    const title = to.meta.title ? `${to.meta.title} - Antigravity` : 'Antigravity'
+    document.title = title
 })
 
 export default router

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import { NCard, NGrid, NGridItem, NSpin, NTag } from 'naive-ui'
+import { NCard, NGrid, NGridItem, NTag, NSkeleton } from 'naive-ui'
 import { useI18n } from 'vue-i18n'
 import VChart from 'vue-echarts'
 import { use } from 'echarts/core'
@@ -86,14 +86,18 @@ onMounted(async () => {
             </n-tag>
         </div>
 
-        <n-spin :show="loading">
+
             <!-- KPI Cards -->
-            <n-grid :x-gap="16" :y-gap="16" :cols="4" class="mb-6">
+            <n-grid :x-gap="16" :y-gap="16" cols="1 s:2 m:4" responsive="screen" class="mb-6">
+                <!-- Balance (Transfer mode only) -->
                 <!-- Balance (Transfer mode only) -->
                 <n-grid-item v-if="stats.wallet_mode === 'transfer'">
                     <n-card class="border-l-4 border-blue-500">
                         <div class="text-sm text-gray-500 mb-1">My Balance</div>
-                        <div class="text-2xl font-bold">
+                        <div v-if="loading" class="h-10 flex items-center">
+                            <n-skeleton text width="60%" />
+                        </div>
+                        <div v-else class="text-2xl font-bold">
                             <MoneyText :value="stats.balance" :currency="stats.currency" />
                         </div>
                     </n-card>
@@ -103,12 +107,17 @@ onMounted(async () => {
                 <n-grid-item>
                     <n-card :class="stats.today_ggr >= 0 ? 'border-l-4 border-green-500' : 'border-l-4 border-red-500'">
                         <div class="text-sm text-gray-500 mb-1">Today's GGR</div>
-                        <div class="text-2xl font-bold">
-                            <MoneyText :value="stats.today_ggr" :currency="stats.currency" />
+                        <div v-if="loading" class="h-10 flex items-center">
+                            <n-skeleton text width="60%" />
                         </div>
-                        <div class="text-xs text-gray-400 mt-1">
-                            Yesterday: <MoneyText :value="stats.yesterday_ggr" :currency="stats.currency" />
-                        </div>
+                        <template v-else>
+                            <div class="text-2xl font-bold">
+                                <MoneyText :value="stats.today_ggr" :currency="stats.currency" />
+                            </div>
+                            <div class="text-xs text-gray-400 mt-1">
+                                Yesterday: <MoneyText :value="stats.yesterday_ggr" :currency="stats.currency" />
+                            </div>
+                        </template>
                     </n-card>
                 </n-grid-item>
 
@@ -116,10 +125,15 @@ onMounted(async () => {
                 <n-grid-item>
                     <n-card class="border-l-4 border-purple-500">
                         <div class="text-sm text-gray-500 mb-1">Active Players</div>
-                        <div class="text-2xl font-bold">
-                            {{ stats.active_players?.toLocaleString() }}
+                        <div v-if="loading" class="h-10 flex items-center">
+                            <n-skeleton text width="60%" />
                         </div>
-                        <div class="text-xs text-gray-400 mt-1">Last 24h</div>
+                        <template v-else>
+                            <div class="text-2xl font-bold">
+                                {{ stats.active_players?.toLocaleString() }}
+                            </div>
+                            <div class="text-xs text-gray-400 mt-1">Last 24h</div>
+                        </template>
                     </n-card>
                 </n-grid-item>
 
@@ -127,10 +141,15 @@ onMounted(async () => {
                 <n-grid-item>
                     <n-card class="border-l-4 border-amber-500">
                         <div class="text-sm text-gray-500 mb-1">Enabled Games</div>
-                        <div class="text-2xl font-bold">
-                            {{ stats.total_games }}
+                        <div v-if="loading" class="h-10 flex items-center">
+                            <n-skeleton text width="60%" />
                         </div>
-                        <div class="text-xs text-gray-400 mt-1">Across all providers</div>
+                        <template v-else>
+                            <div class="text-2xl font-bold">
+                                {{ stats.total_games }}
+                            </div>
+                            <div class="text-xs text-gray-400 mt-1">Across all providers</div>
+                        </template>
                     </n-card>
                 </n-grid-item>
             </n-grid>
@@ -138,10 +157,11 @@ onMounted(async () => {
             <!-- GGR Trend Chart -->
             <n-card title="📈 GGR Trend (Last 7 Days)">
                 <div class="h-[350px]">
-                    <v-chart class="chart" :option="chartOption" autoresize />
+                    <n-skeleton v-if="loading" text :repeat="5" />
+                    <v-chart v-else class="chart" :option="chartOption" autoresize />
                 </div>
             </n-card>
-        </n-spin>
+
     </div>
 </template>
 

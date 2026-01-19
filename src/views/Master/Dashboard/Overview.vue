@@ -128,32 +128,44 @@ onMounted(() => {
         <!-- GGR -->
         <n-grid-item>
              <n-card size="small" :class="stats.total_ggr >= 0 ? 'border-green-500/30 bg-green-500/5' : 'border-red-500/30 bg-red-500/5'">
-                <div class="text-sm text-gray-400 mb-1">{{ t('dashboard.totalGGR') }}</div>
-                <div class="text-2xl font-bold">
+                 <div class="text-sm text-gray-400 mb-1">{{ t('dashboard.totalGGR') }}</div>
+                <div v-if="loading" class="h-8 flex items-center">
+                    <n-skeleton text width="50%" />
+                </div>
+                <div v-else class="text-2xl font-bold">
                     <MoneyText :value="stats.total_ggr" currency="USD" />
                 </div>
             </n-card>
         </n-grid-item>
         <!-- Active Players -->
         <n-grid-item>
-             <n-card size="small">
-                <n-statistic :label="t('dashboard.activePlayers')" :value="stats.active_players">
+            <n-card size="small">
+                <div v-if="loading" class="h-10 flex items-center">
+                    <n-skeleton text width="60%" />
+                </div>
+                <n-statistic v-else :label="t('dashboard.activePlayers')" :value="stats.active_players">
                     <template #suffix>👤</template>
                 </n-statistic>
             </n-card>
         </n-grid-item>
         <!-- Total Requests -->
         <n-grid-item>
-             <n-card size="small">
-                <n-statistic :label="t('dashboard.requests')" :value="stats.total_requests">
+            <n-card size="small">
+                <div v-if="loading" class="h-10 flex items-center">
+                    <n-skeleton text width="60%" />
+                </div>
+                <n-statistic v-else :label="t('dashboard.requests')" :value="stats.total_requests">
                     <template #suffix>Reqs</template>
                 </n-statistic>
             </n-card>
         </n-grid-item>
         <!-- Avg Margin -->
         <n-grid-item>
-             <n-card size="small">
-                <n-statistic :label="t('dashboard.avgMargin')" :value="stats.avg_margin">
+            <n-card size="small">
+                 <div v-if="loading" class="h-10 flex items-center">
+                    <n-skeleton text width="60%" />
+                </div>
+                <n-statistic v-else :label="t('dashboard.avgMargin')" :value="stats.avg_margin">
                     <template #suffix>%</template>
                 </n-statistic>
             </n-card>
@@ -187,7 +199,15 @@ onMounted(() => {
         <!-- Top Merchants -->
         <n-grid-item>
             <n-card :title="t('dashboard.topMerchants')" size="small">
-                <n-list hoverable>
+                <n-list v-if="loading">
+                    <n-list-item v-for="i in 5" :key="i">
+                         <div class="flex justify-between">
+                            <n-skeleton text width="40%" />
+                            <n-skeleton text width="20%" />
+                         </div>
+                    </n-list-item>
+                </n-list>
+                <n-list hoverable v-else>
                     <n-list-item v-for="(m, i) in stats.top_merchants" :key="i">
                         <div class="flex justify-between">
                             <span>{{ i + 1 }}. {{ m.name }}</span>
@@ -201,7 +221,15 @@ onMounted(() => {
         <!-- Top Games -->
          <n-grid-item>
             <n-card :title="t('dashboard.topGames')" size="small">
-                 <n-list hoverable>
+                 <n-list v-if="loading">
+                    <n-list-item v-for="i in 5" :key="i">
+                         <div class="flex justify-between">
+                            <n-skeleton text width="40%" />
+                            <n-skeleton text width="20%" />
+                         </div>
+                    </n-list-item>
+                </n-list>
+                 <n-list hoverable v-else>
                     <n-list-item v-for="(g, i) in stats.top_games" :key="i">
                         <div class="flex justify-between">
                             <span>{{ i + 1 }}. {{ g.name }}</span>

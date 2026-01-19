@@ -3,11 +3,12 @@ import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { 
   NLayout, NLayoutSider, NLayoutHeader, NLayoutContent, NLayoutFooter,
-  NMenu, NButton, NAvatar, NDropdown, NTag
+  NMenu, NButton, NAvatar, NDropdown, NTag, NDrawer, NDrawerContent
 } from 'naive-ui'
 import type { MenuOption } from 'naive-ui'
 import { NIcon } from 'naive-ui'
 import { useAuthStore } from '../stores/auth'
+import { useBreakpoints, breakpointsTailwind } from '@vueuse/core'
 import LanguageSwitcher from '../components/LanguageSwitcher.vue'
 import { useI18n } from 'vue-i18n'
 import { masterMenuOptions } from '../config/menu-master'
@@ -19,6 +20,16 @@ const { t } = useI18n()
 
 // State
 const collapsed = ref(false)
+const showMobileMenu = ref(false)
+
+// Mobile Detection
+const breakpoints = useBreakpoints(breakpointsTailwind)
+const isMobile = breakpoints.smaller('md')
+const isDesktop = breakpoints.greaterOrEqual('md')
+
+// Watch mobile state to auto-collapse/expand
+// usage: v-if="isDesktop" on sider
+
 
 // Menu Options from config
 const menuOptions = computed<MenuOption[]>(() => masterMenuOptions(t))
@@ -47,6 +58,7 @@ const handleVersionClick = () => {
   <n-layout has-sider class="h-screen">
     <!-- Dark Theme Sider for Master Admin -->
     <n-layout-sider
+      v-if="isDesktop"
       bordered
       collapse-mode="width"
       :collapsed-width="64"
@@ -73,10 +85,25 @@ const handleVersionClick = () => {
       />
     </n-layout-sider>
 
+    <!-- Mobile Drawer -->
+    <n-drawer v-model:show="showMobileMenu" :width="240" placement="left" style="background-color: #001428;">
+        <n-drawer-content body-content-style="padding: 0;">
+            <div class="h-16 flex items-center justify-center border-b border-gray-700">
+                <span class="text-xl font-bold text-white tracking-widest">👑 Master Admin</span>
+            </div>
+            <n-menu
+                :options="menuOptions"
+                :value="activeKey"
+                :inverted="true"
+                @update:value="showMobileMenu = false"
+            />
+        </n-drawer-content>
+    </n-drawer>
+
     <n-layout>
       <n-layout-header bordered class="h-16 flex items-center justify-between px-6 bg-[#18181c]">
          <div class="flex items-center">
-            <n-button quaternary circle @click="collapsed = !collapsed">
+            <n-button quaternary circle @click="isMobile ? showMobileMenu = true : collapsed = !collapsed">
                 <template #icon>
                     <n-icon size="24">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -103,7 +130,11 @@ const handleVersionClick = () => {
       </n-layout-header>
       
       <n-layout-content content-style="padding: 24px; min-height: 85vh;">
-         <router-view></router-view>
+         <router-view v-slot="{ Component }">
+            <transition name="fade" mode="out-in">
+              <component :is="Component" />
+            </transition>
+         </router-view>
       </n-layout-content>
       <n-layout-footer bordered class="p-4 text-center">
           <n-tag :bordered="false" size="small" class="cursor-pointer opacity-50 hover:opacity-100 transition-opacity" @click="handleVersionClick">
