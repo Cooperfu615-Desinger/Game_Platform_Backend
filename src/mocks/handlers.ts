@@ -319,6 +319,8 @@ export const handlers = [
             msg: 'Provider Updated Successfully'
         })
     }),
+    ...agentHandlers,
+
     http.get('/api/v2/agent/list', async () => {
         await delay(500) // Simulate network latency
 
@@ -694,6 +696,5 @@ export const handlers = [
     }),
 
     ...financeHandlers,
-    ...systemHandlers,
-    ...agentHandlers
+    ...systemHandlers
 ]

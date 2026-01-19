@@ -100,5 +100,137 @@ export const agentHandlers = [
             msg: 'success',
             data: { list, total: 5 }
         })
+    }),
+
+    // My Games List
+    http.get('/api/v2/agent/games', async () => {
+        await delay(600)
+        const providers = ['PG Soft', 'Evolution', 'Pragmatic Play', 'JILI']
+        // Create 15 mock games
+        const list = Array.from({ length: 15 }, (_, i) => {
+            const provider = faker.helpers.arrayElement(providers)
+            // Hardcode specific scenario for testing
+            if (i === 0) {
+                return {
+                    game_id: 'pg-mahjong-ways',
+                    game_code: 'mahjong-ways',
+                    name_en: 'Mahjong Ways',
+                    provider: 'PG Soft',
+                    type: 'Slot',
+                    rtp: 96.92,
+                    merchant_enabled: true,
+                    master_enabled: true,
+                    thumbnail: 'https://placehold.co/60x60?text=MW'
+                }
+            }
+            if (i === 1) {
+                return {
+                    game_id: 'maintenance-slot',
+                    game_code: 'maintenance-slot',
+                    name_en: 'Maintenance Slot',
+                    provider: 'JILI',
+                    type: 'Slot',
+                    rtp: 95.00,
+                    merchant_enabled: false,
+                    master_enabled: false, // Disabled by platform
+                    thumbnail: 'https://placehold.co/60x60?text=X'
+                }
+            }
+            return {
+                game_id: faker.string.uuid(),
+                game_code: faker.string.alpha({ length: 6, casing: 'lower' }),
+                name_en: faker.commerce.productName(),
+                provider,
+                type: faker.helpers.arrayElement(['Slot', 'Live', 'Fishing']),
+                rtp: faker.number.float({ min: 90, max: 98, fractionDigits: 2 }),
+                merchant_enabled: faker.datatype.boolean(),
+                master_enabled: true,
+                thumbnail: `https://placehold.co/60x60?text=${provider.substring(0, 2)}`
+            }
+        })
+
+        return HttpResponse.json({
+            code: 0,
+            msg: 'success',
+            data: { list, total: 15 }
+        })
+    }),
+
+    // Toggle Game Status
+    http.post('/api/v2/agent/games/toggle', async () => {
+        await delay(400)
+        // In a real mock, we might update state, but for now just success
+        return HttpResponse.json({
+            code: 0,
+            msg: 'Update success'
+        })
+    }),
+
+    // Daily Report
+    http.post('/api/v2/agent/report/daily', async () => {
+        await delay(800)
+        // Generate last 7 days
+        const list = Array.from({ length: 7 }, (_, i) => {
+            const date = new Date()
+            date.setDate(date.getDate() - i)
+            const bets = faker.number.float({ min: 1000, max: 50000, fractionDigits: 2 })
+            // Simulate mixed GGR (some wins for players implies negative GGR, but usually GGR is positive)
+            // Let's make it occasionally negative to test red color
+            const winRate = faker.helpers.arrayElement([0.9, 0.95, 0.98, 1.05, 0.8])
+            const wins = bets * winRate
+
+            return {
+                date: date.toISOString().split('T')[0],
+                currency: 'USD',
+                total_bet: bets,
+                total_win: wins,
+                ggr: bets - wins,
+                round_count: faker.number.int({ min: 50, max: 1000 }),
+                player_count: faker.number.int({ min: 10, max: 200 })
+            }
+        })
+
+        return HttpResponse.json({
+            code: 0,
+            msg: 'success',
+            data: { list, total: 7 }
+        })
+    }),
+
+    // Bet Query (Sanitized - No Provider)
+    http.post('/api/v2/agent/report/bet-query', async ({ request }) => {
+        await delay(700)
+        const body = await request.json() as any
+        const count = body.pageSize || 15
+
+        const list = Array.from({ length: count }, () => {
+            const bet = faker.number.float({ min: 1, max: 500, fractionDigits: 2 })
+            const isWin = faker.datatype.boolean()
+            const win = isWin ? bet * faker.number.float({ min: 1.1, max: 50 }) : 0
+
+            return {
+                id: 'R-' + faker.string.alphanumeric(12).toUpperCase(),
+                time: faker.date.recent().toISOString(),
+                player_id: 'user_' + faker.string.numeric(4),
+                game_name: faker.helpers.arrayElement(['Mahjong Ways', 'Super Ace', 'Crazy Time', 'Baccarat']),
+                bet: bet,
+                win: win,
+                currency: 'USD',
+                status: isWin ? 'win' : 'loss',
+                // No detailed breakdown in list to simulate privacy
+                detail: {}
+            }
+        })
+
+        return HttpResponse.json({
+            code: 0,
+            msg: 'success',
+            data: {
+                list,
+                total: 100,
+                page: body.page || 1,
+                pageSize: count
+            }
+        })
     })
 ]
