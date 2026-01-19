@@ -11,6 +11,7 @@ export interface BetLog {
     id: string; // Round ID
     created_at: string; // Time
     player_account: string;
+    player_id?: string; // Player ID for filtering
     game_name: string;
     bet_amount: number;
     win_amount: number;

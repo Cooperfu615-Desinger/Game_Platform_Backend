@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import { ref, h, onMounted, computed } from 'vue'
 import {
-  NCard, NInput, NDatePicker, NSelect, NButton,
-  NDataTable, NTag, NModal, NCode, NSpace, NTooltip
+  NCard, NInput, NSelect, NButton,
+  NDataTable, NTag, NTooltip
 } from 'naive-ui'
 import { useI18n } from 'vue-i18n'
 import type { DataTableColumns } from 'naive-ui'
 import { useRoundSearch } from '../../../composables/useRoundSearch'
 import type { BetLog } from '../../../types/report'
+import DateRangePicker from '../../../components/Common/DateRangePicker.vue'
+import JsonViewer from '../../../components/Common/JsonViewer.vue'
+import MoneyText from '../../../components/Common/MoneyText.vue'
+import PageFilterBar from '../../../components/Common/PageFilterBar.vue'
 
 const { t } = useI18n()
-// Extending composable search model for aggregator fields
 const { loading, searchModel, logs, handleSearch } = useRoundSearch()
 
 // Initialize
@@ -19,6 +22,13 @@ onMounted(() => {
 })
 
 // Options
+const merchantOptions = [
+    { label: t('common.all'), value: '' },
+    { label: 'AGT001 - Golden Dragon', value: 'AGT001' },
+    { label: 'AGT002 - Silver Tiger', value: 'AGT002' },
+    { label: 'AGT003 - Diamond Star', value: 'AGT003' }
+]
+
 const providerOptions = [
     { label: t('common.all'), value: '' },
     { label: 'PG Soft', value: 'pg' },
@@ -26,94 +36,119 @@ const providerOptions = [
     { label: 'Pragmatic Play', value: 'pp' }
 ]
 
-const currencyOptions = [
-    { label: t('common.all'), value: '' },
-    { label: 'USD', value: 'USD' },
-    { label: 'THB', value: 'THB' },
-    { label: 'VND', value: 'VND' },
-    { label: 'CNY', value: 'CNY' }
-]
+// Drawer Control
+const showJsonViewer = ref(false)
+const selectedBetLog = ref<BetLog | null>(null)
 
-// Modal Control
-const showDetail = ref(false)
-const detailedLog = ref<BetLog | null>(null)
-const jsonContent = ref('')
+const jsonData = computed(() => {
+    if (!selectedBetLog.value) return {}
+    return {
+        platformId: selectedBetLog.value.id,
+        upstreamId: selectedBetLog.value.txId,
+        provider: selectedBetLog.value.providerName,
+        meta: {
+            merchant: selectedBetLog.value.merchant_code,
+            currency: selectedBetLog.value.currency,
+            exchangeRate: selectedBetLog.value.exchangeRate
+        },
+        game_detail: selectedBetLog.value.game_detail,
+        rawData: {
+            created_at: selectedBetLog.value.created_at,
+            bet_amount: selectedBetLog.value.bet_amount,
+            win_amount: selectedBetLog.value.win_amount,
+            originalBet: selectedBetLog.value.originalBet,
+            originalWin: selectedBetLog.value.originalWin,
+            status: selectedBetLog.value.status
+        }
+    }
+})
 
 const openDetail = (row: BetLog) => {
-    detailedLog.value = row
-    // Combine detail with aggregator metadata for full view
-    const fullDetail = {
-        platformId: row.id,
-        upstreamId: row.txId,
-        provider: row.providerName,
-        meta: {
-            merchant: row.merchant_code,
-            currency: row.currency,
-            rate: row.exchangeRate
-        },
-        game_detail: row.game_detail
-    }
-    jsonContent.value = JSON.stringify(fullDetail, null, 2)
-    showDetail.value = true
+    selectedBetLog.value = row
+    showJsonViewer.value = true
 }
 
-// Columns
+const handleReset = () => {
+    searchModel.timeRange = null
+    searchModel.merchantCode = ''
+    searchModel.provider = ''
+    searchModel.currency = ''
+    searchModel.playerId = ''
+    searchModel.roundId = ''
+}
+
+// Columns with MoneyText
 const columns = computed<DataTableColumns<BetLog>>(() => [
     { 
         title: t('betLog.time'), 
         key: 'created_at', 
         width: 160,
-        render: (row) => h('div', { class: 'text-xs' }, new Date(row.created_at).toLocaleString())
+        render: (row) => h('div', { class: 'text-xs text-gray-400' }, new Date(row.created_at).toLocaleString())
     },
     { 
         title: t('betLog.merchant'), 
         key: 'merchant_code', 
         width: 100,
-        render: (row) => h(NTag, { size: 'small', bordered: false }, { default: () => row.merchant_code })
+        render: (row) => h(NTag, { size: 'small', bordered: false, type: 'info' }, { default: () => row.merchant_code })
     },
     { 
         title: t('betLog.provider'), 
         key: 'providerName', 
         width: 120,
         render: (row) => {
-            // Extract badge color from name prefix logic (mock) or just hash
-            const type = row.providerCode === 'pg' ? 'error' : row.providerCode === 'evo' ? 'warning' : 'info'
-            return h(NTag, { type, size: 'small' }, { default: () => row.providerName })
+            const typeMap: Record<string, any> = {
+                'pg': 'error', 'evo': 'warning', 'pp': 'success'
+            }
+            const providerCode = row.providerCode || ''
+            return h(NTag, { type: typeMap[providerCode] || 'default', size: 'small' }, { default: () => row.providerName })
         }
     },
     { 
         title: t('betLog.game'), 
         key: 'game_name', 
-        width: 140,
+        width: 150,
         ellipsis: true
+    },
+    { 
+        title: 'Player', 
+        key: 'player_id', 
+        width: 120,
+        render: (row) => h('span', { class: 'font-mono text-xs' }, row.player_id || row.player_account)
     },
     { 
         title: t('betLog.originalAmount'), 
         key: 'originalBet', 
-        width: 150,
+        width: 160,
         align: 'right',
-        render: (row) => h('div', { class: 'text-right' }, [
-            h('div', { class: 'text-xs text-gray-400' }, `${row.originalBet?.toFixed(2)} ${row.currency}`),
-            h('div', { class: row.originalWin! > 0 ? 'text-green-500 font-bold' : '' }, 
-                `${row.originalWin?.toFixed(2)} ${row.currency}`
-            )
+        render: (row) => h('div', { class: 'text-right space-y-1' }, [
+            h('div', { class: 'text-xs text-gray-500' }, [
+                'Bet: ',
+                h(MoneyText, { value: row.originalBet || 0, currency: row.currency })
+            ]),
+            h('div', { class: 'text-sm' }, [
+                'Win: ',
+                h(MoneyText, { value: row.originalWin || 0, currency: row.currency })
+            ])
         ])
     },
     { 
-        title: t('betLog.baseAmount'), 
+        title: t('betLog.baseAmount') + ' (USD)', 
         key: 'bet_amount', 
-        width: 120,
+        width: 140,
         align: 'right',
         render: (row) => {
-             // Tooltip for exchange rate
-            const trigger = h('div', { class: 'cursor-help' }, [
-                h('div', { class: 'text-xs text-gray-500' }, `$${row.bet_amount.toFixed(2)}`),
-                h('div', { class: row.win_amount > 0 ? 'text-green-400 font-bold' : '' }, `$${row.win_amount.toFixed(2)}`)
+            const trigger = h('div', { class: 'cursor-help text-right' }, [
+                h('div', { class: 'text-xs text-gray-500' }, [
+                    h(MoneyText, { value: row.bet_amount, currency: 'USD' })
+                ]),
+                h('div', {}, [
+                    h(MoneyText, { value: row.win_amount, currency: 'USD' })
+                ])
             ])
             
             return h(NTooltip, { trigger: 'hover' }, {
                 trigger: () => trigger,
-                default: () => `${t('betLog.rate')}: ${row.exchangeRate} (USD)`
+                default: () => `Rate: ${row.exchangeRate} (${row.currency} → USD)`
             })
         }
     },
@@ -122,10 +157,10 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
         key: 'status',
         width: 90,
         render: (row) => {
-            const map: Record<string, 'success' | 'error' | 'warning'> = {
+            const statusMap: Record<string, 'success' | 'error' | 'warning'> = {
                 win: 'success', loss: 'error', refund: 'warning'
             }
-            return h(NTag, { type: map[row.status] || 'default', bordered: false, size: 'small' }, 
+            return h(NTag, { type: statusMap[row.status] || 'default', bordered: false, size: 'small' }, 
                 { default: () => row.status.toUpperCase() }
             )
         }
@@ -137,7 +172,7 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
         fixed: 'right',
         render: (row) => h(NButton, { 
             size: 'tiny', secondary: true, onClick: () => openDetail(row) 
-        }, { default: () => t('common.viewDetail') })
+        }, { default: () => '🔍' })
     }
 ])
 </script>
@@ -151,29 +186,40 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
         <n-button type="primary" dashed @click="handleSearch">{{ t('common.refresh') }}</n-button>
     </div>
 
-    <!-- Aggregator Filter Bar -->
-    <n-card size="small" class="mb-4">
-        <n-space vertical>
-            <div class="flex flex-wrap gap-3">
-                <n-date-picker 
-                    v-model:value="searchModel.timeRange" 
-                    type="datetimerange" 
-                    clearable 
-                    :placeholder="t('betLog.timeRange')"
-                    class="w-80"
-                />
-                <n-input v-model:value="searchModel.merchantCode" :placeholder="t('betLog.merchant')" class="w-32" />
-                <n-select v-model:value="searchModel.provider" :options="providerOptions" :placeholder="t('betLog.provider')" class="w-40" clearable />
-                <n-select v-model:value="searchModel.currency" :options="currencyOptions" placeholder="Currency" class="w-28" clearable />
-                <n-input v-model:value="searchModel.playerId" :placeholder="t('betLog.playerAccount')" class="w-40" />
-                <n-input v-model:value="searchModel.roundId" placeholder="ID / TXID" class="w-40" />
-                
-                <n-button type="primary" @click="handleSearch" :loading="loading">
-                    {{ t('betLog.searchLogs') }}
-                </n-button>
-            </div>
-        </n-space>
-    </n-card>
+    <!-- Filter Bar with DateRangePicker -->
+    <PageFilterBar
+        v-model:searchValue="searchModel.roundId"
+        searchPlaceholder="Round ID / TX ID..."
+        @reset="handleReset"
+    >
+        <template #filters>
+            <DateRangePicker v-model:value="searchModel.timeRange" />
+            <n-select 
+                v-model:value="searchModel.merchantCode" 
+                :options="merchantOptions" 
+                placeholder="Merchant"
+                class="w-44"
+                clearable
+            />
+            <n-select 
+                v-model:value="searchModel.provider" 
+                :options="providerOptions" 
+                placeholder="Provider"
+                class="w-36"
+                clearable
+            />
+            <n-input 
+                v-model:value="searchModel.playerId" 
+                :placeholder="t('betLog.playerAccount')" 
+                class="w-32"
+            />
+        </template>
+        <template #actions>
+            <n-button type="primary" @click="handleSearch" :loading="loading">
+                {{ t('betLog.searchLogs') }}
+            </n-button>
+        </template>
+    </PageFilterBar>
 
     <!-- Data Table -->
     <n-data-table
@@ -182,38 +228,41 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
         :loading="loading"
         flex-height
         :pagination="{ pageSize: 20 }"
-        class="flex-1 bg-[#18181c] rounded-lg shadow-sm"
+        class="flex-1 bg-slate-900/50 rounded-lg"
         :single-line="false"
+        :row-props="(row: BetLog) => ({
+            style: 'cursor: pointer',
+            onClick: () => openDetail(row)
+        })"
     />
 
-    <!-- Detail Modal -->
-    <n-modal v-model:show="showDetail" preset="card" :title="t('betLog.roundDetail')" style="width: 800px">
-        <div class="grid grid-cols-3 gap-4 h-[500px]">
-            <!-- Info -->
-            <div class="col-span-1 bg-gray-800/50 p-4 rounded space-y-4 border border-gray-700">
-                <div class="space-y-1">
-                    <div class="text-xs text-gray-400">{{ t('betLog.roundId') }}</div>
-                    <div class="font-mono text-sm break-all">{{ detailedLog?.id }}</div>
+    <!-- JSON Viewer Drawer -->
+    <JsonViewer
+        v-model:show="showJsonViewer"
+        :title="`Round Detail: ${selectedBetLog?.id || ''}`"
+        :data="jsonData"
+        :width="650"
+    >
+        <template #summary>
+            <n-card v-if="selectedBetLog" size="small" class="bg-slate-800/50">
+                <div class="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                        <div class="text-xs text-gray-400">Merchant</div>
+                        <div class="font-bold">{{ selectedBetLog.merchant_code }}</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-400">Provider</div>
+                        <div class="font-bold">{{ selectedBetLog.providerName }}</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-400">Status</div>
+                        <n-tag :type="selectedBetLog.status === 'win' ? 'success' : 'error'" size="small">
+                            {{ selectedBetLog.status.toUpperCase() }}
+                        </n-tag>
+                    </div>
                 </div>
-                <div class="space-y-1">
-                    <div class="text-xs text-gray-400">{{ t('betLog.txId') }}</div>
-                    <div class="font-mono text-sm break-all text-amber-500">{{ detailedLog?.txId }}</div>
-                </div>
-                 <div class="space-y-1 pt-2 border-t border-gray-700">
-                    <div class="text-xs text-gray-400">{{ t('betLog.merchant') }}</div>
-                    <div class="font-bold">{{ detailedLog?.merchant_code }}</div>
-                </div>
-                <div class="space-y-1">
-                    <div class="text-xs text-gray-400">{{ t('betLog.rate') }}</div>
-                    <div class="font-mono">{{ detailedLog?.currency }} ({{ detailedLog?.exchangeRate }})</div>
-                </div>
-            </div>
-            
-            <!-- JSON -->
-            <div class="col-span-2 bg-[#1e1e1e] p-4 rounded overflow-auto font-mono text-xs border border-gray-700">
-                 <n-code :code="jsonContent" language="json" word-wrap />
-            </div>
-        </div>
-    </n-modal>
+            </n-card>
+        </template>
+    </JsonViewer>
   </div>
 </template>
