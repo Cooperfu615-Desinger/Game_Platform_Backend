@@ -71,7 +71,7 @@ const handleVersionClick = () => {
     >
         <div class="h-16 flex items-center justify-center overflow-hidden whitespace-nowrap border-b border-gray-700">
            <span v-if="!collapsed" class="text-xl font-bold text-white tracking-widest pl-4">
-             👑 Master Admin
+             {{ t('layout.masterAdmin') }}
            </span>
            <span v-else class="text-xl font-bold text-white">👑</span>
         </div>
@@ -89,7 +89,7 @@ const handleVersionClick = () => {
     <n-drawer v-model:show="showMobileMenu" :width="240" placement="left" style="background-color: #001428;">
         <n-drawer-content body-content-style="padding: 0;">
             <div class="h-16 flex items-center justify-center border-b border-gray-700">
-                <span class="text-xl font-bold text-white tracking-widest">👑 Master Admin</span>
+                <span class="text-xl font-bold text-white tracking-widest">{{ t('layout.masterAdmin') }}</span>
             </div>
             <n-menu
                 :options="menuOptions"
@@ -119,8 +119,8 @@ const handleVersionClick = () => {
          
          <div class="flex items-center gap-4">
              <div class="text-right hidden md:block">
-                 <div class="text-sm font-bold text-white">系統管理員</div>
-                 <div class="text-xs text-gray-400">Super Administrator</div>
+                 <div class="text-sm font-bold text-white">{{ t('layout.systemAdmin') }}</div>
+                 <div class="text-xs text-gray-400">{{ t('layout.superAdmin') }}</div>
              </div>
              <LanguageSwitcher />
              <n-dropdown :options="userOptions" @select="handleUserSelect">

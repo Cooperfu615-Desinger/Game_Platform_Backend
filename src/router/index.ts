@@ -14,6 +14,19 @@ NProgress.configure({ showSpinner: false })
  */
 
 const routes: RouteRecordRaw[] = [
+    // ================== ROOT REDIRECT ==================
+    {
+        path: '/',
+        name: 'root',
+        redirect: _ => {
+            const token = localStorage.getItem('auth_token')
+            const role = localStorage.getItem('auth_role')
+
+            if (!token) return '/login'
+            return role === 'MASTER' ? '/admin/dashboard' : '/merchant/dashboard'
+        }
+    },
+
     // ================== MASTER ADMIN ROUTES ==================
     {
         path: '/admin',
@@ -199,36 +212,36 @@ router.beforeEach(async (to, _from, next) => {
     const { useAuthStore } = await import('../stores/auth')
     const authStore = useAuthStore()
 
-    // Rule 1: Whitelist - Login page is always accessible
-    if (to.path === '/login') {
-        // If already logged in, redirect to appropriate dashboard
-        if (authStore.isAuthenticated) {
-            if (authStore.userRole === 'MASTER') {
-                return next('/admin/dashboard')
-            } else {
-                return next('/merchant/dashboard')
-            }
-        }
+    const isAuthenticated = authStore.isAuthenticated
+    const isLoginPath = to.path === '/login'
+
+    // 1. Logged in users shouldn't see login page
+    if (isLoginPath && isAuthenticated) {
+        return next(authStore.userRole === 'MASTER' ? '/admin/dashboard' : '/merchant/dashboard')
+    }
+
+    // 2. Public paths (currently only /login)
+    if (isLoginPath || to.name === 'NotFound') {
         return next()
     }
 
-    // Rule 2: Auth Check - Require authentication for protected routes
-    const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-    if (requiresAuth && !authStore.isAuthenticated) {
-        // Not authenticated - redirect to login
-        return next('/login')
+    // 3. Auth Check - Redirect to login if not authenticated
+    if (!isAuthenticated) {
+        return next(`/login?redirect=${to.fullPath}`)
     }
 
-    // Rule 3: Role Guard - MERCHANT cannot access /admin/* routes
+    // 4. Role Guard
     const routeRole = to.matched.find(record => record.meta.role)?.meta.role as string | undefined
 
-    if (routeRole === 'master' && authStore.userRole === 'MERCHANT') {
-        // MERCHANT trying to access master routes - redirect to merchant dashboard
-        return next('/merchant/dashboard')
+    // MASTER can access everything
+    if (authStore.userRole === 'MASTER') {
+        return next()
     }
 
-    // Rule 4: MASTER can access everything (allow merchant routes for testing)
-    // No additional check needed - MASTER passes through
+    // MERCHANT cannot access master routes
+    if (routeRole === 'master' && authStore.userRole === 'MERCHANT') {
+        return next('/merchant/dashboard')
+    }
 
     next()
 })

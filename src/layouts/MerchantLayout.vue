@@ -84,7 +84,7 @@ const themeOverrides: GlobalThemeOverrides = {
       >
           <div class="h-16 flex items-center justify-center overflow-hidden whitespace-nowrap border-b border-[#333]">
              <span v-if="!collapsed" class="text-xl font-bold text-white tracking-widest pl-4">
-               💼 Merchant
+               {{ t('layout.merchantPortal') }}
              </span>
              <span v-else class="text-xl font-bold text-white">💼</span>
           </div>
@@ -102,7 +102,7 @@ const themeOverrides: GlobalThemeOverrides = {
       <n-drawer v-model:show="showMobileMenu" :width="240" placement="left" style="background-color: #18181c;">
           <n-drawer-content body-content-style="padding: 0;">
               <div class="h-16 flex items-center justify-center border-b border-[#333] bg-[#18181c]">
-                  <span class="text-xl font-bold text-white tracking-widest">💼 Merchant</span>
+                  <span class="text-xl font-bold text-white tracking-widest">{{ t('layout.merchantPortal') }}</span>
               </div>
               <n-menu
                   :options="menuOptions"
@@ -132,8 +132,8 @@ const themeOverrides: GlobalThemeOverrides = {
            
            <div class="flex items-center gap-4">
                <div class="text-right hidden md:block">
-                   <div class="text-sm font-bold text-white">商戶管理員</div>
-                   <div class="text-xs text-gray-400">Merchant Operator</div>
+                   <div class="text-sm font-bold text-white">{{ t('layout.merchantAdmin') }}</div>
+                   <div class="text-xs text-gray-400">{{ t('layout.merchantOperator') }}</div>
                </div>
                <LanguageSwitcher />
                <n-dropdown :options="userOptions" @select="handleUserSelect">

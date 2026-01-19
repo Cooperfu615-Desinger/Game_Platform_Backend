@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import naive from 'naive-ui'
 import router from './router'
-import './router/permission' // Import permission guard
 import './style.css'
 import App from './App.vue'
 import i18n from './i18n'

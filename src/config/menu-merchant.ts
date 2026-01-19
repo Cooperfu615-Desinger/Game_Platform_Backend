@@ -18,15 +18,16 @@ const renderIcon = (icon: any) => () => h(NIcon, null, { default: () => h(icon) 
 /**
  * Merchant Backend Menu Configuration
  * Based on DESIGN_SPEC.md Section 3: Merchant Backend (商戶後台)
+ * All labels use i18n t() function for reactive language switching
  */
-export const merchantMenuOptions = (_t: (key: string) => string): MenuOption[] => [
+export const merchantMenuOptions = (t: (key: string) => string): MenuOption[] => [
     {
         type: 'group',
-        label: '概覽',
+        label: t('menu.overview'),
         key: 'overview-group',
         children: [
             {
-                label: () => h(RouterLink, { to: '/merchant/dashboard' }, { default: () => '商戶儀表板' }),
+                label: () => h(RouterLink, { to: '/merchant/dashboard' }, { default: () => t('menu.merchantDashboard') }),
                 key: 'merchant-dashboard',
                 icon: renderIcon(DashboardOutlined)
             }
@@ -34,11 +35,11 @@ export const merchantMenuOptions = (_t: (key: string) => string): MenuOption[] =
     },
     {
         type: 'group',
-        label: '遊戲管理',
+        label: t('menu.gameManagement'),
         key: 'game-group',
         children: [
             {
-                label: () => h(RouterLink, { to: '/merchant/games' }, { default: () => '我的遊戲' }),
+                label: () => h(RouterLink, { to: '/merchant/games' }, { default: () => t('menu.myGames') }),
                 key: 'merchant-games',
                 icon: renderIcon(SportsEsportsOutlined)
             }
@@ -46,16 +47,16 @@ export const merchantMenuOptions = (_t: (key: string) => string): MenuOption[] =
     },
     {
         type: 'group',
-        label: '報表中心',
+        label: t('menu.reportCenter'),
         key: 'report-group',
         children: [
             {
-                label: () => h(RouterLink, { to: '/merchant/reports/win-loss' }, { default: () => '營收日報' }),
+                label: () => h(RouterLink, { to: '/merchant/reports/win-loss' }, { default: () => t('menu.dailyRevenue') }),
                 key: 'WinLossReport',
                 icon: renderIcon(BarChartOutlined)
             },
             {
-                label: () => h(RouterLink, { to: '/merchant/reports/bet-query' }, { default: () => '注單查詢' }),
+                label: () => h(RouterLink, { to: '/merchant/reports/bet-query' }, { default: () => t('menu.betQuery') }),
                 key: 'merchant-bet-query',
                 icon: renderIcon(DescriptionOutlined)
             }
@@ -63,11 +64,11 @@ export const merchantMenuOptions = (_t: (key: string) => string): MenuOption[] =
     },
     {
         type: 'group',
-        label: '財務中心',
+        label: t('menu.financeCenter'),
         key: 'finance-group',
         children: [
             {
-                label: () => h(RouterLink, { to: '/merchant/finance/invoices' }, { default: () => '我的帳單' }),
+                label: () => h(RouterLink, { to: '/merchant/finance/invoices' }, { default: () => t('menu.myInvoices') }),
                 key: 'merchant-invoices',
                 icon: renderIcon(AttachMoneyOutlined)
             }
@@ -75,11 +76,11 @@ export const merchantMenuOptions = (_t: (key: string) => string): MenuOption[] =
     },
     {
         type: 'group',
-        label: '組織管理',
+        label: t('menu.orgManagement'),
         key: 'org-group',
         children: [
             {
-                label: () => h(RouterLink, { to: '/merchant/organization/sub-list' }, { default: () => '下級代理' }),
+                label: () => h(RouterLink, { to: '/merchant/organization/sub-list' }, { default: () => t('menu.subAgent') }),
                 key: 'sub-agent-list',
                 icon: renderIcon(PeopleAltOutlined)
             }
@@ -87,11 +88,11 @@ export const merchantMenuOptions = (_t: (key: string) => string): MenuOption[] =
     },
     {
         type: 'group',
-        label: '開發者',
+        label: t('menu.developer'),
         key: 'developer-group',
         children: [
             {
-                label: () => h(RouterLink, { to: '/merchant/developer' }, { default: () => '介接資訊' }),
+                label: () => h(RouterLink, { to: '/merchant/developer' }, { default: () => t('menu.integrationInfo') }),
                 key: 'DeveloperCenter',
                 icon: renderIcon(CodeOutlined)
             }

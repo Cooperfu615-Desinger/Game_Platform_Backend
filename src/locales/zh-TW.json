@@ -53,7 +53,16 @@
         "analyze": "分析",
         "back": "返回 / 取消",
         "copy": "複製",
-        "copied": "已複製!"
+        "copied": "已複製!",
+        "loading": "載入中...",
+        "success": "成功",
+        "failed": "失敗",
+        "confirm": "確認",
+        "close": "關閉",
+        "enabled": "已啟用",
+        "disabled": "已停用",
+        "available": "可用",
+        "unavailable": "不可用"
     },
     "menu": {
         "dashboard": "儀表板",
@@ -68,7 +77,46 @@
         "masterAdmin": "👑 總控後台",
         "agentView": "💼 代理後台",
         "organization": "組織管理",
-        "reports": "報表中心"
+        "reports": "報表中心",
+        "warRoom": "戰情中心",
+        "globalDashboard": "全域儀表板",
+        "downstream": "下游管理",
+        "merchantList": "運營商列表",
+        "upstream": "上游管理",
+        "providerList": "供應商列表",
+        "gameInventory": "遊戲庫存",
+        "financeSettlement": "財務與清算",
+        "platformPnL": "平台損益表",
+        "invoiceManagement": "對帳單管理",
+        "riskSystem": "風控與系統",
+        "betQuery": "注單查詢",
+        "staffPermission": "員工權限",
+        "auditLog": "操作日誌",
+        "systemSettings": "系統設定",
+        "overview": "概覽",
+        "merchantDashboard": "商戶儀表板",
+        "gameManagement": "遊戲管理",
+        "myGames": "我的遊戲",
+        "reportCenter": "報表中心",
+        "dailyRevenue": "營收日報",
+        "financeCenter": "財務中心",
+        "myInvoices": "我的帳單",
+        "orgManagement": "組織管理",
+        "subAgent": "下級代理",
+        "developer": "開發者",
+        "integrationInfo": "介接資訊"
+    },
+    "layout": {
+        "masterAdmin": "👑 Master Admin",
+        "merchantPortal": "💼 Merchant",
+        "systemAdmin": "系統管理員",
+        "superAdmin": "Super Administrator",
+        "merchantAdmin": "商戶管理員",
+        "merchantOperator": "Merchant Operator",
+        "version": "版本",
+        "prototype": "原型",
+        "masterConsole": "總控主機",
+        "merchantPortalLabel": "商戶門戶"
     },
     "login": {
         "title": "登入",
@@ -132,6 +180,66 @@
         "currencyType": "幣種",
         "viewSubs": "查看下級"
     },
+    "merchantDashboard": {
+        "myBalance": "我的餘額",
+        "todaysGGR": "今日盈虧",
+        "yesterday": "昨日",
+        "activePlayers": "活躍玩家",
+        "last24h": "過去 24 小時",
+        "enabledGames": "已啟用遊戲",
+        "acrossProviders": "來自所有供應商",
+        "ggrTrend": "📈 GGR 走勢 (近 7 天)",
+        "transferWallet": "💼 轉帳錢包",
+        "seamlessWallet": "🔗 單一錢包"
+    },
+    "merchantGame": {
+        "title": "我的遊戲",
+        "allTypes": "所有類型",
+        "slots": "老虎機",
+        "liveCasino": "真人視訊",
+        "fishing": "捕魚",
+        "game": "遊戲",
+        "provider": "供應商",
+        "type": "類型",
+        "rtp": "RTP",
+        "platformStatus": "平台狀態",
+        "myStatus": "我的狀態",
+        "available": "可用",
+        "disabledByAdmin": "平台已停用",
+        "enabled": "已啟用",
+        "disabled": "已停用",
+        "alertInfo": "管理您玩家可用的遊戲。平台停用的遊戲無法啟用。",
+        "searchPlaceholder": "搜尋遊戲名稱或代碼...",
+        "gameEnabled": "遊戲已啟用",
+        "gameDisabled": "遊戲已停用",
+        "updateFailed": "更新失敗",
+        "loadFailed": "無法載入遊戲",
+        "disabledByPlatform": "此遊戲已被平台管理員停用"
+    },
+    "developerCenter": {
+        "title": "開發者中心",
+        "apiCredentials": "🔑 API 憑證",
+        "merchantCode": "商戶代碼",
+        "secretKey": "通訊密鑰",
+        "sensitive": "敏感資料",
+        "securityNotice": "安全提醒",
+        "securityWarning": "請勿分享您的 Secret Key。使用 IP 白名單限制 API 存取。",
+        "ipWhitelist": "🛡️ IP 白名單",
+        "ipWhitelistDesc": "僅接受來自這些 IP 的請求。留空則允許所有。",
+        "addIpPlaceholder": "新增 IP (例如 1.2.3.4)",
+        "ipTip": "提示：新增您伺服器的公開 IP 位址。最多 10 筆。",
+        "apiDocs": "📚 API 文件",
+        "quickStart": "快速入門",
+        "quickStartDesc": "新手開發者整合指南",
+        "apiReference": "API 參考",
+        "apiReferenceDesc": "完整端點文件",
+        "sdkDownloads": "SDK 下載",
+        "sdkDownloadsDesc": "PHP, Node.js, Python 函式庫",
+        "viewDocs": "📄 查看完整文件",
+        "contactSupport": "💬 聯絡客服",
+        "whitelistUpdated": "IP 白名單已更新",
+        "whitelistFailed": "白名單更新失敗"
+    },
     "merchantConfig": {
         "title": "商戶配置",
         "integration": "對接資訊",
@@ -150,7 +258,9 @@
         "confirmRegenerate": "確定要重置 Secret Key 嗎？這將會影響現有的對接。",
         "regenerateSuccess": "已模擬產生新的 Secret Key",
         "saveSuccess": "配置儲存成功",
-        "enterIp": "輸入允許的 IP 並按下 Enter"
+        "enterIp": "輸入允許的 IP 並按下 Enter",
+        "resetSecretConfirm": "這將導致當前商戶的 API 連線立即中斷，確定要執行嗎？",
+        "emptyWhitelistConfirm": "未設定 IP 白名單將導致所有連線被拒絕 (或開放所有)，確定存檔？"
     },
     "provider": {
         "title": "供應商管理",
@@ -211,7 +321,8 @@
         "topMerchants": "熱門商戶 (GGR)",
         "topGames": "熱門遊戲 (注單量)",
         "systemHealth": "系統健康度 (延遲)",
-        "ms": "毫秒"
+        "ms": "毫秒",
+        "loadFailed": "無法載入儀表板資料"
     },
     "form": {
         "account": "帳號",
@@ -299,5 +410,10 @@
         "rounds": "局數",
         "agentName": "代理名稱",
         "date": "日期"
+    },
+    "table": {
+        "noData": "暫無資料",
+        "rowsPerPage": "每頁顯示",
+        "showing": "顯示 {from} - {to}，共 {total} 筆"
     }
 }

@@ -20,15 +20,16 @@ const renderIcon = (icon: any) => () => h(NIcon, null, { default: () => h(icon) 
 /**
  * Master Admin Menu Configuration
  * Based on DESIGN_SPEC.md Section 2: Master Admin (總控後台)
+ * All labels use i18n t() function for reactive language switching
  */
-export const masterMenuOptions = (_t: (key: string) => string): MenuOption[] => [
+export const masterMenuOptions = (t: (key: string) => string): MenuOption[] => [
     {
         type: 'group',
-        label: '戰情中心',
+        label: t('menu.warRoom'),
         key: 'dashboard-group',
         children: [
             {
-                label: () => h(RouterLink, { to: '/admin/dashboard' }, { default: () => '全域儀表板' }),
+                label: () => h(RouterLink, { to: '/admin/dashboard' }, { default: () => t('menu.globalDashboard') }),
                 key: 'admin-dashboard',
                 icon: renderIcon(DashboardOutlined)
             }
@@ -36,11 +37,11 @@ export const masterMenuOptions = (_t: (key: string) => string): MenuOption[] => 
     },
     {
         type: 'group',
-        label: '下游管理',
+        label: t('menu.downstream'),
         key: 'downstream-group',
         children: [
             {
-                label: () => h(RouterLink, { to: '/admin/merchant/list' }, { default: () => '運營商列表' }),
+                label: () => h(RouterLink, { to: '/admin/merchant/list' }, { default: () => t('menu.merchantList') }),
                 key: 'merchant-list',
                 icon: renderIcon(PeopleAltOutlined)
             }
@@ -48,16 +49,16 @@ export const masterMenuOptions = (_t: (key: string) => string): MenuOption[] => 
     },
     {
         type: 'group',
-        label: '上游管理',
+        label: t('menu.upstream'),
         key: 'upstream-group',
         children: [
             {
-                label: () => h(RouterLink, { to: '/admin/game-center/providers' }, { default: () => '供應商列表' }),
+                label: () => h(RouterLink, { to: '/admin/game-center/providers' }, { default: () => t('menu.providerList') }),
                 key: 'provider-list',
                 icon: renderIcon(CasinoOutlined)
             },
             {
-                label: () => h(RouterLink, { to: '/admin/game-center/list' }, { default: () => '遊戲庫存' }),
+                label: () => h(RouterLink, { to: '/admin/game-center/list' }, { default: () => t('menu.gameInventory') }),
                 key: 'game-center',
                 icon: renderIcon(CasinoOutlined)
             }
@@ -65,16 +66,16 @@ export const masterMenuOptions = (_t: (key: string) => string): MenuOption[] => 
     },
     {
         type: 'group',
-        label: '財務與清算',
+        label: t('menu.financeSettlement'),
         key: 'finance-group',
         children: [
             {
-                label: () => h(RouterLink, { to: '/admin/data-center/report' }, { default: () => '平台損益表' }),
+                label: () => h(RouterLink, { to: '/admin/data-center/report' }, { default: () => t('menu.platformPnL') }),
                 key: 'FinancialReport',
                 icon: renderIcon(AttachMoneyOutlined)
             },
             {
-                label: () => h(RouterLink, { to: '/admin/finance/invoices' }, { default: () => '對帳單管理' }),
+                label: () => h(RouterLink, { to: '/admin/finance/invoices' }, { default: () => t('menu.invoiceManagement') }),
                 key: 'InvoiceManager',
                 icon: renderIcon(DescriptionOutlined)
             }
@@ -82,26 +83,26 @@ export const masterMenuOptions = (_t: (key: string) => string): MenuOption[] => 
     },
     {
         type: 'group',
-        label: '風控與系統',
+        label: t('menu.riskSystem'),
         key: 'system-group',
         children: [
             {
-                label: () => h(RouterLink, { to: '/admin/data-center/bet-log' }, { default: () => '注單查詢' }),
+                label: () => h(RouterLink, { to: '/admin/data-center/bet-log' }, { default: () => t('menu.betQuery') }),
                 key: 'BetLog',
                 icon: renderIcon(BarChartOutlined)
             },
             {
-                label: () => h(RouterLink, { to: '/admin/system/staff' }, { default: () => '員工權限' }),
+                label: () => h(RouterLink, { to: '/admin/system/staff' }, { default: () => t('menu.staffPermission') }),
                 key: 'StaffList',
                 icon: renderIcon(AdminPanelSettingsOutlined)
             },
             {
-                label: () => h(RouterLink, { to: '/admin/system/audit-logs' }, { default: () => '操作日誌' }),
+                label: () => h(RouterLink, { to: '/admin/system/audit-logs' }, { default: () => t('menu.auditLog') }),
                 key: 'AuditLogs',
                 icon: renderIcon(SecurityOutlined)
             },
             {
-                label: () => h(RouterLink, { to: '/admin/system/settings' }, { default: () => '系統設定' }),
+                label: () => h(RouterLink, { to: '/admin/system/settings' }, { default: () => t('menu.systemSettings') }),
                 key: 'SystemSettings',
                 icon: renderIcon(SettingsOutlined)
             }
