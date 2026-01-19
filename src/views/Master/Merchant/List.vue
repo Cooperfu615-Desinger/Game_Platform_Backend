@@ -3,13 +3,15 @@ import { onMounted, h, computed } from 'vue'
 import { NDataTable, NTag, NAlert, NButton, NSpace } from 'naive-ui'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { ref } from 'vue'
 
 import type { DataTableColumns } from 'naive-ui'
 import type { Merchant } from '../../../types/merchant'
 import { useMerchantList } from '../../../composables/useMerchantList'
 import MerchantConfigModal from './components/MerchantConfigModal.vue'
 import MerchantSubscriptionModal from './components/MerchantSubscriptionModal.vue'
-import { ref } from 'vue'
+import MoneyText from '../../../components/Common/MoneyText.vue'
+import StatusBadge from '../../../components/Common/StatusBadge.vue'
 
 const { list, loading, error, fetchList } = useMerchantList()
 const router = useRouter()
@@ -95,16 +97,24 @@ const columns = computed<DataTableColumns<Merchant>>(() => [
       width: 100,
       sorter: (row1, row2) => row1.state - row2.state,
       render(row) {
-        return h(
-          NTag,
-          {
-            type: row.state === 1 ? 'success' : 'error',
-            bordered: false
-          },
-          {
-            default: () => (row.state === 1 ? t('status.active') : t('status.inactive'))
-          }
-        )
+        return h(StatusBadge, {
+          status: row.state === 1 ? 'Active' : 'Suspended'
+        })
+      }
+    },
+    {
+      title: 'Balance',
+      key: 'balance',
+      width: 120,
+      render(row) {
+        // Only show balance for Transfer wallet mode
+        if (row.walletMode === 'transfer' && row.balance !== undefined) {
+          return h(MoneyText, {
+            value: row.balance,
+            currency: row.currency_type || 'USD'
+          })
+        }
+        return h('span', { class: 'text-gray-500' }, '-')
       }
     },
     {

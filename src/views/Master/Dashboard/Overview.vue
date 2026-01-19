@@ -10,6 +10,7 @@ import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart, PieChart } from 'echarts/charts'
 import { GridComponent, TooltipComponent, LegendComponent } from 'echarts/components'
+import MoneyText from '../../../components/Common/MoneyText.vue'
 
 // ECharts Composition
 use([CanvasRenderer, LineChart, PieChart, GridComponent, TooltipComponent, LegendComponent])
@@ -126,10 +127,11 @@ onMounted(() => {
     <n-grid x-gap="12" y-gap="12" cols="1 s:2 m:4" responsive="screen">
         <!-- GGR -->
         <n-grid-item>
-             <n-card size="small" class="border-green-500/30 bg-green-500/5">
-                <n-statistic :label="t('dashboard.totalGGR')" :value="stats.total_ggr">
-                    <template #prefix>$</template>
-                </n-statistic>
+             <n-card size="small" :class="stats.total_ggr >= 0 ? 'border-green-500/30 bg-green-500/5' : 'border-red-500/30 bg-red-500/5'">
+                <div class="text-sm text-gray-400 mb-1">{{ t('dashboard.totalGGR') }}</div>
+                <div class="text-2xl font-bold">
+                    <MoneyText :value="stats.total_ggr" currency="USD" />
+                </div>
             </n-card>
         </n-grid-item>
         <!-- Active Players -->
@@ -189,7 +191,7 @@ onMounted(() => {
                     <n-list-item v-for="(m, i) in stats.top_merchants" :key="i">
                         <div class="flex justify-between">
                             <span>{{ i + 1 }}. {{ m.name }}</span>
-                            <span class="font-mono text-green-400">${{ m.ggr.toLocaleString() }}</span>
+                            <MoneyText :value="m.ggr" currency="USD" />
                         </div>
                     </n-list-item>
                 </n-list>

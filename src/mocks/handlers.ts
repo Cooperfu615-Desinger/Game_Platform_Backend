@@ -26,6 +26,7 @@ function createRandomAgent(id: number, parentId: number | null = null, level: nu
 }
 
 function createRandomMerchant(id: number): Merchant {
+    const walletMode = faker.helpers.arrayElement(['transfer', 'seamless']) as 'transfer' | 'seamless'
     return {
         id,
         site_code: faker.string.alpha({ length: 3, casing: 'upper' }),
@@ -35,11 +36,15 @@ function createRandomMerchant(id: number): Merchant {
         percent: faker.number.int({ min: 90, max: 99 }),
         state: faker.helpers.arrayElement([0, 1]),
         created_at: faker.date.past().toISOString(),
-        // New fields defaults
-        walletMode: 'transfer',
+        // Extended fields
+        walletMode,
         secretKey: faker.string.uuid(),
-        ipWhitelist: [faker.internet.ip()],
-        baseCurrency: 'TWD'
+        ipWhitelist: [faker.internet.ip(), faker.internet.ip()],
+        baseCurrency: 'USD',
+        // Balance only for transfer wallet mode
+        balance: walletMode === 'transfer'
+            ? faker.number.float({ min: 1000, max: 100000, fractionDigits: 2 })
+            : undefined
     }
 }
 
@@ -79,6 +84,42 @@ export const mockProviders: any[] = [
 const merchantSubscriptionMap = new Map<number, any[]>()
 
 export const handlers = [
+    // ================== AUTH HANDLERS ==================
+    // Login API - Returns role-based tokens
+    http.post('/api/login', async ({ request }) => {
+        await delay(500)
+        const body = await request.json() as { username: string; password: string }
+        const { username, password } = body
+
+        // Scenario A: Master Admin
+        if (username === 'admin' && password === 'admin123') {
+            return HttpResponse.json({
+                success: true,
+                token: 'mock-master-token-' + Date.now(),
+                role: 'MASTER',
+                name: 'Super Admin',
+                code: null
+            })
+        }
+
+        // Scenario B: Merchant
+        if (username === 'merchant' && password === '123456') {
+            return HttpResponse.json({
+                success: true,
+                token: 'mock-merchant-token-' + Date.now(),
+                role: 'MERCHANT',
+                name: 'Golden Dragon',
+                code: 'AGT001'
+            })
+        }
+
+        // Invalid credentials
+        return HttpResponse.json({
+            success: false,
+            message: 'Invalid username or password'
+        }, { status: 401 })
+    }),
+
     // ... existing handlers ...
 
     // Get Merchant Subscriptions
