@@ -103,14 +103,20 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('../views/Merchant/Dashboard/Index.vue'),
                 meta: { title: '商戶儀表板', roles: ['agent', 'merchant'] }
             },
-            // Game Management (遊戲管理) - Placeholder
+            // Game Management (遊戲管理)
             {
                 path: 'games',
                 name: 'merchant-games',
-                component: () => import('../views/Merchant/Dashboard/Index.vue'), // TODO: Create Games.vue
+                component: () => import('../views/Merchant/Game/MyGames.vue'),
                 meta: { title: '我的遊戲', roles: ['agent', 'merchant'] }
             },
             // Report Center (報表中心)
+            {
+                path: 'reports/daily',
+                name: 'DailyReport',
+                component: () => import('../views/Merchant/Reports/DailyReport.vue'),
+                meta: { title: '每日報表', roles: ['agent', 'merchant'] }
+            },
             {
                 path: 'reports/win-loss',
                 name: 'WinLossReport',
@@ -120,7 +126,7 @@ const routes: RouteRecordRaw[] = [
             {
                 path: 'reports/bet-query',
                 name: 'merchant-bet-query',
-                component: () => import('../views/Merchant/Reports/WinLoss.vue'), // TODO: Create BetQuery.vue
+                component: () => import('../views/Merchant/Reports/BetQuery.vue'),
                 meta: { title: '注單查詢', roles: ['agent', 'merchant'] }
             },
             // Finance Center (財務中心) - Placeholder
