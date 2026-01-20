@@ -72,7 +72,7 @@ const handleSave = async () => {
         const data = await res.json()
 
         if (data.code === 0) {
-            message.success('Game configuration updated successfully')
+            message.success(t('game.configUpdated'))
             emit('refresh')
             handleClose()
         } else {
@@ -80,7 +80,7 @@ const handleSave = async () => {
         }
     } catch (e) {
         console.error('API Error Details:', e)
-        message.error('An error occurred while saving')
+        message.error(t('game.saveFailed'))
     } finally {
         loading.value = false
     }

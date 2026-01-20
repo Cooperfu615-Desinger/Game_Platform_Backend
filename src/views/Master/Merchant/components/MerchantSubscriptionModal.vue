@@ -29,7 +29,7 @@ watch(() => props.show, async (newVal) => {
                 subscriptions.value = res.data
             }
         } catch (e) {
-            message.error('Failed to load subscriptions')
+            message.error(t('subscription.loadFailed'))
         } finally {
             loading.value = false
         }
@@ -47,13 +47,13 @@ const handleSave = async () => {
         }).then(r => r.json())
 
         if (res.code === 0) {
-            message.success('Subscriptions saved successfully')
+            message.success(t('subscription.saveSuccess'))
             emit('update:show', false)
         } else {
             message.error(res.msg || 'Save failed')
         }
     } catch (e) {
-        message.error('Save failed')
+        message.error(t('subscription.saveFailed'))
     } finally {
         saving.value = false
     }

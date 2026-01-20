@@ -316,6 +316,8 @@
         "off": "關閉",
         "enabled": "遊戲已啟用",
         "maintenanceSet": "遊戲已設為維護模式",
+        "configUpdated": "遊戲配置已更新",
+        "saveFailed": "儲存失敗",
         "disableWarning": "停用「{name}」將從所有商戶隱藏此遊戲。",
         "disableTitle": "⚠️ 停用遊戲"
     },
