@@ -103,7 +103,7 @@ const columns = computed<DataTableColumns<Merchant>>(() => [
       }
     },
     {
-      title: 'Balance',
+      title: t('columns.balance'),
       key: 'balance',
       width: 120,
       render(row) {

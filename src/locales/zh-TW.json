@@ -130,7 +130,8 @@
         "account": "帳號",
         "balance": "餘額",
         "state": "狀態",
-        "createdAt": "建立時間"
+        "createdAt": "建立時間",
+        "action": "操作"
     },
     "agent": {
         "title": "代理管理",
@@ -391,6 +392,7 @@
         "lastLogin": "最後登入",
         "account": "帳號",
         "addStaff": "新增員工",
+        "editStaff": "編輯員工",
         "operator": "操作人員",
         "action": "動作",
         "target": "目標對象",

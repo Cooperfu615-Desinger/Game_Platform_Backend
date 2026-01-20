@@ -20,7 +20,6 @@ interface Staff {
 const staffList = ref<Staff[]>([])
 const loading = ref(false)
 const showModal = ref(false)
-// const formRef = ref<any>(null)
 
 const formModel = ref({
     id: 0,
@@ -44,7 +43,7 @@ const columns = computed<DataTableColumns<Staff>>(() => [
     },
     { title: t('system.lastLogin'), key: 'last_login' },
     { 
-        title: t('finance.status'), // Reuse key
+        title: t('finance.status'),
         key: 'status',
         render: (row) => h(
             NTag, 
@@ -53,12 +52,12 @@ const columns = computed<DataTableColumns<Staff>>(() => [
         )
     },
     {
-        title: 'Action',
+        title: t('columns.action'),
         key: 'action',
         render: (row) => h(
             NButton, 
             { size: 'small', onClick: () => editStaff(row) }, 
-            { default: () => 'Edit' }
+            { default: () => t('common.edit') }
         )
     }
 ])
@@ -86,7 +85,7 @@ const handleSubmit = async () => {
         method: 'POST',
         body: JSON.stringify(formModel.value)
     })
-    message.success('Saved successfully')
+    message.success(t('common.saveSuccess'))
     showModal.value = false
     fetchStaff()
 }
@@ -105,7 +104,7 @@ onMounted(() => fetchStaff())
             <n-data-table :columns="columns" :data="staffList" :loading="loading" />
         </n-card>
 
-        <n-modal v-model:show="showModal" preset="card" :title="formModel.id ? 'Edit Staff' : 'Add Staff'" class="w-[500px]">
+        <n-modal v-model:show="showModal" preset="card" :title="formModel.id ? t('system.editStaff') : t('system.addStaff')" class="w-[500px]">
             <n-form ref="formRef" :model="formModel">
                 <n-form-item :label="t('system.account')">
                     <n-input v-model:value="formModel.account" :disabled="!!formModel.id" />
@@ -113,13 +112,13 @@ onMounted(() => fetchStaff())
                 <n-form-item :label="t('system.role')">
                     <n-select v-model:value="formModel.role" :options="roles" />
                 </n-form-item>
-                <n-form-item label="Status" v-if="formModel.id">
+                <n-form-item :label="t('finance.status')" v-if="formModel.id">
                     <n-select v-model:value="formModel.status" :options="[{label:'Active', value:'active'}, {label:'Disabled', value:'disabled'}]" />
                 </n-form-item>
             </n-form>
             <div class="flex justify-end gap-2 mt-4">
-                <n-button @click="showModal = false">Cancel</n-button>
-                <n-button type="primary" @click="handleSubmit">Save</n-button>
+                <n-button @click="showModal = false">{{ t('common.cancel') }}</n-button>
+                <n-button type="primary" @click="handleSubmit">{{ t('common.save') }}</n-button>
             </div>
         </n-modal>
     </div>
