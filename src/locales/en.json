@@ -355,6 +355,7 @@
         "active": "Active",
         "disabled": "Disabled",
         "inactive": "Inactive",
+        "suspended": "Suspended",
         "maintenance": "Maintenance",
         "win": "Win",
         "loss": "Loss",

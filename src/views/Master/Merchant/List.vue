@@ -40,12 +40,14 @@ const columns = computed<DataTableColumns<Merchant>>(() => [
       title: '#',
       key: 'id',
       width: 60,
-      render: (_, index) => index + 1
+      render: (_, index) => index + 1,
+      sorter: (a, b) => a.id - b.id
     },
     {
       title: t('merchant.merchantId'),
       key: 'display_id',
       width: 120,
+      sorter: (a, b) => (a.display_id || '').localeCompare(b.display_id || ''),
       render: (row) => h(
         'span',
         { 
@@ -72,7 +74,7 @@ const columns = computed<DataTableColumns<Merchant>>(() => [
         return h(
           NTag,
           {
-            color: row.walletMode === 'seamless' ? { color: '#f3e8ff', textColor: '#9333ea', borderColor: '#f3e8ff' } : undefined,
+            color: row.walletMode === 'seamless' ? { color: '#6b21a8', textColor: '#ffffff', borderColor: '#6b21a8' } : undefined,
             type: row.walletMode === 'transfer' ? 'info' : undefined,
             bordered: false,
             size: 'small'
@@ -99,6 +101,7 @@ const columns = computed<DataTableColumns<Merchant>>(() => [
       key: 'balance',
       width: 150,
       align: 'right',
+      sorter: (a, b) => (a.balance || 0) - (b.balance || 0),
       render(row) {
         if (row.walletMode === 'transfer' && row.balance !== undefined) {
           return h(MoneyText, {
@@ -124,6 +127,7 @@ const columns = computed<DataTableColumns<Merchant>>(() => [
       title: t('columns.createdAt'),
       key: 'created_at',
       width: 180,
+      sorter: (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
       render(row) {
         return new Date(row.created_at).toLocaleString()
       }

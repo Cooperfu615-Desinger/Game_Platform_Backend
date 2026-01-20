@@ -348,6 +348,7 @@
         "live": "真人視訊",
         "fishing": "捕魚",
         "sports": "體育",
+        "table": "棋牌遊戲",
         "searchGame": "搜尋遊戲名稱...",
         "active": "啟用",
         "off": "關閉",
@@ -361,13 +362,7 @@
         "rtpStd": "標準",
         "rtpHigh": "高殺率",
         "maxBet": "單注上限",
-        "enterLimit": "輸入限額",
-        "gameList": "遊戲總庫",
-        "slot": "電子老虎機",
-        "live": "真人視訊",
-        "fishing": "捕魚機",
-        "sports": "體育賽事",
-        "table": "棋牌遊戲"
+        "enterLimit": "輸入限額"
     },
     "dashboard": {
         "title": "儀表板",
@@ -409,6 +404,7 @@
         "active": "啟用",
         "disabled": "停用",
         "inactive": "停用",
+        "suspended": "停用",
         "maintenance": "維護中",
         "win": "贏",
         "loss": "輸",

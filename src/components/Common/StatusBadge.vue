@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { NTag } from 'naive-ui'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 type StatusType = 'Active' | 'Suspended' | 'Maintenance' | 'active' | 'suspended' | 'maintenance' | string
 
@@ -37,15 +40,15 @@ const tagType = computed(() => {
 const displayLabel = computed(() => {
     switch (normalizedStatus.value) {
         case 'active':
-            return '🟢 Active'
+            return `🟢 ${t('status.active')}`
         case 'suspended':
         case 'inactive':
         case 'disabled':
-            return '🔴 Suspended'
+            return `🔴 ${t('status.suspended')}`
         case 'maintenance':
-            return '🟠 Maintenance'
+            return `🟠 ${t('status.maintenance')}`
         case 'pending':
-            return '⏳ Pending'
+            return `⏳ ${t('status.pending')}`
         default:
             return props.status
     }
