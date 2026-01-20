@@ -43,16 +43,16 @@ const columns = computed<DataTableColumns<Merchant>>(() => [
       sorter: (row1, row2) => row1.id - row2.id
     },
     {
-      title: t('merchant.siteCodeLabel'), // Merchant Code
-      key: 'site_code',
-      width: 130,
-      sorter: (row1, row2) => row1.site_code.localeCompare(row2.site_code)
-    },
-    {
       title: t('merchant.merchantId'), // Merchant ID
       key: 'account',
       width: 150,
       sorter: (row1, row2) => row1.account.localeCompare(row2.account)
+    },
+    {
+      title: t('merchant.siteCodeLabel'), // Merchant Code (Renamed to Merchant Name)
+      key: 'site_code',
+      width: 130,
+      sorter: (row1, row2) => row1.site_code.localeCompare(row2.site_code)
     },
     {
       title: t('merchant.name'),
