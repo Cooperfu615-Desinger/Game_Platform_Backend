@@ -409,7 +409,12 @@
         "breakdown": "Cost Breakdown",
         "merchant": "Merchant",
         "preview": "Preview Invoices",
-        "confirmGenerate": "Confirm & Generate"
+        "confirmGenerate": "Confirm & Generate",
+        "filterMerchant": "Search Merchant (ID/Name)",
+        "filterStatus": "Settlement Status",
+        "statusPaid": "Paid",
+        "statusPending": "Pending",
+        "confirmMarkPaid": "Are you sure to mark invoice {id} as paid?"
     },
     "invoices": {
         "myInvoices": "My Invoices",

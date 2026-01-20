@@ -456,7 +456,12 @@
         "breakdown": "費用明細",
         "merchant": "商戶",
         "preview": "預覽帳單",
-        "confirmGenerate": "確認並生成"
+        "confirmGenerate": "確認並生成",
+        "filterMerchant": "搜尋商戶 (ID/名稱)",
+        "filterStatus": "結算狀態",
+        "statusPaid": "已結算",
+        "statusPending": "待支付",
+        "confirmMarkPaid": "確定要將帳單 {id} 標記為已結算嗎？"
     },
     "system": {
         "title": "系統安全",

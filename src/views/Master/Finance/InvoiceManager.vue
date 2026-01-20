@@ -3,9 +3,10 @@ import { ref, onMounted, computed, h } from 'vue'
 import { 
     NCard, NButton, NDataTable, NModal, NDatePicker, 
     NSpace, NStatistic, NDrawer, NDrawerContent, NList, NListItem,
-    useMessage, type DataTableColumns, NTooltip, NIcon 
+    useMessage, type DataTableColumns, NTooltip, NIcon,
+    NInput, NSelect, NTag, NPopconfirm
 } from 'naive-ui'
-import { DescriptionOutlined } from '@vicons/material'
+import { DescriptionOutlined, CheckCircleOutlined, SearchOutlined } from '@vicons/material'
 import { useI18n } from 'vue-i18n'
 import StatusBadge from '../../../components/Common/StatusBadge.vue'
 import MoneyText from '../../../components/Common/MoneyText.vue'
@@ -37,6 +38,44 @@ const generateDate = ref<number | null>(Date.now())
 const previewData = ref<any[]>([])
 const generating = ref(false)
 const markingPaid = ref(false)
+
+// Filters
+const searchQuery = ref('')
+const statusFilter = ref<string>('all')
+const dateRange = ref<[number, number] | null>(null)
+
+const filteredInvoices = computed(() => {
+    return invoices.value.filter(inv => {
+        // Status Filter
+        if (statusFilter.value !== 'all' && inv.status !== statusFilter.value) return false
+        
+        // Search Filter
+        if (searchQuery.value) {
+            const query = searchQuery.value.toLowerCase()
+            const matchId = inv.id.toLowerCase().includes(query)
+            const matchName = inv.merchant_name.toLowerCase().includes(query)
+            if (!matchId && !matchName) return false
+        }
+
+        // Date Filter
+        if (dateRange.value) {
+             // Step 3A says "Date Picker (Month Range)".
+             // So I should implement it.
+             const [start, end] = dateRange.value
+             // Convert invoice period to timestamp
+             const pDate = new Date(inv.period + '-01').getTime()
+             if (pDate < start || pDate > end) return false
+        }
+        
+        return true
+    })
+})
+
+const statusOptions = computed(() => [
+    { label: t('common.all'), value: 'all' },
+    { label: t('finance.statusPending'), value: 'pending' },
+    { label: t('finance.statusPaid'), value: 'paid' }
+])
 
 // Columns with StatusBadge and MoneyText
 const columns = computed<DataTableColumns<Invoice>>(() => [
@@ -78,23 +117,44 @@ const columns = computed<DataTableColumns<Invoice>>(() => [
         title: t('finance.status'), 
         key: 'status',
         width: 120,
-        render: (row) => h(StatusBadge, { 
-            status: row.status === 'paid' ? 'Active' : 'Suspended',
-            size: 'small'
-        })
+        render: (row) => h(NTag, { 
+            type: row.status === 'paid' ? 'success' : 'warning',
+            bordered: false,
+            round: true
+        }, { default: () => row.status === 'paid' ? t('finance.statusPaid') : t('finance.statusPending') })
     },
     {
         title: t('columns.action'),
         key: 'action',
-        width: 80,
+        width: 120,
         align: 'center',
-        render: (row) => h(NTooltip, { trigger: 'hover' }, {
-            trigger: () => h(NButton, { 
-                size: 'small', 
-                secondary: true,
-                onClick: () => openDetail(row) 
-            }, { icon: () => h(NIcon, null, { default: () => h(DescriptionOutlined) }) }),
-            default: () => t('finance.detail')
+        render: (row) => h(NSpace, { justify: 'center', size: 'small' }, {
+            default: () => [
+                // Detail Button
+                h(NTooltip, { trigger: 'hover' }, {
+                    trigger: () => h(NButton, { 
+                        size: 'small', 
+                        secondary: true,
+                        onClick: () => openDetail(row) 
+                    }, { icon: () => h(NIcon, null, { default: () => h(DescriptionOutlined) }) }),
+                    default: () => t('finance.detail')
+                }),
+                // Mark Paid Button
+                row.status === 'pending' ? h(NPopconfirm, {
+                    onPositiveClick: () => markAsPaid(row) // Pass row directly
+                }, {
+                    trigger: () => h(NTooltip, { trigger: 'hover' }, {
+                        trigger: () => h(NButton, {
+                            size: 'small',
+                            type: 'success',
+                            circle: true,
+                            secondary: true
+                        }, { icon: () => h(NIcon, null, { default: () => h(CheckCircleOutlined) }) }),
+                        default: () => t('finance.markAsPaid')
+                    }),
+                    default: () => t('finance.confirmMarkPaid', { id: row.id })
+                }) : null
+            ]
         })
     }
 ])
@@ -166,18 +226,27 @@ const openDetail = (invoice: Invoice) => {
     showDetailDrawer.value = true
 }
 
-const markAsPaid = async () => {
-    if (!selectedInvoice.value) return
+const markAsPaid = async (row?: Invoice) => {
+    const target = row || selectedInvoice.value
+    if (!target) return
+    
     markingPaid.value = true
     try {
-        const res = await fetch(`/api/v2/finance/invoices/${selectedInvoice.value.id}/pay`, { method: 'POST' })
+        const res = await fetch(`/api/admin/invoices/${target.id}/status`, { 
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: 'paid' })
+        })
         const data = await res.json()
         if (data.code === 0) {
             message.success(t('finance.markedPaid'))
-            selectedInvoice.value.status = 'paid'
-            // Update in list
-            const idx = invoices.value.findIndex(i => i.id === selectedInvoice.value?.id)
-            if (idx >= 0 && invoices.value[idx]) {
+            target.status = 'paid'
+            // Update in list if it's not the same reference (it usually is in Vue if passed from row)
+            // But if we are in drawer working on copy or if list needs refresh.
+            // Since we mutate `target` which is `row` or `selectedInvoice` (which is ref to row usually), it should be fine.
+            // But to be safe, find in list.
+            const idx = invoices.value.findIndex(i => i.id === target.id)
+            if (idx !== -1 && invoices.value[idx]) {
                 invoices.value[idx].status = 'paid'
             }
         }
@@ -205,9 +274,33 @@ onMounted(() => {
         </div>
 
         <n-card>
+            <div class="flex gap-4 mb-4">
+                <n-input 
+                    v-model:value="searchQuery" 
+                    :placeholder="t('finance.filterMerchant')" 
+                    class="w-64"
+                >
+                    <template #prefix>
+                        <n-icon :component="SearchOutlined" />
+                    </template>
+                </n-input>
+                <n-date-picker 
+                    v-model:value="dateRange" 
+                    type="monthrange" 
+                    clearable 
+                    class="w-64" 
+                />
+                <n-select 
+                    v-model:value="statusFilter" 
+                    :options="statusOptions" 
+                    class="w-40" 
+                    :placeholder="t('finance.filterStatus')"
+                />
+            </div>
+
             <n-data-table 
                 :columns="columns" 
-                :data="invoices" 
+                :data="filteredInvoices" 
                 :loading="loading" 
                 :pagination="{ pageSize: 10 }"
                 striped
@@ -293,7 +386,7 @@ onMounted(() => {
                         <n-button 
                             type="success" 
                             size="large" 
-                            @click="markAsPaid"
+                            @click="() => markAsPaid()"
                             :loading="markingPaid"
                         >
                             ✅ {{ t('finance.markAsPaid') }}

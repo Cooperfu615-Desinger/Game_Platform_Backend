@@ -29,7 +29,7 @@ const generateInitialInvoices = () => {
                 total_ggr: Number(ggr.toFixed(2)),
                 commission_rate: rate,
                 amount_due: Number(commission.toFixed(2)),
-                status: 'paid', // History is paid
+                status: Math.random() > 0.3 ? 'paid' : 'pending',
                 created_at: new Date(month + '-05').toISOString(),
                 breakdown: [
                     { provider: 'PG Soft', ggr: ggr * 0.6, rate: 10, amount: ggr * 0.6 * 0.1 },
@@ -120,7 +120,7 @@ export const financeHandlers = [
         })
     }),
 
-    // Pay Invoice
+    // Pay Invoice (Legacy)
     http.post('/api/v2/finance/invoices/:id/pay', async ({ params }) => {
         await delay(600)
         const id = params.id
@@ -138,5 +138,22 @@ export const financeHandlers = [
             code: 404,
             msg: 'Invoice not found'
         })
+    }),
+
+    // Update Invoice Status (Admin)
+    http.patch('/api/admin/invoices/:id/status', async ({ params, request }) => {
+        await delay(500)
+        const id = params.id
+        const body = await request.json() as any
+        const invoice = invoices.find(i => i.id === id)
+
+        if (invoice) {
+            if (body.status) invoice.status = body.status
+            return HttpResponse.json({
+                code: 0,
+                msg: 'Status Updated'
+            })
+        }
+        return HttpResponse.json({ code: 404, msg: 'Invoice not found' })
     })
 ]
