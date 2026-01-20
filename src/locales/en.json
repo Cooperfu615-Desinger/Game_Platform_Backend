@@ -414,7 +414,8 @@
         "filterStatus": "Settlement Status",
         "statusPaid": "Paid",
         "statusPending": "Pending",
-        "confirmMarkPaid": "Are you sure to mark invoice {id} as paid?"
+        "confirmMarkPaid": "Are you sure to mark invoice {id} as paid?",
+        "detail": "View Detail"
     },
     "invoices": {
         "myInvoices": "My Invoices",
