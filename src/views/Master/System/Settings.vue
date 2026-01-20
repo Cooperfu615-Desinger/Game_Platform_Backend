@@ -30,7 +30,7 @@ const saveSettings = async () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(settings.value)
     })
-    message.success('Settings updated successfully')
+    message.success(t('system.settingsUpdated'))
     loading.value = false
 }
 
@@ -60,7 +60,7 @@ onMounted(() => fetchSettings())
         <n-card :title="t('system.maintenanceMode')">
             <div class="flex items-center justify-between">
                 <span class="text-gray-400">
-                    Enable maintenance mode to block all API requests (Service Unavailable 503).
+                    {{ t('system.maintenanceDesc') }}
                 </span>
                 <n-switch v-model:value="settings.maintenance_mode">
                     <template #checked>ON</template>

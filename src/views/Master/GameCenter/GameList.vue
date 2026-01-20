@@ -66,7 +66,7 @@ const fetchList = async () => {
             })
         }
     } catch (e) {
-        message.error('Failed to load games')
+        message.error(t('common.loadFailed'))
     } finally {
         loading.value = false
     }
@@ -77,11 +77,11 @@ const handleSync = async () => {
     try {
         const res = await fetch('/api/v2/games/sync', { method: 'POST' }).then(r => r.json())
         if (res.code === 0) {
-            message.success(`✅ Synced ${res.data?.count || 15} new games from upstream`)
+            message.success(t('game.syncSuccess', { count: res.data?.count || 15 }))
             fetchList()
         }
     } catch (e) {
-        message.error('Sync failed')
+        message.error(t('game.syncFailed'))
     } finally {
         syncing.value = false
     }
@@ -100,11 +100,11 @@ const handleStatusConfirm = async (row: Game, newVal: boolean) => {
         }).then(r => r.json())
 
         if (res.code !== 0) throw new Error(res.msg)
-        message.success(newVal ? 'Game enabled' : 'Game set to maintenance')
+        message.success(newVal ? t('game.enabled') : t('game.maintenanceSet'))
     } catch (e) {
         row.status = oldStatus
         switchStates.value[row.game_id] = oldStatus === 'active'
-        message.error('Update failed')
+        message.error(t('common.updateFailed'))
     }
 }
 
@@ -165,15 +165,15 @@ const columns: DataTableColumns<Game> = [
         width: 150,
         render: (row) => h(StatusSwitch, {
             value: switchStates.value[row.game_id] ?? (row.status === 'active'),
-            warningMessage: `Disabling "${row.name_en}" will hide it from all merchants.`,
-            warningTitle: '⚠️ Disable Game',
+            warningMessage: t('game.disableWarning', { name: row.name_en }),
+            warningTitle: t('game.disableTitle'),
             'onUpdate:value': (val: boolean) => {
                 switchStates.value[row.game_id] = val
             },
             onConfirm: (val: boolean) => handleStatusConfirm(row, val)
         }, {
-            checked: () => 'Active',
-            unchecked: () => 'Off'
+            checked: () => t('game.active'),
+            unchecked: () => t('game.off')
         })
     }
 ]
@@ -194,14 +194,14 @@ onMounted(() => {
                 <span>🎮</span> {{ t('game.gameList') }}
             </h1>
             <n-button type="primary" :loading="syncing" @click="handleSync">
-                🔄 {{ syncing ? 'Syncing...' : t('game.sync') }}
+                🔄 {{ syncing ? t('game.syncing') : t('game.sync') }}
             </n-button>
         </div>
 
         <!-- Filter Bar -->
         <PageFilterBar
             v-model:searchValue="filters.search"
-            searchPlaceholder="Search game name..."
+            :searchPlaceholder="t('game.searchGame')"
             @reset="handleReset"
         >
             <template #filters>
