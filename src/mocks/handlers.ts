@@ -429,97 +429,90 @@ export const handlers = [
     }),
 
     // Get Bet Logs (Round Search)
-    http.post('/api/v2/report/bet-logs', async () => {
+    http.post('/api/v2/report/bet-logs', async ({ request }) => {
         await delay(800)
-        // const body = await request.json() // In real app, filter by body
-
-        const generateGameDetail = () => {
-            const symbols = ['WILD', 'SCATTER', 'A', 'K', 'Q', 'J', '10', '9']
-            const matrix = Array.from({ length: 3 }, () =>
-                Array.from({ length: 5 }, () => faker.helpers.arrayElement(symbols))
-            )
-            return {
-                round_id: faker.string.uuid(),
-                matrix,
-                lines_won: faker.helpers.multiple(() => ({
-                    line_id: faker.number.int({ min: 1, max: 25 }),
-                    win: faker.number.float({ min: 10, max: 500, fractionDigits: 2 }),
-                    symbols: [faker.helpers.arrayElement(symbols), faker.helpers.arrayElement(symbols), faker.helpers.arrayElement(symbols)]
-                }), { count: { min: 0, max: 3 } }),
-                free_games_triggered: faker.datatype.boolean(0.1),
-                multiplier: faker.helpers.arrayElement([1, 2, 5, 10]),
-                currency: 'USD'
-            }
+        const body = await request.json() as any
+        const { match_roundId, match_playerId, match_merchant, match_provider, timeRange } = {
+            match_roundId: body.roundId,
+            match_playerId: body.playerId,
+            match_merchant: body.merchantCode,
+            match_provider: body.provider,
+            timeRange: body.timeRange
         }
 
         const list = faker.helpers.multiple(() => {
-            const scenario = faker.helpers.weightedArrayElement([
-                { weight: 60, value: 'PG' },   // 60% PG Soft (THB)
-                { weight: 30, value: 'EVO' },  // 30% Evolution (USD)
-                { weight: 10, value: 'PP' }    // 10% Pragmatic (VND)
-            ])
+            // Determine Provider based on filter or random
+            const providerScenario = match_provider
+                ? (match_provider === 'pg' ? 'PG' : match_provider === 'evo' ? 'EVO' : 'PP')
+                : faker.helpers.weightedArrayElement([
+                    { weight: 60, value: 'PG' },
+                    { weight: 30, value: 'EVO' },
+                    { weight: 10, value: 'PP' }
+                ])
 
             let providerCode, providerName, currency, rate, betRange
 
-            switch (scenario) {
+            switch (providerScenario) {
                 case 'PG':
                     providerCode = 'pg'
                     providerName = 'PG Soft'
                     currency = 'THB'
                     rate = 0.03
-                    betRange = { min: 10, max: 500 } // 10-500 THB
+                    betRange = { min: 10, max: 500 }
                     break
                 case 'EVO':
                     providerCode = 'evo'
                     providerName = 'Evolution'
                     currency = 'USD'
                     rate = 1.0
-                    betRange = { min: 1, max: 100 } // 1-100 USD
+                    betRange = { min: 1, max: 100 }
                     break
                 case 'PP':
                     providerCode = 'pp'
                     providerName = 'Pragmatic Play'
                     currency = 'VND'
                     rate = 0.00004
-                    betRange = { min: 10000, max: 500000 } // 10k-500k VND
+                    betRange = { min: 10000, max: 500000 }
                     break
+                default:
+                    providerCode = 'pg'; providerName = 'PG'; currency = 'THB'; rate = 0.03; betRange = { min: 10, max: 100 }
             }
 
             const bet = faker.number.float({ min: betRange!.min, max: betRange!.max, fractionDigits: 2 })
             const win = faker.number.float({ min: 0, max: bet * 5, fractionDigits: 2 })
 
+            // Generate timestamps within range if provided, else recent
+            let created_at = faker.date.recent({ days: 1 }).toISOString()
+            if (timeRange && timeRange.length === 2) {
+                const start = new Date(timeRange[0])
+                const end = new Date(timeRange[1])
+                created_at = faker.date.between({ from: start, to: end }).toISOString()
+            }
+
             return {
-                id: 'PF' + faker.string.numeric(12),  // Platform ID
-                txId: faker.string.uuid(),            // Upstream ID
-                created_at: faker.date.recent().toISOString(),
-                player_account: faker.internet.username(),
-                merchant_code: faker.helpers.arrayElement(['bet365', '1xbet', 'k9win']),
+                id: match_roundId || ('PF' + faker.string.numeric(12)),
+                txId: faker.string.uuid(),
+                created_at,
+                player_account: match_playerId || faker.internet.username(),
+                merchant_code: match_merchant || faker.helpers.arrayElement(['AGT001', 'AGT002', 'AGT003']),
                 game_name: faker.helpers.arrayElement(['Fortune Tiger', 'Super Ace', 'Crazy Time', 'Sweet Bonanza']),
 
-                // Provider Info
                 providerCode,
                 providerName,
-
-                // Amounts
                 currency,
                 exchangeRate: rate,
 
-                // Original (Native)
                 originalBet: bet,
                 originalWin: win,
 
-                // Base (USD)
-                bet_amount: Number((bet * rate!).toFixed(4)), // Normalized for reporting
+                bet_amount: Number((bet * rate!).toFixed(4)),
                 win_amount: Number((win * rate!).toFixed(4)),
-
                 profit: Number(((win - bet) * rate!).toFixed(4)),
 
                 status: win > 0 ? 'win' : 'loss',
                 payout: win / (bet || 1),
 
-                game_detail: generateGameDetail(),
-
-                // Compatibility fields for existing type definition
+                game_detail: { round_id: faker.string.uuid() },
                 providerId: 1,
                 currencyBaseAmount: Number((bet * rate!).toFixed(4))
             }

@@ -11,7 +11,7 @@ import type { BetLog } from '../../../types/report'
 import DateRangePicker from '../../../components/Common/DateRangePicker.vue'
 import JsonViewer from '../../../components/Common/JsonViewer.vue'
 import MoneyText from '../../../components/Common/MoneyText.vue'
-import PageFilterBar from '../../../components/Common/PageFilterBar.vue'
+
 
 const { t } = useI18n()
 const { loading, searchModel, logs, handleSearch } = useRoundSearch()
@@ -196,40 +196,55 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
         <n-button type="primary" dashed @click="handleSearch">{{ t('common.refresh') }}</n-button>
     </div>
 
-    <!-- Filter Bar with DateRangePicker -->
-    <PageFilterBar
-        v-model:searchValue="searchModel.roundId"
-        :searchPlaceholder="t('betLog.roundId') + ' / TX ID...'"
-        @reset="handleReset"
-    >
-        <template #filters>
-            <DateRangePicker v-model:value="searchModel.timeRange" class="w-64" />
-            <n-select 
-                v-model:value="searchModel.merchantCode" 
-                :options="merchantOptions" 
-                :placeholder="t('betLog.merchant')"
-                class="w-40"
-                clearable
-            />
-            <n-select 
-                v-model:value="searchModel.provider" 
-                :options="providerOptions" 
-                :placeholder="t('betLog.provider')"
-                class="w-36"
-                clearable
-            />
-            <n-input 
-                v-model:value="searchModel.playerId" 
-                :placeholder="t('betLog.playerAccount')" 
-                class="w-48"
-            />
-        </template>
-        <template #actions>
-            <n-button type="primary" @click="handleSearch" :loading="loading">
-                {{ t('betLog.searchLogs') }}
-            </n-button>
-        </template>
-    </PageFilterBar>
+    <!-- Custom Filter Layout (3 Rows) -->
+    <div class="bg-slate-800/50 p-4 rounded-lg mb-6 border border-slate-700/50">
+        <div class="flex flex-col gap-4">
+            <!-- Row 1: Round ID + Date Range -->
+            <div class="flex items-center gap-4">
+                <n-input 
+                    v-model:value="searchModel.roundId" 
+                    :placeholder="t('betLog.roundId') + ' / TX ID...'" 
+                    class="w-64" 
+                    clearable
+                />
+                <DateRangePicker v-model:value="searchModel.timeRange" />
+            </div>
+
+            <!-- Row 2: Merchant + Provider -->
+            <div class="flex items-center gap-4">
+                <n-select 
+                    v-model:value="searchModel.merchantCode" 
+                    :options="merchantOptions" 
+                    :placeholder="t('betLog.merchant')"
+                    class="w-64"
+                    clearable
+                />
+                <n-select 
+                    v-model:value="searchModel.provider" 
+                    :options="providerOptions" 
+                    :placeholder="t('betLog.provider')"
+                    class="w-64"
+                    clearable
+                />
+            </div>
+
+            <!-- Row 3: Player + Actions -->
+            <div class="flex items-center gap-4">
+                <n-input 
+                    v-model:value="searchModel.playerId" 
+                    :placeholder="t('betLog.playerAccount')" 
+                    class="w-64"
+                    clearable
+                />
+                <n-button type="primary" @click="handleSearch" :loading="loading" class="px-6">
+                    {{ t('betLog.searchLogs') }}
+                </n-button>
+                <n-button @click="handleReset">
+                    {{ t('common.reset') }}
+                </n-button>
+            </div>
+        </div>
+    </div>
 
     <!-- Data Table -->
     <n-data-table
