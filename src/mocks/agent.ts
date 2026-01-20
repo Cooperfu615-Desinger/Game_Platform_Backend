@@ -232,5 +232,40 @@ export const agentHandlers = [
                 pageSize: count
             }
         })
+    }),
+
+    // Merchant Invoices - Historical billing records
+    http.get('/api/agent/invoices', async () => {
+        await delay(600)
+
+        // Generate 6 months of invoice history
+        const list = Array.from({ length: 6 }, (_, i) => {
+            const date = new Date()
+            date.setMonth(date.getMonth() - i)
+            const yearMonth = date.toISOString().substring(0, 7)
+
+            const totalGgr = faker.number.float({ min: 5000, max: 50000, fractionDigits: 2 })
+            const commissionRate = 0.15 // 15% commission
+            const amountDue = totalGgr * commissionRate
+
+            // First 2 invoices are paid, rest are pending
+            const status = i < 2 ? 'paid' : 'pending'
+
+            return {
+                id: `INV-${yearMonth.replace('-', '')}-${faker.string.numeric(4)}`,
+                period: yearMonth,
+                total_ggr: totalGgr,
+                commission_rate: commissionRate,
+                amount_due: amountDue,
+                status,
+                created_at: date.toISOString()
+            }
+        })
+
+        return HttpResponse.json({
+            code: 0,
+            msg: 'success',
+            data: { list, total: list.length }
+        })
     })
 ]

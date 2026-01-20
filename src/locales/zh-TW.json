@@ -301,6 +301,20 @@
         "revenueShare": "成本占成 (%)",
         "currency": "結算幣種"
     },
+    "invoices": {
+        "myInvoices": "我的帳單",
+        "invoiceNo": "帳單編號",
+        "period": "週期",
+        "billingPeriod": "帳單週期",
+        "amountDue": "應付金額",
+        "status": "狀態",
+        "pending": "待付款",
+        "paid": "已付款",
+        "downloadPdf": "下載 PDF",
+        "viewDetail": "查看詳情",
+        "noInvoices": "無帳單記錄",
+        "loadError": "載入帳單失敗"
+    },
     "game": {
         "title": "遊戲中心",
         "gameList": "遊戲列表",

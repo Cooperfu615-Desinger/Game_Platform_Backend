@@ -147,11 +147,10 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('../views/Merchant/Reports/BetQuery.vue'),
                 meta: { title: '注單查詢', roles: ['agent', 'merchant'] }
             },
-            // Finance Center (財務中心) - Placeholder
             {
                 path: 'finance/invoices',
                 name: 'merchant-invoices',
-                component: () => import('../views/Merchant/Dashboard/Index.vue'), // TODO: Create Invoices.vue
+                component: () => import('../views/Merchant/Finance/MyInvoices.vue'),
                 meta: { title: '我的帳單', roles: ['agent', 'merchant'] }
             },
             // Organization (組織管理)

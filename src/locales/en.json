@@ -383,6 +383,20 @@
         "preview": "Preview Invoices",
         "confirmGenerate": "Confirm & Generate"
     },
+    "invoices": {
+        "myInvoices": "My Invoices",
+        "invoiceNo": "Invoice No.",
+        "period": "Period",
+        "billingPeriod": "Billing Period",
+        "amountDue": "Amount Due",
+        "status": "Status",
+        "pending": "Pending",
+        "paid": "Paid",
+        "downloadPdf": "Download PDF",
+        "viewDetail": "View Detail",
+        "noInvoices": "No invoice records",
+        "loadError": "Failed to load invoices"
+    },
     "system": {
         "title": "System Security",
         "staffList": "Staff List",
