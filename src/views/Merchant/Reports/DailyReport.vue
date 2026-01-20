@@ -4,6 +4,8 @@ import { NDataTable, NButton, NSpace, NCard, NStatistic, NGrid, NGridItem } from
 import type { DataTableColumns } from 'naive-ui'
 import DateRangePicker from '../../../components/Common/DateRangePicker.vue'
 import MoneyText from '../../../components/Common/MoneyText.vue'
+import { renderHeaderWithTooltip } from '../../../utils/renderHelpers'
+
 
 
 interface DailyReport {
@@ -43,7 +45,7 @@ const columns = computed<DataTableColumns<DailyReport>>(() => [
         width: 100 
     },
     { 
-        title: 'Total Bet', 
+        title: () => renderHeaderWithTooltip('Total Bet', 'tips.turnover_def'), 
         key: 'total_bet',
         width: 140,
         align: 'right',
@@ -51,14 +53,14 @@ const columns = computed<DataTableColumns<DailyReport>>(() => [
         render: (row) => h(MoneyText, { value: row.total_bet, currency: row.currency })
     },
     { 
-        title: 'Total Win', 
+        title: () => renderHeaderWithTooltip('Total Win', 'tips.payout_def'), 
         key: 'total_win',
         width: 140,
         align: 'right',
         render: (row) => h(MoneyText, { value: row.total_win, currency: row.currency })
     },
     { 
-        title: 'GGR', 
+        title: () => renderHeaderWithTooltip('GGR', 'tips.ggr_formula'), 
         key: 'ggr',
         width: 140,
         align: 'right',

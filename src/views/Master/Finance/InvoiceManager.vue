@@ -8,6 +8,7 @@ import {
 import { useI18n } from 'vue-i18n'
 import StatusBadge from '../../../components/Common/StatusBadge.vue'
 import MoneyText from '../../../components/Common/MoneyText.vue'
+import { renderHeaderWithTooltip } from '../../../utils/renderHelpers'
 
 const { t } = useI18n()
 const message = useMessage()
@@ -62,7 +63,7 @@ const columns = computed<DataTableColumns<Invoice>>(() => [
         render: (row) => h(MoneyText, { value: row.total_ggr, currency: 'USD' })
     },
     { 
-        title: t('finance.amountDue'), 
+        title: () => renderHeaderWithTooltip(t('finance.amountDue'), 'tips.invoice_amount'), 
         key: 'amount_due', 
         width: 140,
         align: 'right',
