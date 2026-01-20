@@ -101,7 +101,7 @@ const fetchDashboard = async () => {
             stats.value = data.data
         }
     } catch (e) {
-        message.error('Failed to load dashboard data')
+        message.error(t('dashboard.loadError'))
     } finally {
         loading.value = false
     }
@@ -155,7 +155,7 @@ onMounted(() => {
                     <n-skeleton text width="60%" />
                 </div>
                 <n-statistic v-else :label="t('dashboard.requests')" :value="stats.total_requests">
-                    <template #suffix>Reqs</template>
+                    <template #suffix>{{ t('dashboard.reqs') }}</template>
                 </n-statistic>
             </n-card>
         </n-grid-item>
