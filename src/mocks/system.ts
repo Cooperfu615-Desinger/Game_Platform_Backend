@@ -165,7 +165,7 @@ export const systemHandlers = [
             }, { status: 404 })
         }
 
-        const existing = jobLevels[index]
+        const existing = jobLevels[index]!
         jobLevels[index] = {
             id: existing.id,
             name: body.name ?? existing.name,
@@ -239,13 +239,16 @@ export const systemHandlers = [
             // Update existing staff
             const idx = staffList.findIndex(s => s.id === body.id)
             if (idx !== -1) {
+                const existing = staffList[idx]!
                 staffList[idx] = {
-                    ...staffList[idx],
-                    username: body.username ?? staffList[idx].username,
-                    realname: body.realname ?? staffList[idx].realname,
-                    email: body.email ?? staffList[idx].email,
-                    status: body.status ?? staffList[idx].status,
-                    job_level_id: body.job_level_id ?? staffList[idx].job_level_id
+                    id: existing.id,
+                    username: body.username ?? existing.username,
+                    realname: body.realname ?? existing.realname,
+                    email: body.email ?? existing.email,
+                    status: body.status ?? existing.status,
+                    job_level_id: body.job_level_id ?? existing.job_level_id,
+                    created_at: existing.created_at,
+                    last_login: existing.last_login
                 }
             }
         } else {
