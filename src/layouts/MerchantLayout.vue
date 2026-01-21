@@ -45,10 +45,6 @@ const handleVersionClick = () => {
 
 // Light Theme Overrides for Merchant Layout
 const themeOverrides: GlobalThemeOverrides = {
-  common: {
-    primaryColor: '#2563eb',
-    primaryColorHover: '#1d4ed8'
-  },
   Layout: {
     siderColor: '#18181c', // Dark Sidebar (Master style)
     headerColor: '#18181c', // Dark Header
