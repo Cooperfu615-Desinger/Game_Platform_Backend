@@ -6,12 +6,14 @@ interface Props {
     currency?: string
     showSign?: boolean
     compact?: boolean
+    color?: string  // Custom color class
 }
 
 const props = withDefaults(defineProps<Props>(), {
     currency: 'USD',
     showSign: false,
-    compact: false
+    compact: false,
+    color: ''  // Empty string means use default color logic
 })
 
 // Format number with thousand separators
@@ -47,6 +49,10 @@ const currencySymbol = computed(() => {
 
 // Color class based on value (positive = green, negative = red)
 const colorClass = computed(() => {
+    // If custom color is provided, use it
+    if (props.color) return props.color
+    
+    // Otherwise use default logic
     if (props.value > 0) return 'text-green-500'
     if (props.value < 0) return 'text-red-500'
     return 'text-gray-400'

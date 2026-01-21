@@ -61,82 +61,104 @@ export function setupManualMock() {
             }), { status: 200 })
         }
 
-        // --- Bet Logs ---
+        // --- Bet Logs (Phase 8.8) ---
         if (url.includes('/api/v2/report/bet-logs') && method === 'POST') {
             await delay(600)
             const list = Array.from({ length: 50 }).map(() => {
-                const bet = parseFloat(faker.finance.amount({ min: 1, max: 500, dec: 2 }))
+                // Merchant data
+                const merchantCode = `OP-${faker.number.int({ min: 1001, max: 1020 })}`
+                const merchantName = faker.helpers.arrayElement(['Golden Dragon', 'Silver Tiger', 'Diamond Star', 'Royal Crown', 'Lucky 88', 'Grand Casino'])
 
-                // Scenarios:
-                // 0: Loss (40%)
-                // 1: Small Win (40%)
-                // 2: Big Win (10%)
-                // 3: Refund (5%)
-                // 4: Free Game (5%)
+                // Provider data
+                const providerName = faker.helpers.arrayElement(['PG Soft', 'Evolution', 'Pragmatic Play'])
+                const gameName = faker.helpers.arrayElement(['Fortune Tiger', 'Super Ace', 'Gates of Olympus', 'Sugar Rush', 'Crazy Time'])
+
+                // Player IDs (dual-layer)
+                const aggPlayerId = `PL-${faker.number.int({ min: 1000, max: 9999 })}`
+                const merchantMemberId = `mem_${faker.internet.username().toLowerCase()}`
+
+                // Financial scenarios
                 const scenario = faker.helpers.weightedArrayElement([
-                    { weight: 40, value: 'loss' },
-                    { weight: 40, value: 'small_win' },
-                    { weight: 10, value: 'big_win' },
-                    { weight: 5, value: 'refund' },
-                    { weight: 5, value: 'free_game' }
+                    { weight: 40, value: 'WIN' },    // 40% wins
+                    { weight: 50, value: 'LOSS' },   // 50% losses
+                    { weight: 10, value: 'REFUND' }  // 10% refunds/cancelled
                 ])
 
-                let win = 0
-                let status = 'loss'
-                let isFreeGame = false
+                const baseBet = faker.number.float({ min: 10, max: 500, fractionDigits: 2 })
+                let betAmount: number, payoutAmount: number, netWin: number, status: 'settled' | 'unsettled' | 'cancelled'
 
-                if (scenario === 'loss') {
-                    win = 0
-                    status = 'loss'
-                } else if (scenario === 'small_win') {
-                    win = bet * faker.number.float({ min: 1.1, max: 10 })
-                    status = 'win'
-                } else if (scenario === 'big_win') {
-                    win = bet * faker.number.float({ min: 100, max: 5000 })
-                    status = 'win'
-                } else if (scenario === 'refund') {
-                    win = bet
-                    status = 'refund'
-                } else if (scenario === 'free_game') {
-                    win = bet * faker.number.float({ min: 20, max: 50 })
-                    status = 'win'
-                    isFreeGame = true
+                switch (scenario) {
+                    case 'WIN':
+                        betAmount = baseBet
+                        payoutAmount = baseBet * faker.number.float({ min: 1.5, max: 10, fractionDigits: 2 })
+                        netWin = Number((payoutAmount - betAmount).toFixed(2))
+                        status = 'settled'
+                        break
+                    case 'LOSS':
+                        betAmount = baseBet
+                        payoutAmount = faker.datatype.boolean(0.9) ? 0 : baseBet * faker.number.float({ min: 0.1, max: 0.9, fractionDigits: 2 })
+                        netWin = Number((payoutAmount - betAmount).toFixed(2))
+                        status = 'settled'
+                        break
+                    case 'REFUND':
+                        betAmount = baseBet
+                        payoutAmount = baseBet
+                        netWin = 0
+                        status = 'cancelled'
+                        break
+                    default:
+                        betAmount = baseBet
+                        payoutAmount = 0
+                        netWin = -baseBet
+                        status = 'settled'
                 }
 
-                const payout = bet > 0 ? (win / bet) : 0
-
                 return {
-                    id: faker.string.numeric(12),
+                    // Core IDs (Phase 8.8)
+                    round_id: `R-${faker.string.numeric(12)}`,
+                    id: `PF-${faker.string.numeric(10)}`,
                     created_at: faker.date.recent({ days: 1 }).toISOString(),
-                    player_account: faker.internet.username(),
-                    game_name: faker.helpers.arrayElement(['Fortune Tiger', 'Super Ace', 'Gates of Olympus', 'Sugar Rush']),
-                    bet_amount: bet,
-                    win_amount: win,
-                    profit: win - bet,
-                    currency: 'CNY',
-                    payout: parseFloat(payout.toFixed(2)),
-                    status: status,
+
+                    // Merchant info
+                    merchant_display_id: merchantCode,
+                    merchant_name: merchantName,
+
+                    // Game info
+                    provider_name: providerName,
+                    game_name: gameName,
+
+                    // Player IDs (dual-layer)
+                    agg_player_id: aggPlayerId,
+                    merchant_member_id: merchantMemberId,
+
+                    // Financial
+                    bet_amount: betAmount,
+                    payout_amount: payoutAmount,
+                    net_win: netWin,
+                    currency: 'USD',
+
+                    // Status
+                    status,
+
+                    // Detail
                     game_detail: {
-                        round_id: faker.string.uuid(),
-                        matrix: [
-                            ['A', 'K', 'Q', 'J'],
-                            ['10', '9', '8', '7'],
-                            ['SCC', 'WILD', 'A', 'K']
-                        ],
-                        lines_won: status === 'win' ? [{ line_id: 1, win: win, symbols: ['A', 'A', 'A'] }] : [],
-                        free_games_triggered: isFreeGame,
-                        multiplier: payout,
-                        currency: 'CNY'
+                        round_id: `R-${faker.string.numeric(12)}`,
+                        matrix: [],
+                        lines_won: [],
+                        free_games_triggered: false,
+                        multiplier: 1,
+                        currency: 'USD'
                     }
                 }
             })
+
             // Sort by time desc
             list.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
 
             return new Response(JSON.stringify({
                 code: 0,
                 msg: 'success',
-                data: { list, total: 50 }
+                data: { list, total: 200 }
             }), { status: 200 })
         }
 

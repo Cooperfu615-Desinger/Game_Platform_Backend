@@ -123,6 +123,7 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
         key: 'round_id',
         width: 160,
         fixed: 'left',
+        sorter: 'default',
         render: (row) => h('span', {
             class: 'font-mono text-xs cursor-pointer hover:text-primary',
             onClick: (e: Event) => {
@@ -135,6 +136,7 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
         title: t('betLog.time'),
         key: 'created_at',
         width: 140,
+        sorter: 'default',
         render: (row) => {
             const date = new Date(row.created_at)
             return h('div', { class: 'text-xs' }, [
@@ -147,6 +149,7 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
         title: t('betLog.merchantId'),
         key: 'merchant_display_id',
         width: 110,
+        sorter: 'default',
         render: (row) => h(NTag, { size: 'small', bordered: false, type: 'info' }, {
             default: () => row.merchant_display_id
         })
@@ -155,12 +158,14 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
         title: t('betLog.merchantName'),
         key: 'merchant_name',
         width: 140,
+        sorter: 'default',
         render: (row) => h('span', { class: 'font-medium' }, row.merchant_name)
     },
     {
         title: t('betLog.provider'),
         key: 'provider_name',
         width: 130,
+        sorter: 'default',
         render: (row) => {
             const typeMap: Record<string, any> = {
                 'PG Soft': 'error',
@@ -177,18 +182,21 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
         title: t('betLog.game'),
         key: 'game_name',
         width: 150,
+        sorter: 'default',
         ellipsis: true
     },
     {
         title: t('betLog.aggPlayer'),
         key: 'agg_player_id',
         width: 120,
+        sorter: 'default',
         render: (row) => h('span', { class: 'font-mono text-xs text-cyan-400' }, row.agg_player_id)
     },
     {
         title: t('betLog.merchantPlayer'),
         key: 'merchant_member_id',
         width: 140,
+        sorter: 'default',
         render: (row) => h('span', { class: 'font-mono text-xs text-purple-400' }, row.merchant_member_id)
     },
     {
@@ -196,20 +204,22 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
         key: 'bet_amount',
         width: 110,
         align: 'right',
-        render: (row) => h(MoneyText, { value: row.bet_amount, currency: row.currency })
+        sorter: 'default',
+        render: (row) => h(MoneyText, { value: row.bet_amount, currency: row.currency, color: 'text-white' })
     },
     {
         title: renderHeaderWithTooltip('betLog.netWin', 'betLog.netWinFormula'),
         key: 'net_win',
         width: 120,
         align: 'right',
+        sorter: 'default',
         render: (row) => {
             const value = row.net_win
-            const color = value > 0 ? 'text-green-500' : value < 0 ? 'text-red-500' : 'text-gray-400'
-            const prefix = value > 0 ? '+' : ''
-            return h('span', { class: `font-bold ${color}` }, [
-                prefix,
-                h(MoneyText, { value: Math.abs(value), currency: row.currency })
+            const color = value > 0 ? 'text-green-500' : value < 0 ? 'text-red-500' : 'text-gray-600'
+            const prefix = value > 0 ? '+' : value < 0 ? '-' : ''
+            return h('span', { class: `font-bold` }, [
+                h('span', { class: color }, prefix),
+                h(MoneyText, { value: Math.abs(value), currency: row.currency, color })
             ])
         }
     },
@@ -217,6 +227,7 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
         title: t('betLog.status'),
         key: 'status',
         width: 100,
+        sorter: 'default',
         render: (row) => {
             const statusMap: Record<string, { type: 'success' | 'warning' | 'default', label: string }> = {
                 settled: { type: 'success', label: t('betLog.statusSettled') },
@@ -235,7 +246,7 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
 </script>
 
 <template>
-  <div class="p-6 h-full flex flex-col">
+  <div class="p-6 flex flex-col" style="height: calc(100vh - 80px);">
     <div class="flex justify-between items-center mb-4">
         <h1 class="text-2xl font-bold flex items-center gap-2">
             <span>📊</span> {{ t('betLog.title') }}
@@ -243,14 +254,16 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
         <n-button type="primary" dashed @click="handleSearch">{{ t('common.refresh') }}</n-button>
     </div>
 
-    <!-- Grid Filter Layout (2 Rows) -->
-    <n-card class="mb-6" :bordered="false" content-style="padding: 20px;">
+    <!-- Grid Filter Layout (3 Rows) -->
+    <n-card class="mb-6 flex-shrink-0" :bordered="false" content-style="padding: 20px;">
         <n-grid :cols="24" :x-gap="12" :y-gap="12">
-            <!-- Row 1 -->
-            <n-grid-item :span="6">
+            <!-- Row 1: 時間選擇器 + 快捷按鈕（由 DateRangePicker 元件提供） -->
+            <n-grid-item :span="24">
                 <DateRangePicker v-model:value="searchModel.timeRange" />
             </n-grid-item>
-            <n-grid-item :span="5">
+
+            <!-- Row 2: 商戶選擇 + 供應商選擇 -->
+            <n-grid-item :span="6">
                 <n-select
                     v-model:value="searchModel.merchantCode"
                     :options="merchantOptions"
@@ -259,7 +272,7 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
                     clearable
                 />
             </n-grid-item>
-            <n-grid-item :span="5">
+            <n-grid-item :span="6">
                 <n-select
                     v-model:value="searchModel.provider"
                     :options="providerOptions"
@@ -267,14 +280,11 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
                     clearable
                 />
             </n-grid-item>
-            <n-grid-item :span="8">
-                <!-- Empty space for future filters -->
-            </n-grid-item>
-            <n-grid-item :span="4">
-                <!-- Empty space for alignment -->
+            <n-grid-item :span="12">
+                <!-- Empty space -->
             </n-grid-item>
 
-            <!-- Row 2 -->
+            <!-- Row 3: 局號輸入 + 玩家ID輸入 + 搜尋/重置按鈕 -->
             <n-grid-item :span="5">
                 <n-input
                     v-model:value="searchModel.roundId"
@@ -293,7 +303,7 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
                 <!-- Empty space -->
             </n-grid-item>
             <n-grid-item :span="4" class="flex justify-end gap-2">
-                <n-button type="primary" @click="handleSearch" :loading="loading" class="flex-1">
+                <n-button type="primary" @click="handleSearch" :loading="loading">
                     {{ t('betLog.searchLogs') }}
                 </n-button>
                 <n-button @click="handleReset">
@@ -310,7 +320,8 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
         :loading="loading"
         flex-height
         :pagination="{ pageSize: 20 }"
-        class="flex-1"
+        :scroll-x="1800"
+        style="flex: 1; min-height: 500px;"
         :single-line="false"
         :row-props="(row: BetLog) => ({
             style: 'cursor: pointer',
@@ -339,13 +350,21 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
                     <div>
                         <div class="text-xs text-gray-400">{{ t('betLog.bet') }}</div>
                         <div class="font-bold">
-                            <MoneyText :value="selectedBetLog.bet_amount" :currency="selectedBetLog.currency" />
+                            <MoneyText :value="selectedBetLog.bet_amount" :currency="selectedBetLog.currency" color="text-white" />
                         </div>
                     </div>
                     <div>
                         <div class="text-xs text-gray-400">{{ t('betLog.netWin') }}</div>
-                        <div :class="['font-bold', selectedBetLog.net_win > 0 ? 'text-green-500' : selectedBetLog.net_win < 0 ? 'text-red-500' : 'text-gray-400']">
-                            {{ selectedBetLog.net_win > 0 ? '+' : '' }}<MoneyText :value="Math.abs(selectedBetLog.net_win)" :currency="selectedBetLog.currency" />
+                        <div class="font-bold">
+                            <template v-if="selectedBetLog.net_win > 0">
+                                <span class="text-green-500">+</span><MoneyText :value="selectedBetLog.net_win" :currency="selectedBetLog.currency" color="text-green-500" />
+                            </template>
+                            <template v-else-if="selectedBetLog.net_win < 0">
+                                <span class="text-red-500">-</span><MoneyText :value="Math.abs(selectedBetLog.net_win)" :currency="selectedBetLog.currency" color="text-red-500" />
+                            </template>
+                            <template v-else>
+                                <MoneyText :value="selectedBetLog.net_win" :currency="selectedBetLog.currency" color="text-gray-600" />
+                            </template>
                         </div>
                     </div>
                 </div>
