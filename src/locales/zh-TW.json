@@ -532,6 +532,26 @@
             "system_jobLevels": "職等管理"
         }
     },
+    "audit": {
+        "filterTime": "時間區間",
+        "filterOperator": "操作人員",
+        "filterAction": "動作類型",
+        "time": "操作時間",
+        "operator": "人員",
+        "action": "動作",
+        "target": "目標對象",
+        "ip": "来源 IP",
+        "details": "變更內容",
+        "viewDetails": "查看詳情",
+        "types": {
+            "login": "登入系統",
+            "logout": "登出系統",
+            "create": "新增資料",
+            "update": "修改資料",
+            "delete": "刪除資料",
+            "other": "其他操作"
+        }
+    },
     "dateRange": {
         "today": "今天",
         "yesterday": "昨天",

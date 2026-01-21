@@ -11,7 +11,6 @@ export type Permission =
     | 'reports:daily'
     | 'reports:bet'
     | 'system'
-    | 'system:staff'
     | 'system:job-levels'
 
 // Job Level interface
@@ -36,4 +35,17 @@ export interface Staff {
     job_level_name?: string  //  Included in API responses for display
     created_at: string
     last_login?: string
+}
+
+// Audit Log Types
+export type AuditAction = 'login' | 'logout' | 'create' | 'update' | 'delete' | 'other'
+
+export interface AuditLog {
+    id: string
+    time: string      // ISO Timestamp
+    operator: string  // Username
+    action: AuditAction
+    target: string    // e.g., "Merchant: OP-1001", "System"
+    ip: string
+    details: any      // JSON object for diff or description
 }

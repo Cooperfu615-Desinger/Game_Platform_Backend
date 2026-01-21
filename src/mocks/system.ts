@@ -77,30 +77,59 @@ function getJobLevelName(jobLevelId: number): string {
 }
 
 // ==================== AUDIT LOGS ====================
-interface AuditLogMock {
-    id: string
-    time: string
-    operator: string
-    action: string
-    target: string
-    ip: string
-    changes: any
-}
+// ==================== AUDIT LOGS ====================
+// Mock Data Generation
+const auditLogs: any[] = faker.helpers.multiple(() => {
+    const action = faker.helpers.arrayElement(['login', 'logout', 'create', 'update', 'delete', 'other']) as 'login' | 'logout' | 'create' | 'update' | 'delete' | 'other'
+    let target = ''
+    let details: any = {}
 
-const auditLogs: AuditLogMock[] = Array.from({ length: 25 }, () => ({
-    id: faker.string.uuid(),
-    time: faker.date.recent({ days: 10 }).toISOString(),
-    operator: faker.helpers.arrayElement(['admin', 'tech_lead', 'system']),
-    action: faker.helpers.arrayElement([
-        'UPDATE_PROVIDER_STATUS', 'GENERATE_INVOICE', 'CREATE_MERCHANT', 'UPDATE_GAME_RTP', 'SYSTEM_MAINTENANCE'
-    ]),
-    target: faker.helpers.arrayElement(['PG Soft', 'Bet365', 'Global Settings', 'Invoice #202510']),
-    ip: faker.internet.ip(),
-    changes: {
-        before: { status: 'active' },
-        after: { status: 'maintenance' }
+    switch (action) {
+        case 'login':
+            target = 'System'
+            details = { message: 'User logged in successfully', method: 'password' }
+            break
+        case 'logout':
+            target = 'System'
+            details = { message: 'User logged out' }
+            break
+        case 'create':
+            target = `Merchant: ${faker.company.name()}`
+            details = {
+                new_data: {
+                    id: faker.number.int({ min: 1000, max: 9999 }),
+                    name: target.split(': ')[1],
+                    status: 'active'
+                }
+            }
+            break
+        case 'update':
+            target = faker.datatype.boolean() ? `Merchant: OP-${faker.number.int({ min: 1000, max: 2000 })}` : 'Global Settings'
+            details = {
+                before: { status: 'active', limit: 1000 },
+                after: { status: 'maintenance', limit: 5000 }
+            }
+            break
+        case 'delete':
+            target = `Staff: ${faker.person.fullName()}`
+            details = { reason: 'Resigned', deleted_by: 'admin' }
+            break
+        case 'other':
+            target = 'Report Export'
+            details = { file: 'financial_report_2025.csv', size: '2.5MB' }
+            break
     }
-})).sort((a: any, b: any) => new Date(b.time).getTime() - new Date(a.time).getTime())
+
+    return {
+        id: faker.string.uuid(),
+        time: faker.date.recent({ days: 10 }).toISOString(),
+        operator: faker.helpers.arrayElement(['admin', 'tech_lead', 'finance_user', 'system']),
+        action,
+        target,
+        ip: faker.internet.ip(),
+        details
+    }
+}, { count: 60 }).sort((a: any, b: any) => new Date(b.time).getTime() - new Date(a.time).getTime())
 
 // ==================== GLOBAL SETTINGS ====================
 let globalSettings = {
@@ -313,10 +342,10 @@ export const systemHandlers = [
             id: faker.string.uuid(),
             time: new Date().toISOString(),
             operator: 'admin',
-            action: 'UPDATE_SETTINGS',
+            action: 'update',
             target: 'Global Config',
             ip: '127.0.0.1',
-            changes: body
+            details: body
         })
 
         return HttpResponse.json({ code: 0, msg: 'Settings updated' })
