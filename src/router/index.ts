@@ -138,8 +138,8 @@ const routes: RouteRecordRaw[] = [
             {
                 path: 'reports/daily',
                 name: 'DailyReport',
-                component: () => import('../views/Merchant/Reports/DailyReport.vue'),
-                meta: { title: '每日報表', roles: ['agent', 'merchant'] }
+                component: () => import('../views/Merchant/Reports/RevenueReport.vue'),
+                meta: { title: '營收報表', roles: ['agent', 'merchant'] }
             },
             {
                 path: 'reports/win-loss',

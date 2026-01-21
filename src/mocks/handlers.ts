@@ -776,6 +776,86 @@ export const handlers = [
         })
     }),
 
+    // Merchant Daily Revenue Report (Aggregated)
+    http.get('/api/v2/merchant/reports/daily', async () => {
+        await delay(500)
+
+        const items = Array.from({ length: 30 }).map((_, i) => {
+            const date = new Date()
+            date.setDate(date.getDate() - i)
+            const dateStr = date.toISOString().split('T')[0]
+
+            const totalBet = Number(faker.finance.amount({ min: 10000, max: 500000, dec: 2 }))
+            const rtp = faker.number.int({ min: 80, max: 110 })
+            const totalPayout = Number((totalBet * (rtp / 100)).toFixed(2))
+            const netWin = Number((totalPayout - totalBet).toFixed(2))
+
+            return {
+                date: dateStr,
+                tx_count: faker.number.int({ min: 50, max: 2000 }),
+                total_bet: totalBet,
+                total_payout: totalPayout,
+                net_win: netWin,
+                rtp: rtp
+            }
+        })
+
+        // Calculate Grand Total Summary
+        const summary = items.reduce((acc, curr) => ({
+            total_bet: acc.total_bet + curr.total_bet,
+            total_payout: acc.total_payout + curr.total_payout,
+            net_win: acc.net_win + curr.net_win,
+            tx_count: acc.tx_count + curr.tx_count
+        }), { total_bet: 0, total_payout: 0, net_win: 0, tx_count: 0 })
+
+        // Calculate Avg RTP
+        const avgRtp = summary.total_bet > 0
+            ? (summary.total_payout / summary.total_bet * 100).toFixed(2)
+            : 0
+
+        return HttpResponse.json({
+            code: 0,
+            msg: 'success',
+            data: {
+                items,
+                summary: {
+                    ...summary,
+                    rtp: Number(avgRtp)
+                }
+            }
+        })
+    }),
+
+    // Merchant Report Transactions Information (Drill-down)
+    http.get('/api/v2/merchant/reports/transactions', async () => {
+        await delay(600)
+        const total = 50
+        const list = Array.from({ length: 15 }).map(() => {
+            const bet = Number(faker.finance.amount({ min: 10, max: 1000, dec: 2 }))
+            const isWin = faker.datatype.boolean()
+            const payout = isWin ? bet * faker.number.float({ min: 0.5, max: 50 }) : 0
+
+            return {
+                id: faker.string.uuid(),
+                player_id: `user_${faker.string.alphanumeric(6)}`,
+                game_name: faker.helpers.arrayElement(mockGames).name_en,
+                bet_amount: bet,
+                payout_amount: Number(payout.toFixed(2)),
+                net_win: Number((payout - bet).toFixed(2)),
+                created_at: faker.date.recent().toISOString()
+            }
+        })
+
+        return HttpResponse.json({
+            code: 0,
+            msg: 'success',
+            data: {
+                list,
+                total
+            }
+        })
+    }),
+
     ...financeHandlers,
     ...systemHandlers
 ]

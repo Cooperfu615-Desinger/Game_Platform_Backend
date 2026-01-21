@@ -304,6 +304,21 @@
         "resetSecretConfirm": "這將導致當前商戶的 API 連線立即中斷，確定要執行嗎？",
         "emptyWhitelistConfirm": "未設定 IP 白名單將導致所有連線被拒絕 (或開放所有)，確定存檔？"
     },
+    "merchantReports": {
+        "title": "營收報表",
+        "dailySummary": "每日營收",
+        "transactionDetails": "交易明細",
+        "totalBet": "總投注",
+        "totalPayout": "總派彩",
+        "netWin": "總盈虧",
+        "txCount": "注單數",
+        "viewDetails": "查看明細",
+        "summaryTitle": "區間總計",
+        "avgRtp": "平均 RTP",
+        "player": "玩家",
+        "game": "遊戲",
+        "betTime": "投注時間"
+    },
     "provider": {
         "title": "供應商管理",
         "list": "供應商列表",
