@@ -51,8 +51,8 @@ export const merchantMenuOptions = (t: (key: string) => string): MenuOption[] =>
         key: 'report-group',
         children: [
             {
-                label: () => h(RouterLink, { to: '/merchant/reports/win-loss' }, { default: () => t('menu.dailyRevenue') }),
-                key: 'WinLossReport',
+                label: () => h(RouterLink, { to: '/merchant/reports/daily' }, { default: () => t('menu.dailyRevenue') }),
+                key: 'DailyReport',
                 icon: renderIcon(BarChartOutlined)
             },
             {
