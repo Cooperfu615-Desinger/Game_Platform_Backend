@@ -93,6 +93,12 @@ const routes: RouteRecordRaw[] = [
                 meta: { title: '員工權限', roles: ['admin'] }
             },
             {
+                path: 'system/job-levels',
+                name: 'JobLevelList',
+                component: () => import('../views/Master/System/JobLevelList.vue'),
+                meta: { title: '職等管理', roles: ['admin'] }
+            },
+            {
                 path: 'system/audit-logs',
                 name: 'AuditLogs',
                 component: () => import('../views/Master/System/AuditLogs.vue'),

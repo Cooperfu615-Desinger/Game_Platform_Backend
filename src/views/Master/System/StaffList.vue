@@ -5,46 +5,48 @@ import {
     useMessage, type DataTableColumns 
 } from 'naive-ui'
 import { useI18n } from 'vue-i18n'
+import type { Staff, JobLevel } from '../../../types/system'
 
 const { t } = useI18n()
 const message = useMessage()
 
-interface Staff {
-    id: number
-    account: string
-    role: string
-    last_login: string
-    status: 'active' | 'disabled'
-}
-
 const staffList = ref<Staff[]>([])
+const jobLevels = ref<JobLevel[]>([])
 const loading = ref(false)
 const showModal = ref(false)
 
 const formModel = ref({
     id: 0,
-    account: '',
-    role: 'Support',
-    status: 'active'
+    username: '',
+    realname: '',
+    email: '',
+    job_level_id: 0,
+    status: 'active' as 'active' | 'disabled'
 })
 
-const roles = ['Super Admin', 'Tech Lead', 'Finance', 'Support'].map(r => ({ label: r, value: r }))
+const jobLevelOptions = computed(() => 
+    jobLevels.value.map(jl => ({ label: jl.name, value: jl.id }))
+)
 
 const columns = computed<DataTableColumns<Staff>>(() => [
-    { title: t('system.account'), key: 'account' },
+    { title: t('system.username'), key: 'username', width: 150 },
+    { title: t('system.realname'), key: 'realname', width: 150 },
+    { title: t('system.email'), key: 'email', ellipsis: { tooltip: true } },
     { 
-        title: t('system.role'), 
-        key: 'role',
+        title: t('system.jobLevel'), 
+        key: 'job_level_name',
+        width: 180,
         render: (row) => h(
             NTag, 
-            { type: row.role === 'Super Admin' ? 'error' : 'info', bordered: false }, 
-            { default: () => row.role }
+            { type: 'info', bordered: false }, 
+            { default: () => row.job_level_name || 'N/A' }
         )
     },
-    { title: t('system.lastLogin'), key: 'last_login' },
+    { title: t('system.lastLogin'), key: 'last_login', width: 180 },
     { 
         title: t('finance.status'),
         key: 'status',
+        width: 100,
         render: (row) => h(
             NTag, 
             { type: row.status === 'active' ? 'success' : 'error', bordered: false }, 
@@ -54,6 +56,7 @@ const columns = computed<DataTableColumns<Staff>>(() => [
     {
         title: t('columns.action'),
         key: 'action',
+        width: 100,
         render: (row) => h(
             NButton, 
             { size: 'small', onClick: () => editStaff(row) }, 
@@ -64,33 +67,68 @@ const columns = computed<DataTableColumns<Staff>>(() => [
 
 const fetchStaff = async () => {
     loading.value = true
-    const res = await fetch('/api/v2/system/staff')
-    const data = await res.json()
-    staffList.value = data.data.list
-    loading.value = false
+    try {
+        const res = await fetch('/api/v2/system/staff')
+        const data = await res.json()
+        staffList.value = data.data.list
+    } finally {
+        loading.value = false
+    }
+}
+
+const fetchJobLevels = async () => {
+    try {
+        const res = await fetch('/api/admin/job-levels')
+        const data = await res.json()
+        jobLevels.value = data.data.list
+    } catch (error) {
+        message.error('Failed to load job levels')
+    }
 }
 
 const editStaff = (row: Staff) => {
-    formModel.value = { ...row }
+    formModel.value = {
+        id: row.id,
+        username: row.username,
+        realname: row.realname,
+        email: row.email,
+        job_level_id: row.job_level_id,
+        status: row.status
+    }
     showModal.value = true
 }
 
 const addStaff = () => {
-    formModel.value = { id: 0, account: '', role: 'Support', status: 'active' }
+    formModel.value = { 
+        id: 0, 
+        username: '', 
+        realname: '',
+        email: '',
+        job_level_id: 0, 
+        status: 'active' 
+    }
     showModal.value = true
 }
 
 const handleSubmit = async () => {
-    await fetch('/api/v2/system/staff', {
-        method: 'POST',
-        body: JSON.stringify(formModel.value)
-    })
-    message.success(t('common.saveSuccess'))
-    showModal.value = false
-    fetchStaff()
+    try {
+        await fetch('/api/v2/system/staff', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formModel.value)
+        })
+        message.success('Staff saved successfully')
+        showModal.value = false
+        await fetchStaff()
+    } catch (error) {
+        message.error('Failed to save')
+    }
 }
 
-onMounted(() => fetchStaff())
+onMounted(async () => {
+    await fetchJobLevels()
+    await fetchStaff()
+})
 </script>
 
 <template>
@@ -104,16 +142,29 @@ onMounted(() => fetchStaff())
             <n-data-table :columns="columns" :data="staffList" :loading="loading" />
         </n-card>
 
-        <n-modal v-model:show="showModal" preset="card" :title="formModel.id ? t('system.editStaff') : t('system.addStaff')" class="w-[500px]">
+        <n-modal v-model:show="showModal" preset="card" :title="formModel.id ? t('system.editStaff') : t('system.addStaff')" class="w-[600px]">
             <n-form ref="formRef" :model="formModel">
-                <n-form-item :label="t('system.account')">
-                    <n-input v-model:value="formModel.account" :disabled="!!formModel.id" />
+                <n-form-item :label="t('system.username')" required>
+                    <n-input v-model:value="formModel.username" :disabled="!!formModel.id" />
                 </n-form-item>
-                <n-form-item :label="t('system.role')">
-                    <n-select v-model:value="formModel.role" :options="roles" />
+                <n-form-item :label="t('system.realname')" required>
+                    <n-input v-model:value="formModel.realname" />
+                </n-form-item>
+                <n-form-item :label="t('system.email')" required>
+                    <n-input v-model:value="formModel.email" />
+                </n-form-item>
+                <n-form-item :label="t('system.jobLevel')" required>
+                    <n-select 
+                        v-model:value="formModel.job_level_id" 
+                        :options="jobLevelOptions" 
+                        :placeholder="t('system.assignJobLevel')"
+                    />
                 </n-form-item>
                 <n-form-item :label="t('finance.status')" v-if="formModel.id">
-                    <n-select v-model:value="formModel.status" :options="[{label:'Active', value:'active'}, {label:'Disabled', value:'disabled'}]" />
+                    <n-select 
+                        v-model:value="formModel.status" 
+                        :options="[{label:'Active', value:'active'}, {label:'Disabled', value:'disabled'}]" 
+                    />
                 </n-form-item>
             </n-form>
             <div class="flex justify-end gap-2 mt-4">
