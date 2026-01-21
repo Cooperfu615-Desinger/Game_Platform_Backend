@@ -64,7 +64,9 @@
         "enabled": "Enabled",
         "disabled": "Disabled",
         "available": "Available",
-        "unavailable": "Unavailable"
+        "unavailable": "Unavailable",
+        "read": "Read",
+        "write": "Write"
     },
     "menu": {
         "dashboard": "Dashboard",

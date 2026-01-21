@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted, h } from 'vue'
-import { NButton, NDataTable, NDrawer, NForm, NFormItem, NInput, useMessage } from 'naive-ui'
+import { ref, onMounted, h, computed } from 'vue'
+import { NButton, NDataTable, NDrawer, NForm, NFormItem, NInput, NTree, useMessage } from 'naive-ui'
 import { useI18n } from 'vue-i18n'
-import type { DataTableColumns } from 'naive-ui'
+import type { DataTableColumns, TreeOption } from 'naive-ui'
 import type { JobLevel } from '../../../types/system'
 
 const { t } = useI18n()
@@ -19,6 +19,46 @@ const formModel = ref({
     description: '',
     permissions: [] as string[]
 })
+
+// Permission Tree Structure
+const permissionOptions = computed<TreeOption[]>(() => [
+    { 
+        key: 'dashboard', 
+        label: t('system.perm.dashboard')
+    },
+    { 
+        key: 'merchant', 
+        label: t('system.perm.merchant'),
+        children: [
+            { key: 'merchant:read', label: t('common.read') },
+            { key: 'merchant:write', label: t('common.write') }
+        ]
+    },
+    { 
+        key: 'finance', 
+        label: t('system.perm.finance'),
+        children: [
+            { key: 'finance:read', label: t('common.read') },
+            { key: 'finance:write', label: t('common.write') }
+        ]
+    },
+    { 
+        key: 'reports', 
+        label: t('system.perm.reports'),
+        children: [
+            { key: 'reports:daily', label: t('system.perm.reports_daily') },
+            { key: 'reports:bet', label: t('system.perm.reports_bet') }
+        ]
+    },
+    { 
+        key: 'system', 
+        label: t('system.perm.system'),
+        children: [
+            { key: 'system:staff', label: t('system.perm.system_staff') },
+            { key: 'system:job-levels', label: t('system.perm.system_jobLevels') }
+        ]
+    }
+])
 
 const columns: DataTableColumns<JobLevel> = [
     { title: 'ID', key: 'id', width: 80 },
@@ -169,10 +209,22 @@ onMounted(() => {
                         />
                     </n-form-item>
                     
-                    <div class="text-sm text-gray-400">
-                        {{ t('system.permissions') }}: {{ formModel.permissions.length }} selected
-                        <br>(Permission tree UI: TBD in next iteration)
-                    </div>
+                    <n-form-item :label="t('system.permissions')" required>
+                        <div class="w-full">
+                            <div class="mb-2 text-sm text-gray-500">
+                                {{ formModel.permissions.length }} {{ t('common.enabled') }}
+                            </div>
+                            <n-tree
+                                :data="permissionOptions"
+                                :checkable="true"
+                                :cascade="true"
+                                :default-expand-all="true"
+                                :checked-keys="formModel.permissions"
+                                @update:checked-keys="(keys: string[]) => formModel.permissions = keys"
+                                block-line
+                            />
+                        </div>
+                    </n-form-item>
                 </n-form>
 
                 <div class="flex justify-end gap-3 mt-6">

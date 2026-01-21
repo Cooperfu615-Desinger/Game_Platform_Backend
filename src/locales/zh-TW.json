@@ -64,7 +64,9 @@
         "enabled": "已啟用",
         "disabled": "已停用",
         "available": "可用",
-        "unavailable": "不可用"
+        "unavailable": "不可用",
+        "read": "讀取",
+        "write": "寫入"
     },
     "menu": {
         "dashboard": "儀表板",
