@@ -11,6 +11,19 @@ import { computed } from 'vue'
 
 const { locale } = useI18n()
 
+// Theme Overrides for Light Green Primary
+const themeOverrides = {
+  common: {
+    primaryColor: '#63e2b7', // Light Green
+    primaryColorHover: '#7fe7c4',
+    primaryColorPressed: '#5acea7',
+    primaryColorSuppl: '#2a483e'
+  },
+  Button: {
+    textColorPrimary: '#ffffff' // White Text as requested
+  }
+}
+
 const naiveLocale = computed(() => {
   return locale.value === 'zh-TW' ? zhTW : enUS
 })
@@ -21,7 +34,7 @@ const naiveDateLocale = computed(() => {
 </script>
 
 <template>
-  <n-config-provider :theme="darkTheme" :locale="naiveLocale" :date-locale="naiveDateLocale">
+  <n-config-provider :theme="darkTheme" :theme-overrides="themeOverrides" :locale="naiveLocale" :date-locale="naiveDateLocale">
     <n-global-style />
     <n-message-provider>
       <div class="min-h-screen bg-[#18181c] text-white">
