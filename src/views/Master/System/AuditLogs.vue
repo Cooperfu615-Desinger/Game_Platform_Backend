@@ -223,28 +223,28 @@ onMounted(() => fetchLogs())
             <n-drawer-content :title="t('audit.details')">
                 <div v-if="selectedLog" class="space-y-6">
                     <!-- Summary -->
-                    <div class="grid grid-cols-2 gap-4 text-sm bg-gray-50 p-4 rounded-lg">
-                        <div class="text-gray-500">{{ t('audit.time') }}</div>
+                    <div class="grid grid-cols-2 gap-4 text-sm bg-gray-900 p-4 rounded-lg text-gray-100">
+                        <div class="text-gray-400">{{ t('audit.time') }}</div>
                         <div class="font-medium">{{ formatDate(selectedLog.time) }}</div>
                         
-                        <div class="text-gray-500">{{ t('audit.operator') }}</div>
-                        <div class="font-bold text-gray-900">{{ selectedLog.operator }}</div>
+                        <div class="text-gray-400">{{ t('audit.operator') }}</div>
+                        <div class="font-bold text-white">{{ selectedLog.operator }}</div>
                         
-                        <div class="text-gray-500">{{ t('audit.action') }}</div>
+                        <div class="text-gray-400">{{ t('audit.action') }}</div>
                         <div>
                             <n-tag :type="getActionConfig(selectedLog.action).type as any" size="small" :bordered="false">
                                 {{ t(getActionConfig(selectedLog.action).labelKey) }}
                             </n-tag>
                         </div>
 
-                        <div class="text-gray-500">{{ t('audit.ip') }}</div>
+                        <div class="text-gray-400">{{ t('audit.ip') }}</div>
                         <div class="font-mono text-xs">{{ selectedLog.ip }}</div>
                     </div>
 
                     <!-- Target Info -->
                     <div>
                         <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">{{ t('audit.target') }}</div>
-                        <div class="p-3 border rounded-md text-sm text-gray-700 bg-white">
+                        <div class="p-3 border border-gray-700 rounded-md text-sm text-gray-200 bg-gray-900">
                             {{ selectedLog.target }}
                         </div>
                     </div>
