@@ -318,6 +318,7 @@
         "player": "玩家",
         "game": "遊戲",
         "betTime": "投注時間",
+        "activePlayers": "遊戲人數",
         "category": "遊戲分類",
         "rtp": "RTP (%)",
         "Slot": "電子老虎機",

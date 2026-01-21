@@ -20,6 +20,7 @@ const dateRange = ref<[number, number]>([
 interface DailyReportItem {
     key?: string
     date: string
+    active_players: number
     tx_count: number
     total_bet: number
     total_payout: number
@@ -34,6 +35,7 @@ const summary = ref({
     total_payout: 0,
     net_win: 0,
     tx_count: 0,
+    active_players: 0,
     rtp: 0
 })
 
@@ -91,6 +93,12 @@ const columns: DataTableColumns<DailyReportItem> = [
                 return t(`merchantReports.${row.date}`)
             }
         }
+    },
+    {
+        title: t('merchantReports.activePlayers'),
+        key: 'active_players',
+        align: 'right',
+        render: (row) => row.active_players.toLocaleString()
     },
     {
         title: t('merchantReports.txCount'),
@@ -184,6 +192,11 @@ onMounted(fetchData)
         <!-- Summary Cards -->
         <n-card :title="t('merchantReports.summaryTitle')" size="small">
             <n-grid :cols="4" gap="12">
+                <n-grid-item>
+                    <n-statistic :label="t('merchantReports.activePlayers')">
+                        {{ summary.active_players.toLocaleString() }}
+                    </n-statistic>
+                </n-grid-item>
                 <n-grid-item>
                     <n-statistic :label="t('merchantReports.totalBet')">
                         {{ summary.total_bet.toLocaleString() }}

@@ -794,6 +794,7 @@ export const handlers = [
                 return {
                     key: `${dateStr}-${cat}`,
                     date: cat, // Display name for UI
+                    active_players: faker.number.int({ min: 5, max: 200 }),
                     tx_count: faker.number.int({ min: 10, max: 500 }),
                     total_bet: bet,
                     total_payout: payout,
@@ -804,11 +805,12 @@ export const handlers = [
 
             // Sum up for daily total
             const dailyTotal = children.reduce((acc, curr) => ({
+                active_players: acc.active_players + curr.active_players,
                 tx_count: acc.tx_count + curr.tx_count,
                 total_bet: acc.total_bet + curr.total_bet,
                 total_payout: acc.total_payout + curr.total_payout,
                 net_win: acc.net_win + curr.net_win
-            }), { tx_count: 0, total_bet: 0, total_payout: 0, net_win: 0 })
+            }), { active_players: 0, tx_count: 0, total_bet: 0, total_payout: 0, net_win: 0 })
 
             return {
                 key: dateStr,
@@ -823,8 +825,9 @@ export const handlers = [
             total_bet: acc.total_bet + curr.total_bet,
             total_payout: acc.total_payout + curr.total_payout,
             net_win: acc.net_win + curr.net_win,
-            tx_count: acc.tx_count + curr.tx_count
-        }), { total_bet: 0, total_payout: 0, net_win: 0, tx_count: 0 })
+            tx_count: acc.tx_count + curr.tx_count,
+            active_players: acc.active_players + curr.active_players
+        }), { total_bet: 0, total_payout: 0, net_win: 0, tx_count: 0, active_players: 0 })
 
         return HttpResponse.json({
             code: 0,
