@@ -250,9 +250,20 @@ export const systemHandlers = [
                     created_at: existing.created_at,
                     last_login: existing.last_login
                 }
+                // Mock: Log password update (real app would hash and store)
+                if (body.password && body.password.trim()) {
+                    console.log(`[Mock] Password updated for: ${existing.username}`)
+                }
             }
         } else {
-            // Create new staff
+            // Create new staff - validate password required
+            if (!body.password || !body.password.trim()) {
+                return HttpResponse.json({
+                    code: 400,
+                    msg: 'Password is required for new staff'
+                }, { status: 400 })
+            }
+
             const newId = staffList.length > 0 ? Math.max(...staffList.map(s => s.id)) + 1 : 1
             const newStaff: Staff = {
                 id: newId,
@@ -264,6 +275,7 @@ export const systemHandlers = [
                 created_at: new Date().toISOString()
             }
             staffList.push(newStaff)
+            console.log(`[Mock] New staff created: ${body.username}`)
         }
 
         return HttpResponse.json({ code: 0, msg: 'Saved successfully' })

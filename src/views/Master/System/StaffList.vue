@@ -20,6 +20,7 @@ const formModel = ref({
     username: '',
     realname: '',
     email: '',
+    password: '',
     job_level_id: 0,
     status: 'active' as 'active' | 'disabled'
 })
@@ -92,6 +93,7 @@ const editStaff = (row: Staff) => {
         username: row.username,
         realname: row.realname,
         email: row.email,
+        password: '',  // Reset password field for edit mode
         job_level_id: row.job_level_id,
         status: row.status
     }
@@ -104,6 +106,7 @@ const addStaff = () => {
         username: '', 
         realname: '',
         email: '',
+        password: '',
         job_level_id: 0, 
         status: 'active' 
     }
@@ -152,6 +155,17 @@ onMounted(async () => {
                 </n-form-item>
                 <n-form-item :label="t('system.email')" required>
                     <n-input v-model:value="formModel.email" />
+                </n-form-item>
+                <n-form-item 
+                    :label="formModel.id ? t('system.resetPassword') : t('system.password')" 
+                    :required="!formModel.id"
+                >
+                    <n-input 
+                        v-model:value="formModel.password" 
+                        type="password"
+                        show-password-on="click"
+                        :placeholder="formModel.id ? t('system.editPasswordPlaceholder') : t('system.passwordPlaceholder')"
+                    />
                 </n-form-item>
                 <n-form-item :label="t('system.jobLevel')" required>
                     <n-select 
