@@ -42,6 +42,12 @@ const transferForm = reactive({
 const transferring = ref(false)
 const submitting = ref(false)
 
+const agentModalTitle = computed(() => {
+    return agentModalMode.value === 'create' 
+        ? t('merchant.agent.createTitle') 
+        : t('merchant.agent.editTitle')
+})
+
 // Columns
 // Columns
 const columns = computed(() => [
@@ -284,33 +290,45 @@ onMounted(fetchData)
         </n-card>
 
         <!-- Create/Edit Modal -->
-        <n-modal v-model:show="showAgentModal" preset="card" :title="agentModalMode === 'create' ? t('merchant.agent.createTitle') : t('merchant.agent.editTitle')" class="w-[600px]">
-            <n-form label-placement="left" label-width="120">
-                <n-form-item :label="t('merchant.agent.account')" required>
-                    <n-input v-model:value="agentForm.account" :disabled="agentModalMode === 'edit'" />
-                </n-form-item>
-                <n-form-item v-if="agentModalMode === 'create'" :label="t('merchant.agent.password')" required>
-                    <n-input v-model:value="agentForm.password" type="password" show-password-on="click" />
-                </n-form-item>
-                <n-form-item :label="t('merchant.agent.commissionRate')">
-                    <div class="w-full px-2">
-                        <n-slider v-model:value="agentForm.commission_rate" :step="1" :max="100" />
+        <!-- Create/Edit Modal -->
+        <n-modal v-model:show="showAgentModal">
+            <n-card
+                style="width: 600px"
+                :title="agentModalTitle"
+                :bordered="false"
+                size="huge"
+                role="dialog"
+                aria-modal="true"
+                closable
+                @close="showAgentModal = false"
+            >
+                <n-form label-placement="left" label-width="120">
+                    <n-form-item :label="t('merchant.agent.account')" required>
+                        <n-input v-model:value="agentForm.account" :disabled="agentModalMode === 'edit'" />
+                    </n-form-item>
+                    <n-form-item v-if="agentModalMode === 'create'" :label="t('merchant.agent.password')" required>
+                        <n-input v-model:value="agentForm.password" type="password" show-password-on="click" />
+                    </n-form-item>
+                    <n-form-item :label="t('merchant.agent.commissionRate')">
+                        <div class="w-full px-2">
+                            <n-slider v-model:value="agentForm.commission_rate" :step="1" :max="100" />
+                        </div>
+                        <span class="ml-4 w-12 text-right font-bold">{{ agentForm.commission_rate }}%</span>
+                    </n-form-item>
+                    <n-form-item :label="t('merchant.agent.status')">
+                        <n-switch v-model:value="agentForm.status" />
+                    </n-form-item>
+                    <n-form-item :label="t('merchant.agent.note')">
+                        <n-input v-model:value="agentForm.note" type="textarea" />
+                    </n-form-item>
+                </n-form>
+                <template #footer>
+                    <div class="flex justify-end gap-2">
+                        <n-button @click="showAgentModal = false">{{ t('common.cancel') }}</n-button>
+                        <n-button type="primary" :loading="submitting" @click="submitAgent">{{ t('common.confirm') }}</n-button>
                     </div>
-                    <span class="ml-4 w-12 text-right font-bold">{{ agentForm.commission_rate }}%</span>
-                </n-form-item>
-                <n-form-item :label="t('merchant.agent.status')">
-                    <n-switch v-model:value="agentForm.status" />
-                </n-form-item>
-                <n-form-item :label="t('merchant.agent.note')">
-                    <n-input v-model:value="agentForm.note" type="textarea" />
-                </n-form-item>
-            </n-form>
-            <template #footer>
-                <div class="flex justify-end gap-2">
-                    <n-button @click="showAgentModal = false">{{ t('common.cancel') }}</n-button>
-                    <n-button type="primary" :loading="submitting" @click="submitAgent">{{ t('common.confirm') }}</n-button>
-                </div>
-            </template>
+                </template>
+            </n-card>
         </n-modal>
 
         <!-- Transfer Modal -->
