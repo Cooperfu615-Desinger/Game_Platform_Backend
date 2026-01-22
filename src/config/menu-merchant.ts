@@ -9,7 +9,8 @@ import {
     AttachMoneyOutlined,
     CodeOutlined,
     SportsEsportsOutlined,
-    PeopleAltOutlined
+    PeopleAltOutlined,
+    AccountBalanceWalletOutlined
 } from '@vicons/material'
 
 // Icon render helper
@@ -71,6 +72,11 @@ export const merchantMenuOptions = (t: (key: string) => string): MenuOption[] =>
                 label: () => h(RouterLink, { to: '/merchant/finance/invoices' }, { default: () => t('menu.myInvoices') }),
                 key: 'merchant-invoices',
                 icon: renderIcon(AttachMoneyOutlined)
+            },
+            {
+                label: () => h(RouterLink, { to: '/merchant/finance/funds' }, { default: () => t('merchant.fundRecord.title') }),
+                key: 'merchant-funds',
+                icon: renderIcon(AccountBalanceWalletOutlined)
             }
         ]
     },

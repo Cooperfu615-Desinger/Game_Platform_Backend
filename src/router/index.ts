@@ -161,9 +161,23 @@ const routes: RouteRecordRaw[] = [
             },
             {
                 path: 'finance/invoices',
-                name: 'merchant-invoices',
+                name: 'MerchantInvoices',
                 component: () => import('../views/Merchant/Finance/MyInvoices.vue'),
-                meta: { title: '我的帳單', roles: ['agent', 'merchant'] }
+                meta: {
+                    title: 'merchant.invoices.title',
+                    requiresAuth: true,
+                    roles: ['agent']
+                }
+            },
+            {
+                path: 'finance/funds',
+                name: 'MerchantFunds',
+                component: () => import('../views/Merchant/Finance/FundManagement.vue'),
+                meta: {
+                    title: 'merchant.fundRecord.title',
+                    requiresAuth: true,
+                    roles: ['agent']
+                }
             },
             // Organization (組織管理)
             {

@@ -162,5 +162,41 @@ export const fundsHandlers = [
             msg: 'Adjustment applied successfully',
             data: newRecord
         })
+    }),
+
+    // Merchant Fund List
+    http.get('/api/v2/merchant/funds', async () => {
+        await delay(600)
+        // Assume current merchant is ID 1001 (Bet365) for demo
+        const merchantId = '1001'
+
+        let list = fundRecords.filter(r => r.merchant_id === merchantId)
+
+        // Ensure we have some data for demo including a rejected one
+        if (!list.some(r => r.status === 'rejected')) {
+            list.push({
+                id: 'FUND-REJECT-DEMO',
+                merchant_id: '1001',
+                merchant_name: 'Bet365',
+                type: 'top-up',
+                amount: 50000,
+                status: 'rejected',
+                reason: 'Screenshot invalid (Demo)',
+                created_at: new Date(Date.now() - 172800000).toISOString(),
+                reviewer: 'admin'
+            } as FundRecord)
+        }
+
+        // Sort by date desc
+        list.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+
+        return HttpResponse.json({
+            code: 0,
+            msg: 'success',
+            data: {
+                list,
+                total: list.length
+            }
+        })
     })
 ]
