@@ -11,7 +11,8 @@ import {
     AttachMoneyOutlined,
     SettingsOutlined,
     SecurityOutlined,
-    AdminPanelSettingsOutlined
+    AdminPanelSettingsOutlined,
+    AccountBalanceWalletOutlined
 } from '@vicons/material'
 
 // Icon render helper
@@ -69,6 +70,11 @@ export const masterMenuOptions = (t: (key: string) => string): MenuOption[] => [
         label: t('menu.financeSettlement'),
         key: 'finance-group',
         children: [
+            {
+                label: () => h(RouterLink, { to: '/admin/finance/funds' }, { default: () => t('finance.funds.title') }),
+                key: 'FundManagement',
+                icon: renderIcon(AccountBalanceWalletOutlined)
+            },
             {
                 label: () => h(RouterLink, { to: '/admin/data-center/report' }, { default: () => t('menu.platformPnL') }),
                 key: 'FinancialReport',
