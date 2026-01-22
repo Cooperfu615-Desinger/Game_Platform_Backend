@@ -5,21 +5,21 @@
         </h1>
 
         <!-- Top Section: Wallet Info & Actions -->
-        <n-card class="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-100">
+        <n-card class="mb-6 !bg-[#101014] !border-gray-800" :bordered="false">
             <div class="flex justify-between items-center">
-                <div class="flex gap-8">
+                <div class="flex gap-12">
                     <!-- Balance -->
                     <div>
-                        <div class="text-gray-500 text-sm mb-1">{{ t('finance.currentBalance') }}</div>
-                        <div class="text-3xl font-bold text-gray-800">
+                        <div class="text-gray-400 text-sm mb-2 font-medium">{{ t('finance.currentBalance') }}</div>
+                        <div class="text-3xl font-bold text-[#4ade80] tracking-wide">
                             {{ formatCurrency(walletInfo.balance) }} 
-                            <span class="text-sm text-gray-400 font-normal">{{ walletInfo.currency }}</span>
+                            <span class="text-sm text-gray-500 font-normal">{{ walletInfo.currency }}</span>
                         </div>
                     </div>
                     <!-- Credit Limit -->
                     <div>
-                        <div class="text-gray-500 text-sm mb-1">{{ t('finance.creditLimit') }}</div>
-                        <div class="text-3xl font-bold text-gray-800">
+                        <div class="text-gray-400 text-sm mb-2 font-medium">{{ t('finance.creditLimit') }}</div>
+                        <div class="text-3xl font-bold text-white tracking-wide">
                             {{ formatCurrency(walletInfo.credit_limit) }}
                         </div>
                     </div>

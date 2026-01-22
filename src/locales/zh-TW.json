@@ -66,7 +66,10 @@
         "available": "可用",
         "unavailable": "不可用",
         "read": "讀取",
-        "write": "寫入"
+        "write": "寫入",
+        "createdAt": "建立時間",
+        "submit": "送出",
+        "reason": "原因/理由"
     },
     "menu": {
         "dashboard": "儀表板",
@@ -569,6 +572,10 @@
         "breakdown": "費用明細",
         "merchant": "商戶",
         "preview": "預覽帳單",
+        "currentBalance": "目前餘額",
+        "creditLimit": "信用額度",
+        "amount": "金額",
+        "requestedAmount": "申請金額",
         "confirmGenerate": "確認並生成",
         "filterMerchant": "搜尋商戶 (ID/名稱)",
         "filterStatus": "結算狀態",

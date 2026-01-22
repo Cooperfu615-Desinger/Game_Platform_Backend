@@ -66,7 +66,10 @@
         "available": "Available",
         "unavailable": "Unavailable",
         "read": "Read",
-        "write": "Write"
+        "write": "Write",
+        "createdAt": "Created At",
+        "submit": "Submit",
+        "reason": "Reason"
     },
     "menu": {
         "dashboard": "Dashboard",
@@ -193,7 +196,28 @@
         "noteInherit": "Note: The created merchant will inherit games from the parent agent by default.",
         "initialState": "Initial State",
         "currencyType": "Currency",
-        "viewSubs": "View Subs"
+        "viewSubs": "View Subs",
+        "fundRecord": {
+            "title": "Fund Management",
+            "applyTopUp": "Top Up",
+            "applyCredit": "Credit Limit",
+            "type": "Type",
+            "amount": "Amount",
+            "status": "Status",
+            "remarks": "Remarks",
+            "adminNote": "Admin Note",
+            "types": {
+                "topUp": "Top Up",
+                "credit": "Credit Limit",
+                "manual": "Manual Adjust",
+                "deduction": "Deduction"
+            },
+            "statusLabel": {
+                "pending": "Pending",
+                "approved": "Approved",
+                "rejected": "Rejected"
+            }
+        }
     },
     "merchantDashboard": {
         "myBalance": "My Balance",
@@ -427,6 +451,10 @@
         "breakdown": "Cost Breakdown",
         "merchant": "Merchant",
         "preview": "Preview Invoices",
+        "currentBalance": "Current Balance",
+        "creditLimit": "Credit Limit",
+        "amount": "Amount",
+        "requestedAmount": "Requested Amount",
         "confirmGenerate": "Confirm & Generate",
         "filterMerchant": "Search Merchant (ID/Name)",
         "filterStatus": "Settlement Status",
