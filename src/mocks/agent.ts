@@ -87,19 +87,51 @@ export const agentHandlers = [
     // Sub Agent List
     http.get('/api/v2/agent/sub-agents', async () => {
         await delay(500)
-        const list = Array.from({ length: 5 }, () => ({
+        const list = Array.from({ length: 8 }, () => ({
             id: faker.number.int({ min: 100, max: 999 }),
             account: faker.internet.username(),
             level: 2,
             balance: faker.number.float({ min: 100, max: 5000, fractionDigits: 2 }),
-            status: 'active',
-            created_at: faker.date.past().toISOString()
+            status: faker.helpers.arrayElement(['active', 'disabled']),
+            created_at: faker.date.past().toISOString(),
+            commission_rate: faker.number.int({ min: 20, max: 50 }),
+            player_count: faker.number.int({ min: 0, max: 500 }),
+            monthly_performance: faker.number.float({ min: 0, max: 100000, fractionDigits: 2 }),
+            promotion_code: faker.string.alphanumeric(8).toUpperCase(),
+            percent: 30
         }))
         return HttpResponse.json({
             code: 0,
             msg: 'success',
-            data: { list, total: 5 }
+            data: { list, total: 8 }
         })
+    }),
+
+    // Create Agent
+    http.post('/api/v2/merchant/agents', async () => {
+        await delay(600)
+        return HttpResponse.json({ code: 0, msg: 'Agent created successfully' })
+    }),
+
+    // Update Agent
+    http.put('/api/v2/merchant/agents/:id', async () => {
+        await delay(500)
+        return HttpResponse.json({ code: 0, msg: 'Agent updated successfully' })
+    }),
+
+    // Transfer
+    http.post('/api/v2/merchant/agents/:id/transfer', async ({ request }) => {
+        await delay(600)
+        const body = await request.json() as any
+
+        // Simple logic simulation
+        if (body.type === 'deposit') {
+            merchantStats.balance -= body.amount
+        } else {
+            merchantStats.balance += body.amount
+        }
+
+        return HttpResponse.json({ code: 0, msg: 'Transfer successful' })
     }),
 
     // My Games List

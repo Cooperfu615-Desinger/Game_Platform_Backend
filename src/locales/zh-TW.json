@@ -226,6 +226,26 @@
                 "approved": "已核准",
                 "rejected": "已拒絕"
             }
+        },
+        "agent": {
+            "title": "下級代理管理",
+            "addAgent": "新增代理",
+            "commissionRate": "返佣比例 (%)",
+            "playerCount": "下級玩家",
+            "monthlyPerformance": "本月業績",
+            "promotionLink": "推廣連結",
+            "transfer": "轉帳/資金",
+            "transferAmount": "轉帳金額",
+            "copySuccess": "連結已複製",
+            "editTitle": "編輯代理",
+            "createTitle": "新增代理",
+            "transferTitle": "代理資金操作",
+            "account": "代理帳號",
+            "password": "密碼",
+            "status": "狀態",
+            "balance": "餘額",
+            "actions": "操作",
+            "note": "備註"
         }
     },
     "merchantDashboard": {

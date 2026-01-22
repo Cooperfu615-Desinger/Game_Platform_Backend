@@ -12,6 +12,7 @@ import { fundsHandlers } from './funds'
 
 // Helper Functions
 function createRandomAgent(id: number, parentId: number | null = null, level: number = 1): Agent {
+    const pct = faker.number.int({ min: 10, max: 90 })
     return {
         id,
         account: faker.internet.username(),
@@ -19,7 +20,11 @@ function createRandomAgent(id: number, parentId: number | null = null, level: nu
         level,
         parent_id: parentId,
         balance: faker.number.float({ min: 1000, max: 100000, fractionDigits: 2 }),
-        percent: faker.number.int({ min: 10, max: 90 }),
+        percent: pct,
+        commission_rate: pct,
+        player_count: faker.number.int({ min: 0, max: 200 }),
+        monthly_performance: faker.number.float({ min: 0, max: 50000, fractionDigits: 2 }),
+        promotion_code: faker.string.alphanumeric(8).toUpperCase(),
         state: faker.helpers.arrayElement(['active', 'disabled']),
         created_at: faker.date.past().toISOString(),
         children_count: level < 3 ? faker.number.int({ min: 0, max: 5 }) : 0
