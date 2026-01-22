@@ -54,7 +54,7 @@ export const masterMenuOptions = (t: (key: string) => string): MenuOption[] => [
         key: 'upstream-group',
         children: [
             {
-                label: () => h(RouterLink, { to: '/admin/game-center/providers' }, { default: () => t('menu.providerList') }),
+                label: () => h(RouterLink, { to: '/admin/game-center/providers' }, { default: () => t('provider.title') }),
                 key: 'provider-list',
                 icon: renderIcon(CasinoOutlined)
             },

@@ -70,6 +70,14 @@ export const mockProviders: any[] = [
             secretKey: 'sk_pg_123',
             revenueShare: 12,
             currency: 'USD'
+        },
+        contractConfig: {
+            settlement_currency: 'USD',
+            rules: {
+                slot_free_spin: { enabled: false, provider_share: 0 },
+                live_tip: { enabled: false, provider_share: 0 },
+                card_fee: { enabled: false, provider_share: 0 }
+            }
         }
     },
     {
@@ -85,6 +93,14 @@ export const mockProviders: any[] = [
             secretKey: 'sk_evo_456',
             revenueShare: 10,
             currency: 'EUR'
+        },
+        contractConfig: {
+            settlement_currency: 'EUR',
+            rules: {
+                slot_free_spin: { enabled: false, provider_share: 0 },
+                live_tip: { enabled: false, provider_share: 0 },
+                card_fee: { enabled: false, provider_share: 0 }
+            }
         }
     },
     {
@@ -100,6 +116,14 @@ export const mockProviders: any[] = [
             secretKey: 'sk_pp_789',
             revenueShare: 15,
             currency: 'USD'
+        },
+        contractConfig: {
+            settlement_currency: 'USD',
+            rules: {
+                slot_free_spin: { enabled: false, provider_share: 0 },
+                live_tip: { enabled: false, provider_share: 0 },
+                card_fee: { enabled: false, provider_share: 0 }
+            }
         }
     },
     {
@@ -115,6 +139,14 @@ export const mockProviders: any[] = [
             secretKey: 'sk_jili_abc',
             revenueShare: 8,
             currency: 'USD'
+        },
+        contractConfig: {
+            settlement_currency: 'USD',
+            rules: {
+                slot_free_spin: { enabled: false, provider_share: 0 },
+                live_tip: { enabled: false, provider_share: 0 },
+                card_fee: { enabled: false, provider_share: 0 }
+            }
         }
     },
     {
@@ -130,6 +162,14 @@ export const mockProviders: any[] = [
             secretKey: 'sk_hab_xyz',
             revenueShare: 11,
             currency: 'USD'
+        },
+        contractConfig: {
+            settlement_currency: 'USD',
+            rules: {
+                slot_free_spin: { enabled: false, provider_share: 0 },
+                live_tip: { enabled: false, provider_share: 0 },
+                card_fee: { enabled: false, provider_share: 0 }
+            }
         }
     }
 ]

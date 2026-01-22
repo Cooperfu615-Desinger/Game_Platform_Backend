@@ -3,9 +3,9 @@ import { ref, watch } from 'vue'
 import { 
     NModal, NTabs, NTabPane, NForm, NFormItem, 
     NInput, NButton, NSelect, NInputNumber,
-    useMessage, NDatePicker, NIcon
+    useMessage, NDatePicker, NIcon, NSwitch, NCard, NTooltip
 } from 'naive-ui'
-import { SettingsOutlined } from '@vicons/material'
+import { SettingsOutlined, InfoOutlined } from '@vicons/material'
 import { useI18n } from 'vue-i18n'
 import type { Provider } from '../../../../types/provider'
 import MaintenanceSettingsModal from './MaintenanceSettingsModal.vue'
@@ -30,6 +30,14 @@ const formModel = ref<Partial<Provider>>({
     contract: {
         costPercent: 0,
         expiryDate: Date.now()
+    },
+    contractConfig: {
+        settlement_currency: 'USD',
+        rules: {
+            slot_free_spin: { enabled: false, provider_share: 0 },
+            live_tip: { enabled: false, provider_share: 0 },
+            card_fee: { enabled: false, provider_share: 0 }
+        }
     }
 })
 
@@ -44,6 +52,16 @@ watch(() => props.show, (newVal) => {
             formModel.value.contract = {
                 costPercent: 0,
                 expiryDate: Date.now()
+            }
+        }
+        if (!formModel.value.contractConfig) {
+            formModel.value.contractConfig = {
+                settlement_currency: 'USD',
+                rules: {
+                    slot_free_spin: { enabled: false, provider_share: 0 },
+                    live_tip: { enabled: false, provider_share: 0 },
+                    card_fee: { enabled: false, provider_share: 0 }
+                }
             }
         }
     }
@@ -128,14 +146,23 @@ const handleSave = async () => {
                 </n-form>
             </n-tab-pane>
 
-            <!-- Tab 2: Finance -->
-            <n-tab-pane name="finance" :tab="t('provider.finance')">
+            <!-- Tab 2: Contract & Finance -->
+            <n-tab-pane name="contract" :tab="t('provider.contract')">
                 <n-form
                     label-placement="left"
                     label-width="160"
                     require-mark-placement="right-hanging"
                     class="mt-4"
                 >
+                    <!-- Settlement Currency -->
+                    <n-form-item :label="t('provider.settlementCurrency')">
+                        <n-select 
+                            v-model:value="formModel.contractConfig!.settlement_currency" 
+                            :options="currencyOptions" 
+                        />
+                    </n-form-item>
+
+                    <!-- Revenue Share (Base) -->
                     <n-form-item :label="t('provider.revenueShare')">
                         <n-input-number 
                             v-model:value="formModel.apiConfig!.revenueShare" 
@@ -146,35 +173,78 @@ const handleSave = async () => {
                         </n-input-number>
                     </n-form-item>
 
-                    <n-form-item :label="t('provider.currency')">
-                        <n-select 
-                            v-model:value="formModel.apiConfig!.currency" 
-                            :options="currencyOptions" 
-                        />
-                    </n-form-item>
-                </n-form>
-            </n-tab-pane>
+                    <!-- Advanced Rules -->
+                    <n-card :title="t('provider.advancedRules')" size="small" class="mt-4 bg-gray-50 border-gray-200">
+                        <!-- Slot Free Spin -->
+                        <div class="mb-4 pb-4 border-b border-gray-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="font-medium flex items-center gap-2">
+                                    {{ t('provider.rules.slotFreeSpin') }}
+                                    <n-tooltip trigger="hover">
+                                        <template #trigger><n-icon :component="InfoOutlined" class="text-gray-400 cursor-pointer" /></template>
+                                        {{ t('provider.rules.slotHelp') }}
+                                    </n-tooltip>
+                                </div>
+                                <n-switch v-model:value="formModel.contractConfig!.rules.slot_free_spin.enabled" />
+                            </div>
+                            <div v-if="formModel.contractConfig!.rules.slot_free_spin.enabled" class="flex gap-4 items-center pl-6">
+                                <n-form-item :label="t('provider.rules.providerShare')" :show-label="true" label-placement="left" class="mb-0">
+                                    <n-input-number v-model:value="formModel.contractConfig!.rules.slot_free_spin.provider_share" :min="0" :max="100" size="small">
+                                        <template #suffix>%</template>
+                                    </n-input-number>
+                                </n-form-item>
+                                <div class="text-gray-500 text-sm">
+                                    {{ t('provider.rules.aggregatorShare') }}: 
+                                    <span class="font-bold text-primary">{{ 100 - (formModel.contractConfig?.rules.slot_free_spin.provider_share || 0) }}%</span>
+                                </div>
+                            </div>
+                        </div>
 
-            <!-- Tab 3: Contract -->
-            <n-tab-pane name="contract" :tab="t('provider.contract')">
-                <n-form
-                    label-placement="left"
-                    label-width="160"
-                    require-mark-placement="right-hanging"
-                    class="mt-4"
-                >
-                    <n-form-item :label="t('provider.contractCost')">
-                        <n-input-number 
-                            v-model:value="formModel.contract!.costPercent" 
-                            :min="0" 
-                            :max="100"
-                            :placeholder="t('provider.costPlaceholder')"
-                        >
-                            <template #suffix>%</template>
-                        </n-input-number>
-                    </n-form-item>
+                        <!-- Live Tip -->
+                        <div class="mb-4 pb-4 border-b border-gray-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="font-medium flex items-center gap-2">
+                                    {{ t('provider.rules.liveTip') }}
+                                </div>
+                                <n-switch v-model:value="formModel.contractConfig!.rules.live_tip.enabled" />
+                            </div>
+                            <div v-if="formModel.contractConfig!.rules.live_tip.enabled" class="flex gap-4 items-center pl-6">
+                                <n-form-item :label="t('provider.rules.providerShare')" :show-label="true" label-placement="left" class="mb-0">
+                                    <n-input-number v-model:value="formModel.contractConfig!.rules.live_tip.provider_share" :min="0" :max="100" size="small">
+                                        <template #suffix>%</template>
+                                    </n-input-number>
+                                </n-form-item>
+                                <div class="text-gray-500 text-sm">
+                                    {{ t('provider.rules.aggregatorShare') }}: 
+                                    <span class="font-bold text-primary">{{ 100 - (formModel.contractConfig?.rules.live_tip.provider_share || 0) }}%</span>
+                                </div>
+                            </div>
+                        </div>
 
-                    <n-form-item :label="t('provider.expiryDate')">
+                        <!-- Card Fee -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="font-medium flex items-center gap-2">
+                                    {{ t('provider.rules.cardFee') }}
+                                </div>
+                                <n-switch v-model:value="formModel.contractConfig!.rules.card_fee.enabled" />
+                            </div>
+                            <div v-if="formModel.contractConfig!.rules.card_fee.enabled" class="flex gap-4 items-center pl-6">
+                                <n-form-item :label="t('provider.rules.providerShare')" :show-label="true" label-placement="left" class="mb-0">
+                                    <n-input-number v-model:value="formModel.contractConfig!.rules.card_fee.provider_share" :min="0" :max="100" size="small">
+                                        <template #suffix>%</template>
+                                    </n-input-number>
+                                </n-form-item>
+                                <div class="text-gray-500 text-sm">
+                                    {{ t('provider.rules.aggregatorShare') }}: 
+                                    <span class="font-bold text-primary">{{ 100 - (formModel.contractConfig?.rules.card_fee.provider_share || 0) }}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </n-card>
+
+                    <!-- Expiry Date (Existing) -->
+                    <n-form-item :label="t('provider.expiryDate')" class="mt-4">
                         <n-date-picker 
                             v-model:value="formModel.contract!.expiryDate as number" 
                             type="date"

@@ -17,6 +17,14 @@ export interface Provider {
         costPercent: number;
         expiryDate: number | string;
     };
+    contractConfig?: {
+        settlement_currency: string;
+        rules: {
+            slot_free_spin: { enabled: boolean; provider_share: number };
+            live_tip: { enabled: boolean; provider_share: number };
+            card_fee: { enabled: boolean; provider_share: number };
+        };
+    };
     maintenanceConfig?: {
         isEmergency: boolean;
         startTime?: number;

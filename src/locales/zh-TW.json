@@ -352,7 +352,7 @@
         "revenueShare": "成本占成 (%)",
         "currency": "結算幣種",
         "gameList": "遊戲清單",
-        "contract": "合約",
+        "contract": "合約與財務",
         "contractCost": "合約成本 (%)",
         "expiryDate": "合約到期日",
         "maintenanceSchedule": "維護排程",
@@ -364,7 +364,17 @@
         "rtp": "殺率 (RTP)",
         "games": "遊戲",
         "costPlaceholder": "輸入百分比",
-        "searchGame": "搜尋遊戲..."
+        "searchGame": "搜尋遊戲...",
+        "settlementCurrency": "結算幣種",
+        "advancedRules": "進階分成設定",
+        "rules": {
+            "slotFreeSpin": "🎰 老虎機 - 免費旋轉成本",
+            "slotHelp": "啟用後，供應商將分擔部分免費旋轉產生的派彩成本",
+            "liveTip": "👩💼 真人視訊 - 會員打賞分成",
+            "cardFee": "🀄 棋牌遊戲 - 服務費分成",
+            "providerShare": "供應商佔比",
+            "aggregatorShare": "聚合商佔比"
+        }
     },
     "invoices": {
         "myInvoices": "我的帳單",
