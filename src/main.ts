@@ -6,6 +6,9 @@ import './style.css'
 import App from './App.vue'
 import i18n from './i18n'
 
+// ECharts plugin - must be imported before vue-echarts components are used
+import './plugins/echarts'
+
 // Tech Standards: Force Mock in Prod or if API is unreachable
 // In a real scenario, you might check for API availability, but for now we follow the standard:
 // "Modify to: whenever unable to connect to real API, OR VITE_USE_MOCK=true, start MSW"
