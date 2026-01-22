@@ -43,74 +43,77 @@ const transferring = ref(false)
 const submitting = ref(false)
 
 // Columns
+// Columns
 const columns = computed(() => [
+    { title: 'ID', key: 'id', width: 80, sorter: 'default' as const },
     { 
         title: t('merchant.agent.account'), 
         key: 'account',
-        width: 180,
-        render: (row: Agent) => h('div', [
-            h('div', { class: 'font-bold' }, row.account),
-            h('div', { class: 'text-xs text-gray-400' }, `ID: ${row.id}`)
-        ])
+        width: 160,
+        sorter: 'default' as const,
+        render: (row: Agent) => h('div', { class: 'font-bold' }, row.account)
     },
     { 
         title: t('merchant.agent.playerCount'), 
         key: 'player_count',
+        sorter: 'default' as const,
         render: (row: Agent) => row.player_count?.toLocaleString() || 0
     },
     { 
         title: t('merchant.agent.monthlyPerformance'), 
         key: 'monthly_performance',
+        sorter: 'default' as const,
         render: (row: Agent) => row.monthly_performance ? row.monthly_performance.toLocaleString() : '0'
     },
     { 
         title: t('merchant.agent.commissionRate'), 
         key: 'commission_rate',
-        render: (row: Agent) => h(NTag, { type: 'info', bordered: false }, { default: () => `${row.commission_rate ?? row.percent}%` })
+        sorter: 'default' as const,
+        render: (row: Agent) => h(NTag, { type: 'info', bordered: false }, { default: () => `${row.commission_rate ?? row.percent ?? 0}%` })
     },
     { 
         title: t('merchant.agent.balance'), 
         key: 'balance',
+        sorter: 'default' as const,
         render: (row: Agent) => h('span', { class: 'font-mono' }, row.balance.toLocaleString())
     },
     { 
         title: t('merchant.agent.status'), 
         key: 'status',
-        render: (row: Agent) => h(NSwitch, {
-            value: row.state === 'active',
-            size: 'small',
-            onUpdateValue: (val) => handleStatusChange(row, val)
-        })
+        width: 140,
+        render: (row: Agent) => h('div', { class: 'flex items-center gap-2' }, [
+            h(NSwitch, {
+                value: row.state === 'active',
+                size: 'small',
+                onUpdateValue: (val) => handleStatusChange(row, val)
+            }),
+            h('span', { class: 'text-xs text-gray-400' }, row.state === 'active' ? 'Active' : 'Disabled') 
+        ])
     },
     { 
         title: t('merchant.agent.actions'), 
         key: 'actions',
-        width: 200,
+        width: 180,
         render: (row: Agent) => h(NSpace, { size: 'small' }, {
             default: () => [
-                // Transfer
                 h(NButton, { 
                     size: 'small', secondary: true, type: 'warning',
                     onClick: () => openTransfer(row)
                 }, { icon: () => h(AccountBalanceWalletOutlined) }),
-                // Edit
                 h(NButton, { 
                     size: 'small', secondary: true, type: 'primary',
                     onClick: () => openEdit(row)
                 }, { icon: () => h(EditOutlined) }),
-                // Link
                 h(NPopover, { trigger: 'click', placement: 'bottom' }, {
                     trigger: () => h(NButton, { size: 'small', secondary: true }, { icon: () => h(LinkOutlined) }),
-                    default: () => h('div', { class: 'p-2 flex gap-2 items-center' }, [
-                        h('span', { class: 'bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-xs break-all border border-gray-200 dark:border-gray-700' }, 
+                    default: () => h('div', { class: 'p-2 flex gap-2 items-center bg-[#18181c] rounded border border-gray-700' }, [
+                        h('span', { class: 'text-gray-200 px-2 py-1 text-xs break-all' }, 
                             `https://platform.com/r/${row.promotion_code || 'REF' + row.id}`
                         ),
                         h(NButton, { 
-                            size: 'tiny', type: 'primary', ghost: true,
+                            size: 'tiny', type: 'primary',
                             onClick: () => copyLink(`https://platform.com/r/${row.promotion_code || 'REF' + row.id}`)
-                        }, { default: () => t('merchant.agent.copySuccess') }) // Using "Copy Success" as placeholder for "Copy"? Or just icon. 
-                        // User specified "Copy Success" message, button label usually "複製".
-                        // Let's use icon for copy.
+                        }, { default: () => t('merchant.agent.copySuccess') })
                     ])
                 })
             ]
@@ -312,7 +315,7 @@ onMounted(fetchData)
 
         <!-- Transfer Modal -->
         <n-modal v-model:show="showTransferModal" preset="card" :title="t('merchant.agent.transferTitle')" class="w-[500px]">
-            <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded mb-4">
+            <div class="bg-[#18181c] p-4 rounded mb-4 border border-gray-700">
                 <div class="flex justify-between mb-2">
                     <span class="text-gray-500">{{ t('merchant.agent.account') }}</span>
                     <span class="font-bold">{{ transferForm.targetName }}</span>

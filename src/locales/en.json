@@ -217,6 +217,26 @@
                 "approved": "Approved",
                 "rejected": "Rejected"
             }
+        },
+        "agent": {
+            "title": "Sub-Agent Management",
+            "addAgent": "Add Agent",
+            "commissionRate": "Commission Rate (%)",
+            "playerCount": "Players",
+            "monthlyPerformance": "Monthly Perf.",
+            "promotionLink": "Promotion Link",
+            "transfer": "Transfer Funds",
+            "transferAmount": "Transfer Amount",
+            "copySuccess": "Link Copied",
+            "editTitle": "Edit Agent",
+            "createTitle": "Create Agent",
+            "transferTitle": "Agent Fund Transfer",
+            "account": "Account",
+            "password": "Password",
+            "status": "Status",
+            "balance": "Balance",
+            "actions": "Actions",
+            "note": "Note"
         }
     },
     "merchantDashboard": {
