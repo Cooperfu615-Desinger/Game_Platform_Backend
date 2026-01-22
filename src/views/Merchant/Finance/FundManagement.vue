@@ -99,7 +99,7 @@ import { ref, onMounted, h } from 'vue'
 import { useI18n } from 'vue-i18n'
 import {
     NCard, NButton, NDataTable, NTag, NModal, NForm, NFormItem, 
-    NInputNumber, NInput, useMessage, NAlert
+    NInputNumber, NInput, useMessage
 } from 'naive-ui'
 
 const { t } = useI18n()
@@ -118,13 +118,15 @@ const submitting = ref(false)
 
 const pagination = { pageSize: 10 }
 
-const typeMap: Record<string, string> = {
+type TagType = 'success' | 'info' | 'warning' | 'error' | 'default' | 'primary'
+
+const typeMap: Record<string, TagType> = {
     'top-up': 'success',
     'credit-limit': 'info',
     'manual-adjust': 'warning'
 }
 
-const statusMap: Record<string, string> = {
+const statusMap: Record<string, TagType> = {
     'pending': 'warning',
     'approved': 'success',
     'rejected': 'error'
