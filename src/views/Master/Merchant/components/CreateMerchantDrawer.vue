@@ -28,7 +28,9 @@ const formValue = reactive({
     walletMode: 'transfer',
     percent: 90.0,
     authorized_providers: [], // Game Auth
-    remarks: ''
+    remarks: '',
+    credit_limit: 0,
+    balance: 0
 })
 
 const providerOptions = [
@@ -136,6 +138,18 @@ const handleSubmit = async () => {
                 <n-form-item :label="t('merchant.revenueShare')" path="percent">
                     <n-input-number v-model:value="formValue.percent" :min="0" :max="100" />
                     <span class="ml-2">%</span>
+                </n-form-item>
+
+                <n-form-item :label="t('invoices.creditLimit')" path="credit_limit">
+                    <n-input-number v-model:value="formValue.credit_limit" :min="0" :step="1000">
+                        <template #prefix>$</template>
+                    </n-input-number>
+                </n-form-item>
+
+                <n-form-item v-if="formValue.walletMode === 'transfer'" :label="t('columns.balance')" path="balance">
+                    <n-input-number v-model:value="formValue.balance" :min="0" :step="100">
+                        <template #prefix>$</template>
+                    </n-input-number>
                 </n-form-item>
 
                 <!-- Game Auth -->

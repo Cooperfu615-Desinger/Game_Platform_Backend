@@ -6,6 +6,7 @@ import { mockGames } from './data/games'
 import { financeHandlers } from './finance'
 import { systemHandlers } from './system'
 import { agentHandlers } from './agent'
+import { fundsHandlers } from './funds'
 
 // ... existing code ...
 
@@ -326,6 +327,7 @@ export const handlers = [
         })
     }),
     ...agentHandlers,
+    ...fundsHandlers,
 
     http.get('/api/v2/agent/list', async () => {
         await delay(500) // Simulate network latency

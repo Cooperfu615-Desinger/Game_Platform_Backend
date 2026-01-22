@@ -27,7 +27,8 @@ const formValue = reactive({
     site_code: '', // Merchant Name
     percent: 0,    // Revenue Share
     remarks: '',
-    state: 1       // 1=Active, 0=Suspended
+    state: 1,       // 1=Active, 0=Suspended
+    credit_limit: 0
 })
 
 watch(() => props.show, (newVal) => {
@@ -38,6 +39,7 @@ watch(() => props.show, (newVal) => {
         formValue.percent = props.merchant.revenue_share || props.merchant.percent || 0
         formValue.remarks = props.merchant.remarks || props.merchant.name || ''
         formValue.state = props.merchant.state
+        formValue.credit_limit = props.merchant.credit_limit || 0
     }
 })
 
@@ -67,7 +69,8 @@ const handleSubmit = async () => {
                     // Map remarks back to name if that's the convention, or send both
                     name: formValue.remarks,
                     remarks: formValue.remarks,
-                    state: formValue.state
+                    state: formValue.state,
+                    credit_limit: formValue.credit_limit
                 }
 
                 // Mock API endpoint for update
@@ -114,6 +117,13 @@ const handleSubmit = async () => {
                 <n-form-item :label="t('merchant.revenueShare')" path="percent">
                     <n-input-number v-model:value="formValue.percent" :min="0" :max="100" />
                     <span class="ml-2">%</span>
+                </n-form-item>
+
+                <!-- Credit Limit -->
+                <n-form-item :label="t('invoices.creditLimit')" path="credit_limit">
+                    <n-input-number v-model:value="formValue.credit_limit" :min="0" :step="1000">
+                        <template #prefix>$</template>
+                    </n-input-number>
                 </n-form-item>
 
                 <!-- Remarks -->

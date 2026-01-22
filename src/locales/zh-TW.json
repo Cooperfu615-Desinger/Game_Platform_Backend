@@ -540,7 +540,39 @@
         "statusPaid": "已結算",
         "statusPending": "待支付",
         "confirmMarkPaid": "確定要將帳單 {id} 標記為已結算嗎？",
-        "detail": "查看詳情"
+        "detail": "查看詳情",
+        "funds": {
+            "title": "資金管理",
+            "type": "交易類型",
+            "merchant": "所屬商戶",
+            "amount": "變動金額/額度",
+            "proof": "證明/備註",
+            "status": "狀態",
+            "action": "審核操作",
+            "createdAt": "申請時間",
+            "reviewer": "審核人員",
+            "manualAdjust": "人工調帳",
+            "reason": "理由/備註",
+            "types": {
+                "top-up": "充值申請",
+                "credit-limit": "額度調整",
+                "manual-adjust": "人工調整"
+            },
+            "statusLabel": {
+                "pending": "待審核",
+                "approved": "已核准",
+                "rejected": "已拒絕"
+            },
+            "dialog": {
+                "reviewTitle": "資金審核",
+                "adjustTitle": "人工調帳",
+                "approve": "確認核准",
+                "reject": "拒絕申請",
+                "confirmAdjust": "確認執行調帳",
+                "balance": "目前餘額",
+                "adjustment": "調整金額 (正數增加/負數扣除)"
+            }
+        }
     },
     "system": {
         "title": "系統安全",

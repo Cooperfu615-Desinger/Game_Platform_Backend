@@ -85,6 +85,12 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('../views/Master/Finance/InvoiceManager.vue'),
                 meta: { title: '對帳單管理', roles: ['admin'] }
             },
+            {
+                path: 'finance/funds',
+                name: 'FundManagement',
+                component: () => import('../views/Master/Finance/FundManagement.vue'),
+                meta: { title: '資金管理', roles: ['admin'] }
+            },
             // Risk & System (風控與系統)
             {
                 path: 'system/staff',
