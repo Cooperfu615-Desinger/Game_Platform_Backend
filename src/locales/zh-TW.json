@@ -202,7 +202,28 @@
         "noteInherit": "注意：建立的商戶將預設繼承上級代理的遊戲。",
         "initialState": "初始狀態",
         "currencyType": "幣種",
-        "viewSubs": "查看下級"
+        "viewSubs": "查看下級",
+        "fundRecord": {
+            "title": "資金管理",
+            "applyTopUp": "充值申請",
+            "applyCredit": "調額申請",
+            "type": "交易類型",
+            "amount": "變動金額",
+            "status": "狀態",
+            "remarks": "備註/回覆",
+            "adminNote": "管理員回覆",
+            "types": {
+                "topUp": "充值",
+                "credit": "額度調整",
+                "manual": "人工調整",
+                "deduction": "系統扣款"
+            },
+            "statusLabel": {
+                "pending": "審核中",
+                "approved": "已核准",
+                "rejected": "已拒絕"
+            }
+        }
     },
     "merchantDashboard": {
         "myBalance": "我的餘額",

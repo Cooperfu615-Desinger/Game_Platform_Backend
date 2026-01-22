@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class="flex gap-4">
-                    <n-button type="default" size="large" @click="showCreditModal = true">
+                    <n-button type="info" ghost size="large" @click="showCreditModal = true">
                         + {{ t('merchant.fundRecord.applyCredit') }}
                     </n-button>
                     <n-button type="primary" size="large" @click="showTopUpModal = true">
@@ -143,7 +143,10 @@ const columns = [
         title: t('merchant.fundRecord.type'),
         key: 'type',
         render: (row: any) => h(NTag, { type: typeMap[row.type] || 'default', bordered: false }, 
-            { default: () => t(`merchant.fundRecord.types.${row.type === 'top-up' ? 'topUp' : row.type === 'credit-limit' ? 'credit' : 'manual'}`) }
+            { default: () => {
+                const map: Record<string, string> = { 'top-up': 'topUp', 'credit-limit': 'credit', 'manual-adjust': 'manual' }
+                return t(`merchant.fundRecord.types.${map[row.type] || 'manual'}`)
+            }}
         )
     },
     {
@@ -155,7 +158,7 @@ const columns = [
         title: t('merchant.fundRecord.status'),
         key: 'status',
         render: (row: any) => h(NTag, { type: statusMap[row.status] || 'default', size: 'small' },
-            { default: () => t(`finance.funds.status.${row.status}`) } // Reusing finance status keys as they are common
+            { default: () => t(`merchant.fundRecord.statusLabel.${row.status}`) }
         )
     },
     {
