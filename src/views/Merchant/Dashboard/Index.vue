@@ -57,11 +57,11 @@
           <n-skeleton text :repeat="3" />
         </div>
         <div v-else>
-          <n-alert v-for="alert in stats.alerts" :type="alert.type" class="mb-2">
-            {{ alert.message }}
-            <template #action>
-              <n-button text size="small" @click="onProcessAlert(alert)">{{ t('merchantDashboard.quickActions') }}</n-button>
-            </template>
+          <n-alert v-for="alert in stats.alerts" :key="alert.type" :type="alert.type === 'invoice' ? 'warning' : 'error'" class="mb-2">
+            <div class="flex items-center justify-between">
+              <span>{{ alert.message }}</span>
+              <n-button text size="small" @click="onProcessAlert(alert)">前往處理</n-button>
+            </div>
           </n-alert>
         </div>
       </n-card>
