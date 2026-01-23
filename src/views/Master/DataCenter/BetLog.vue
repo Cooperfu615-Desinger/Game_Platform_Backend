@@ -246,7 +246,7 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
 </script>
 
 <template>
-  <div class="p-6 flex flex-col" style="height: calc(100vh - 80px);">
+  <div class="p-6 flex flex-col h-[calc(100vh-80px)]">
     <div class="flex justify-between items-center mb-4">
         <h1 class="text-2xl font-bold flex items-center gap-2">
             <span>📊</span> {{ t('betLog.title') }}
@@ -321,7 +321,7 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
         flex-height
         :pagination="{ pageSize: 20 }"
         :scroll-x="1800"
-        style="flex: 1; min-height: 500px;"
+        class="flex-1 min-h-[500px]"
         :single-line="false"
         :row-props="(row: BetLog) => ({
             style: 'cursor: pointer',

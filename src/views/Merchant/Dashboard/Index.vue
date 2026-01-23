@@ -40,7 +40,7 @@
           <n-alert v-for="alert in stats.alerts" :key="alert.type" :type="alert.type === 'invoice' ? 'warning' : 'error'" class="mb-2">
             <div class="flex items-center justify-between">
               <span>{{ alert.message }}</span>
-              <n-button text size="small" @click="onProcessAlert(alert)">前往處理</n-button>
+              <n-button text size="small" @click="onProcessAlert(alert)">{{ t('merchantDashboard.actions.processAlert') }}</n-button>
             </div>
           </n-alert>
         </div>

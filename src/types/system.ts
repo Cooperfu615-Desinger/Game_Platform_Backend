@@ -47,5 +47,5 @@ export interface AuditLog {
     action: AuditAction
     target: string    // e.g., "Merchant: OP-1001", "System"
     ip: string
-    details: any      // JSON object for diff or description
+    details: Record<string, unknown>
 }

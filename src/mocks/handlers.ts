@@ -2,6 +2,7 @@ import { http, HttpResponse, delay } from 'msw'
 import { faker } from '@faker-js/faker'
 import type { Merchant, MerchantDetail } from '../types/merchant'
 import type { Agent } from '../types/agent'
+import type { Provider } from '../types/provider'
 import { mockGames } from './data/games'
 import { financeHandlers } from './finance'
 import { systemHandlers } from './system'
@@ -61,7 +62,7 @@ function createRandomMerchant(id: number): Merchant {
 }
 
 // Mock Providers
-export const mockProviders: any[] = [
+export const mockProviders: Provider[] = [
     {
         id: 1,
         code: 'pg',
@@ -351,7 +352,7 @@ export const handlers = [
             id: mockProviders.length + 1,
             code: body.code,
             name: body.name,
-            status: 'active',
+            status: 'active' as const,
             type: body.type || 'Slot',
             gameCount: 0,
             apiConfig: body.apiConfig || {},
@@ -400,7 +401,7 @@ export const handlers = [
                 ...mockProviders[providerIndex],
                 ...body,
                 apiConfig: {
-                    ...mockProviders[providerIndex].apiConfig,
+                    ...mockProviders[providerIndex]!.apiConfig,
                     ...(body.apiConfig || {})
                 }
             }

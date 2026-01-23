@@ -9,7 +9,7 @@ export interface Provider {
         secretKey?: string;
         revenueShare?: number;
         currency?: string;
-        [key: string]: any;
+        [key: string]: string | number | boolean | undefined;
     };
     type?: string;
     gameCount?: number;

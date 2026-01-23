@@ -3,6 +3,12 @@
         "seamless": "單一錢包",
         "transfer": "轉帳錢包"
     },
+    "validation": {
+        "invalidAmount": "請輸入有效金額",
+        "txidRequired": "請輸入交易序號",
+        "invalidLimit": "請輸入有效額度",
+        "submitFailed": "提交失敗"
+    },
     "common": {
         "hi": "您好,",
         "logout": "登出",
@@ -262,7 +268,8 @@
             "topUp": "立即充值",
             "requestCredit": "申請調額",
             "payBills": "支付帳單",
-            "addAgent": "新增代理"
+            "addAgent": "新增代理",
+            "processAlert": "前往處理"
         },
         "kpi": {
             "bet": "總投注",
@@ -357,7 +364,16 @@
         "saveSuccess": "配置儲存成功",
         "enterIp": "輸入允許的 IP 並按下 Enter",
         "resetSecretConfirm": "這將導致當前商戶的 API 連線立即中斷，確定要執行嗎？",
-        "emptyWhitelistConfirm": "未設定 IP 白名單將導致所有連線被拒絕 (或開放所有)，確定存檔？"
+        "emptyWhitelistConfirm": "未設定 IP 白名單將導致所有連線被拒絕 (或開放所有)，確定存檔？",
+        "dialog": {
+            "resetSecretTitle": "警告：重置密鑰",
+            "confirmReset": "確定重置",
+            "walletModeTitle": "警告：切換錢包模式",
+            "walletModeContent": "切換錢包模式可能導致既有餘額顯示異常，請確認已完成清算。",
+            "confirmSwitch": "確認切換",
+            "securityTitle": "安全性警告",
+            "confirmSave": "確定存檔"
+        }
     },
     "merchantReports": {
         "title": "營收報表",
@@ -471,7 +487,11 @@
         "reason": "申請理由",
         "submitRequestSuccess": "調額申請已送出",
         "payAmountHint": "折合約 {amount} USDT",
-        "requestPending": "額度審核中"
+        "requestPending": "額度審核中",
+        "txidPlaceholder": "請輸入交易序號",
+        "blockchainTxidPlaceholder": "請輸入區塊鏈交易序號",
+        "uploadImageMock": "上傳圖片 (模擬)",
+        "creditReasonPlaceholder": "請說明調額理由"
     },
     "game": {
         "title": "遊戲中心",

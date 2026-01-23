@@ -3,6 +3,12 @@
         "seamless": "Seamless",
         "transfer": "Transfer"
     },
+    "validation": {
+        "invalidAmount": "Please enter a valid amount",
+        "txidRequired": "Please enter transaction ID",
+        "invalidLimit": "Please enter a valid limit",
+        "submitFailed": "Submission failed"
+    },
     "common": {
         "hi": "Hi,",
         "logout": "Logout",
@@ -249,7 +255,29 @@
         "acrossProviders": "Across all providers",
         "ggrTrend": "📈 GGR Trend (Last 7 Days)",
         "transferWallet": "💼 Transfer Wallet",
-        "seamlessWallet": "🔗 Seamless"
+        "seamlessWallet": "🔗 Seamless",
+        "welcome": "Good Morning, {name}",
+        "walletTitle": "Wallet",
+        "creditUsage": "Credit Usage",
+        "todayStats": "Today's Stats",
+        "compareYesterday": "vs Yesterday",
+        "revenueTrend": "Revenue Trend (7 Days)",
+        "alerts": "Alerts & To-do",
+        "topGames": "Top Games Today",
+        "quickActions": "Quick Actions",
+        "actions": {
+            "topUp": "Top Up",
+            "requestCredit": "Request Credit",
+            "payBills": "Pay Bills",
+            "addAgent": "Add Agent",
+            "processAlert": "Process"
+        },
+        "kpi": {
+            "bet": "Total Bet",
+            "win": "Net Win",
+            "players": "Active Players",
+            "tx": "Transactions"
+        }
     },
     "merchantGame": {
         "title": "My Games",
@@ -319,7 +347,16 @@
         "saveSuccess": "Configuration saved successfully",
         "enterIp": "Enter allowed IP and press Enter",
         "resetSecretConfirm": "This will immediately disconnect the current merchant's API connection. Are you sure?",
-        "emptyWhitelistConfirm": "Not setting IP whitelist will cause all connections to be rejected (or allow all). Save anyway?"
+        "emptyWhitelistConfirm": "Not setting IP whitelist will cause all connections to be rejected (or allow all). Save anyway?",
+        "dialog": {
+            "resetSecretTitle": "Warning: Reset Secret Key",
+            "confirmReset": "Confirm Reset",
+            "walletModeTitle": "Warning: Switch Wallet Mode",
+            "walletModeContent": "Switching wallet mode may cause balance display issues. Please confirm settlement is complete.",
+            "confirmSwitch": "Confirm Switch",
+            "securityTitle": "Security Warning",
+            "confirmSave": "Confirm Save"
+        }
     },
     "provider": {
         "title": "Provider Management",
@@ -485,6 +522,7 @@
     },
     "invoices": {
         "myInvoices": "My Invoices",
+        "financeCenter": "Finance Center",
         "invoiceNo": "Invoice No.",
         "period": "Period",
         "billingPeriod": "Billing Period",
@@ -492,10 +530,37 @@
         "status": "Status",
         "pending": "Pending",
         "paid": "Paid",
+        "verifying": "Verifying",
         "downloadPdf": "Download PDF",
         "viewDetail": "View Detail",
         "noInvoices": "No invoice records",
-        "loadError": "Failed to load invoices"
+        "loadError": "Failed to load invoices",
+        "creditLimit": "Credit Limit",
+        "balance": "Wallet Balance",
+        "outstanding": "Outstanding Amount",
+        "topUp": "Top Up",
+        "payNow": "Pay Now",
+        "uploadProof": "Upload Payment Proof",
+        "paymentAddress": "Payment Address (USDT-TRC20)",
+        "txid": "Transaction ID (TXID)",
+        "uploadScreenshot": "Upload Screenshot (Optional)",
+        "submitSuccess": "Proof submitted, pending verification",
+        "topUpSuccess": "Top-up request submitted",
+        "topUpAmount": "Top-up Amount",
+        "submit": "Submit",
+        "currentCurrency": "Settlement Currency",
+        "exchangeRate": "Exchange Rate",
+        "exchangeRateHint": "1 USD ≈ {rate} {currency}",
+        "requestLimit": "Request Credit Limit",
+        "desiredLimit": "Desired Limit",
+        "reason": "Reason",
+        "submitRequestSuccess": "Credit request submitted",
+        "payAmountHint": "Approx. {amount} USDT",
+        "requestPending": "Credit Request Pending",
+        "txidPlaceholder": "Enter transaction ID",
+        "blockchainTxidPlaceholder": "Enter blockchain transaction ID",
+        "uploadImageMock": "Upload Image (Mock)",
+        "creditReasonPlaceholder": "Please explain your credit request"
     },
     "system": {
         "title": "System Security",

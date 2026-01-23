@@ -8,7 +8,9 @@ import {
 } from 'naive-ui'
 import { useMerchantDetail } from '../../../composables/useMerchantDetail'
 import RTPSelector from '../../../components/Business/RTPSelector.vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const dialog = useDialog()
@@ -38,10 +40,10 @@ const handleIpCreate = (label: string) => {
 // Fix 2: Secret Key Regeneration Confirmation
 const handleRegenerateKey = () => {
   dialog.warning({
-    title: '警告：重置密鑰',
-    content: '這將導致當前商戶的 API 連線立即中斷，確定要執行嗎？',
-    positiveText: '確定重置',
-    negativeText: '取消',
+    title: t('merchantConfig.dialog.resetSecretTitle'),
+    content: t('merchantConfig.resetSecretConfirm'),
+    positiveText: t('merchantConfig.dialog.confirmReset'),
+    negativeText: t('common.cancel'),
     onPositiveClick: () => {
       regenerateKey()
     }
@@ -59,10 +61,10 @@ const handleWalletModeUpdate = (value: 'transfer' | 'seamless') => {
   
   if (value !== formModel.value.wallet_mode) {
      dialog.warning({
-      title: '警告：切換錢包模式',
-      content: '切換錢包模式可能導致既有餘額顯示異常，請確認已完成清算。',
-      positiveText: '確認切換',
-      negativeText: '取消',
+      title: t('merchantConfig.dialog.walletModeTitle'),
+      content: t('merchantConfig.dialog.walletModeContent'),
+      positiveText: t('merchantConfig.dialog.confirmSwitch'),
+      negativeText: t('common.cancel'),
       onPositiveClick: () => {
         if (formModel.value) formModel.value.wallet_mode = value
       }
@@ -74,10 +76,10 @@ const handleWalletModeUpdate = (value: 'transfer' | 'seamless') => {
 const handleSave = () => {
   if (formModel.value && (!formModel.value.ip_whitelist || formModel.value.ip_whitelist.length === 0)) {
     dialog.warning({
-      title: '安全性警告',
-      content: '未設定 IP 白名單將導致所有連線被拒絕 (或開放所有)，確定存檔？',
-      positiveText: '確定存檔',
-      negativeText: '取消',
+      title: t('merchantConfig.dialog.securityTitle'),
+      content: t('merchantConfig.emptyWhitelistConfirm'),
+      positiveText: t('merchantConfig.dialog.confirmSave'),
+      negativeText: t('common.cancel'),
       onPositiveClick: () => {
         updateDetail()
       }

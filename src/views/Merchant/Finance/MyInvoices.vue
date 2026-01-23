@@ -53,7 +53,7 @@ const requestReason = ref('')
 const topUpUsdtHint = computed(() => {
     if (!topUpAmount.value || topUpAmount.value <= 0) return ''
     const usdt = (topUpAmount.value / wallet.value.exchange_rate).toFixed(2)
-    return `折合約 ${usdt} USDT`
+    return t('invoices.payAmountHint', { amount: usdt })
 })
 
 // Mock USDT Address
@@ -173,7 +173,7 @@ const handlePayNow = (invoice: Invoice) => {
 
 const handleSubmitTopUp = async () => {
     if (!topUpAmount.value || topUpAmount.value <= 0) {
-        message.warning('請輸入有效金額')
+        message.warning(t('validation.invalidAmount'))
         return
     }
     submitting.value = true
@@ -190,7 +190,7 @@ const handleSubmitTopUp = async () => {
             topUpAmount.value = null
         }
     } catch (e) {
-        message.error('提交失敗')
+        message.error(t('validation.submitFailed'))
     } finally {
         submitting.value = false
     }
@@ -198,7 +198,7 @@ const handleSubmitTopUp = async () => {
 
 const handleSubmitPayment = async () => {
     if (!paymentTxid.value.trim()) {
-        message.warning('請輸入交易序號')
+        message.warning(t('validation.txidRequired'))
         return
     }
     if (!selectedInvoice.value) return
@@ -221,7 +221,7 @@ const handleSubmitPayment = async () => {
             }
         }
     } catch (e) {
-        message.error('提交失敗')
+        message.error(t('validation.submitFailed'))
     } finally {
         submitting.value = false
     }
@@ -229,7 +229,7 @@ const handleSubmitPayment = async () => {
 
 const handleSubmitCreditRequest = async () => {
     if (!desiredLimit.value || desiredLimit.value <= 0) {
-        message.warning('請輸入有效額度')
+        message.warning(t('validation.invalidLimit'))
         return
     }
     submitting.value = true
@@ -251,7 +251,7 @@ const handleSubmitCreditRequest = async () => {
             requestReason.value = ''
         }
     } catch (e) {
-        message.error('提交失敗')
+        message.error(t('validation.submitFailed'))
     } finally {
         submitting.value = false
     }
@@ -333,7 +333,7 @@ onMounted(() => {
         </n-card>
 
         <!-- 充值彈窗 -->
-        <n-modal v-model:show="showTopUpModal" preset="card" :title="t('invoices.topUp')" style="width: 400px;">
+        <n-modal v-model:show="showTopUpModal" preset="card" :title="t('invoices.topUp')" class="w-[400px]">
             <n-form>
                 <n-form-item :label="t('invoices.topUpAmount') + ' (' + wallet.currency + ')'">
                     <n-input-number v-model:value="topUpAmount" :min="1" :placeholder="wallet.currency" style="width: 100%;" />
@@ -343,10 +343,10 @@ onMounted(() => {
                     <n-input :value="MOCK_USDT_ADDRESS" readonly />
                 </n-form-item>
                 <n-form-item :label="t('invoices.txid')">
-                    <n-input placeholder="請輸入交易序號" />
+                    <n-input :placeholder="t('invoices.txidPlaceholder')" />
                 </n-form-item>
                 <div class="flex justify-end gap-2">
-                    <n-button @click="showTopUpModal = false">取消</n-button>
+                    <n-button @click="showTopUpModal = false">{{ t('common.cancel') }}</n-button>
                     <n-button type="primary" :loading="submitting" @click="handleSubmitTopUp">
                         {{ t('invoices.submit') }}
                     </n-button>
@@ -355,7 +355,7 @@ onMounted(() => {
         </n-modal>
 
         <!-- 付款彈窗 -->
-        <n-modal v-model:show="showPaymentModal" preset="card" :title="t('invoices.uploadProof')" style="width: 450px;">
+        <n-modal v-model:show="showPaymentModal" preset="card" :title="t('invoices.uploadProof')" class="w-[450px]">
             <n-form v-if="selectedInvoice">
                 <n-form-item :label="t('invoices.amountDue')">
                     <span class="text-xl font-bold">{{ selectedInvoice.amount_due?.toLocaleString() }} USDT</span>
@@ -364,13 +364,13 @@ onMounted(() => {
                     <n-input :value="MOCK_USDT_ADDRESS" readonly />
                 </n-form-item>
                 <n-form-item :label="t('invoices.txid')">
-                    <n-input v-model:value="paymentTxid" placeholder="請輸入區塊鏈交易序號" />
+                    <n-input v-model:value="paymentTxid" :placeholder="t('invoices.blockchainTxidPlaceholder')" />
                 </n-form-item>
                 <n-form-item :label="t('invoices.uploadScreenshot')">
-                    <n-button secondary disabled>上傳圖片 (模擬)</n-button>
+                    <n-button secondary disabled>{{ t('invoices.uploadImageMock') }}</n-button>
                 </n-form-item>
                 <div class="flex justify-end gap-2">
-                    <n-button @click="showPaymentModal = false">取消</n-button>
+                    <n-button @click="showPaymentModal = false">{{ t('common.cancel') }}</n-button>
                     <n-button type="primary" :loading="submitting" @click="handleSubmitPayment">
                         {{ t('invoices.submit') }}
                     </n-button>
@@ -379,16 +379,16 @@ onMounted(() => {
         </n-modal>
 
         <!-- 調額申請彈窗 -->
-        <n-modal v-model:show="showCreditRequestModal" preset="card" :title="t('invoices.requestLimit')" style="width: 450px;">
+        <n-modal v-model:show="showCreditRequestModal" preset="card" :title="t('invoices.requestLimit')" class="w-[450px]">
             <n-form>
                 <n-form-item :label="t('invoices.desiredLimit') + ' (' + wallet.currency + ')'">
                     <n-input-number v-model:value="desiredLimit" :min="1" style="width: 100%;" />
                 </n-form-item>
                 <n-form-item :label="t('invoices.reason')">
-                    <n-input v-model:value="requestReason" type="textarea" placeholder="請說明調額理由" />
+                    <n-input v-model:value="requestReason" type="textarea" :placeholder="t('invoices.creditReasonPlaceholder')" />
                 </n-form-item>
                 <div class="flex justify-end gap-2">
-                    <n-button @click="showCreditRequestModal = false">取消</n-button>
+                    <n-button @click="showCreditRequestModal = false">{{ t('common.cancel') }}</n-button>
                     <n-button type="primary" :loading="submitting" @click="handleSubmitCreditRequest">
                         {{ t('invoices.submit') }}
                     </n-button>
