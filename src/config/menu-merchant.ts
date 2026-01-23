@@ -1,4 +1,5 @@
 import { h } from 'vue'
+import type { Component } from 'vue'
 import { RouterLink } from 'vue-router'
 import type { MenuOption } from 'naive-ui'
 import { NIcon } from 'naive-ui'
@@ -14,7 +15,7 @@ import {
 } from '@vicons/material'
 
 // Icon render helper
-const renderIcon = (icon: any) => () => h(NIcon, null, { default: () => h(icon) })
+const renderIcon = (icon: Component) => () => h(NIcon, null, { default: () => h(icon) })
 
 /**
  * Merchant Backend Menu Configuration

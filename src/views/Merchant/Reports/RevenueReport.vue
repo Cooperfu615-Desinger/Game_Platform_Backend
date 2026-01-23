@@ -6,6 +6,7 @@ import {
 import type { DataTableColumns } from 'naive-ui'
 import { useI18n } from 'vue-i18n'
 import TransactionDetailDrawer from './components/TransactionDetailDrawer.vue'
+import type { RevenueReportRow } from '../../../types/table'
 
 const { t } = useI18n()
 const message = useMessage()
@@ -17,17 +18,8 @@ const dateRange = ref<[number, number]>([
     new Date().getTime()
 ])
 
-interface DailyReportItem {
-    key?: string
-    date: string
-    active_players: number
-    tx_count: number
-    total_bet: number
-    total_payout: number
-    net_win: number
-    rtp: number
-    children?: DailyReportItem[]
-}
+// Local interface removed, using RevenueReportRow
+type DailyReportItem = RevenueReportRow
 
 const items = ref<DailyReportItem[]>([])
 const summary = ref({
@@ -75,21 +67,10 @@ const columns: DataTableColumns<DailyReportItem> = [
         title: t('merchantReports.dailySummary'), // Date or Category
         key: 'date',
         width: 180,
-        render: (row: any) => {
-            // Check if it's a category row (has no children but is a child of a date row strictly in this context? 
-            // Actually our data structure: DateRow has children. CategoryRow has NO children.
-            // If row has children -> It's a Date row.
-            // If row has NO children -> It's a Category row.
-            
-            // Wait, we need a better way to distinguish.
-            // In our mock data:
-            // Date row: { key: '2023-01-01', date: '2023-01-01', children: [...] }
-            // Category row: { key: '2023-01-01-Slot', date: 'Slot', ... } (We put category name in 'date' field in mock)
-
+        render: (row) => {
             if (row.children) {
                 return row.date 
             } else {
-                // It's a category. Translate it.
                 return t(`merchantReports.${row.date}`)
             }
         }
@@ -104,7 +85,7 @@ const columns: DataTableColumns<DailyReportItem> = [
         title: t('merchantReports.txCount'),
         key: 'tx_count',
         align: 'right',
-        render: (row: any) => row.children ? row.tx_count.toLocaleString() : '-'
+        render: (row) => row.children ? row.tx_count.toLocaleString() : '-'
     },
     {
         title: t('merchantReports.totalBet'),
@@ -136,7 +117,7 @@ const columns: DataTableColumns<DailyReportItem> = [
         title: t('merchantReports.details'),
         key: 'actions',
         width: 100,
-        render: (row: any) => {
+        render: (row) => {
             // Only show Action for Date rows
             if (row.children) {
                 return h(
@@ -214,7 +195,7 @@ onMounted(fetchData)
             :data="items"
             :loading="loading"
             :pagination="{ pageSize: 10 }"
-            :row-key="(row: any) => row.key"
+            :row-key="(row: DailyReportItem) => row.key"
             striped
         />
 

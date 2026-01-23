@@ -3,6 +3,7 @@ import { ref, watch, h } from 'vue'
 import { NDrawer, NDrawerContent, NDataTable, useMessage, NSpin } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
 import { useI18n } from 'vue-i18n'
+import type { TransactionDetailRow } from '../../../../types/table'
 
 const props = defineProps<{
     show: boolean
@@ -14,7 +15,7 @@ const emit = defineEmits(['update:show'])
 const { t } = useI18n()
 const message = useMessage()
 const loading = ref(false)
-const list = ref<any[]>([])
+const list = ref<TransactionDetailRow[]>([])
 
 const fetchTransactions = async () => {
     loading.value = true
@@ -38,12 +39,12 @@ watch(() => props.show, (newVal) => {
     }
 })
 
-const columns: DataTableColumns = [
+const columns: DataTableColumns<TransactionDetailRow> = [
     {
         title: t('merchantReports.betTime'),
         key: 'created_at',
         width: 160,
-        render: (row: any) => new Date(row.created_at).toLocaleString()
+        render: (row) => new Date(row.created_at).toLocaleString()
     },
     {
         title: t('merchantReports.player'),
@@ -60,21 +61,21 @@ const columns: DataTableColumns = [
         key: 'bet_amount',
         width: 120,
         align: 'right',
-        render: (row: any) => row.bet_amount.toFixed(2)
+        render: (row: TransactionDetailRow) => row.bet_amount.toFixed(2)
     },
     {
         title: t('merchantReports.totalPayout'),
         key: 'payout_amount',
         width: 120,
         align: 'right',
-        render: (row: any) => row.payout_amount.toFixed(2)
+        render: (row: TransactionDetailRow) => row.payout_amount.toFixed(2)
     },
     {
         title: t('merchantReports.netWin'),
         key: 'net_win',
         width: 120,
         align: 'right',
-        render: (row: any) => {
+        render: (row: TransactionDetailRow) => {
             const val = row.net_win
             return h(
                 'span',
@@ -93,7 +94,7 @@ const columns: DataTableColumns = [
                 <n-data-table
                     :columns="columns"
                     :data="list"
-                    :row-key="(row: any) => row.id"
+                    :row-key="(row: TransactionDetailRow) => row.id"
                     striped
                 />
             </n-spin>

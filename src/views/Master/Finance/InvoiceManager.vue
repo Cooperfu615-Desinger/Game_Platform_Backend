@@ -28,6 +28,14 @@ interface Invoice {
     breakdown?: any[]
 }
 
+interface InvoicePreviewItem {
+    merchant_id: string
+    merchant_name: string
+    total_ggr: number
+    commission_rate: number
+    amount_due: number
+}
+
 // State
 const invoices = ref<Invoice[]>([])
 const loading = ref(false)
@@ -35,7 +43,7 @@ const showGenerateModal = ref(false)
 const showDetailDrawer = ref(false)
 const selectedInvoice = ref<Invoice | null>(null)
 const generateDate = ref<number | null>(Date.now())
-const previewData = ref<any[]>([])
+const previewData = ref<InvoicePreviewItem[]>([])
 const generating = ref(false)
 const markingPaid = ref(false)
 
@@ -159,11 +167,11 @@ const columns = computed<DataTableColumns<Invoice>>(() => [
     }
 ])
 
-const previewColumns = [
+const previewColumns: DataTableColumns<InvoicePreviewItem> = [
     { title: t('merchant.siteCodeLabel'), key: 'merchant_name' },
-    { title: () => renderHeaderWithTooltip('GGR', 'tips.ggr_formula'), key: 'total_ggr', render: (row: any) => h(MoneyText, { value: row.total_ggr, currency: 'USD' }) },
-    { title: t('finance.commissionRate'), key: 'commission_rate', render: (row: any) => row.commission_rate + '%' },
-    { title: t('finance.amountDue'), key: 'amount_due', render: (row: any) => h(MoneyText, { value: row.amount_due, currency: 'USD' }) }
+    { title: () => renderHeaderWithTooltip('GGR', 'tips.ggr_formula'), key: 'total_ggr', render: (row) => h(MoneyText, { value: row.total_ggr, currency: 'USD' }) },
+    { title: t('finance.commissionRate'), key: 'commission_rate', render: (row) => row.commission_rate + '%' },
+    { title: t('finance.amountDue'), key: 'amount_due', render: (row) => h(MoneyText, { value: row.amount_due, currency: 'USD' }) }
 ]
 
 // Actions
