@@ -8,7 +8,6 @@ import {
 } from 'naive-ui'
 import { DescriptionOutlined, CheckCircleOutlined, SearchOutlined } from '@vicons/material'
 import { useI18n } from 'vue-i18n'
-import StatusBadge from '../../../components/Common/StatusBadge.vue'
 import MoneyText from '../../../components/Common/MoneyText.vue'
 import { renderHeaderWithTooltip } from '../../../utils/renderHelpers'
 
@@ -91,26 +90,27 @@ const columns = computed<DataTableColumns<Invoice>>(() => [
         title: t('merchant.merchantId'), 
         key: 'id',
         width: 120,
+        align: 'right',
         render: (row) => h('span', { class: 'font-mono text-xs' }, row.id)
     },
     { 
         title: t('merchant.siteCodeLabel'), 
         key: 'merchant_name',
-        width: 180
+        width: 180,
+        align: 'right'
     },
     { 
         title: t('finance.period'), 
         key: 'period',
-        width: 100
+        width: 100,
+        align: 'right'
     },
     { 
         title: () => renderHeaderWithTooltip(t('finance.totalGGR'), 'tips.ggr_formula'), 
         key: 'total_ggr', 
         width: 140,
-        align: 'left',
-        render: (row) => h('div', { class: 'text-right' }, [
-            h(MoneyText, { value: row.total_ggr, currency: 'USD' })
-        ])
+        align: 'right',
+        render: (row) => h(MoneyText, { value: row.total_ggr, currency: 'USD' })
     },
     { 
         title: () => renderHeaderWithTooltip(t('finance.amountDue'), 'tips.invoice_amount'), 
@@ -125,6 +125,7 @@ const columns = computed<DataTableColumns<Invoice>>(() => [
         title: t('finance.status'), 
         key: 'status',
         width: 120,
+        align: 'right',
         render: (row) => h(NTag, { 
             type: row.status === 'paid' ? 'success' : 'warning',
             bordered: false,
@@ -168,10 +169,10 @@ const columns = computed<DataTableColumns<Invoice>>(() => [
 ])
 
 const previewColumns: DataTableColumns<InvoicePreviewItem> = [
-    { title: t('merchant.siteCodeLabel'), key: 'merchant_name' },
-    { title: () => renderHeaderWithTooltip('GGR', 'tips.ggr_formula'), key: 'total_ggr', render: (row) => h(MoneyText, { value: row.total_ggr, currency: 'USD' }) },
-    { title: t('finance.commissionRate'), key: 'commission_rate', render: (row) => row.commission_rate + '%' },
-    { title: t('finance.amountDue'), key: 'amount_due', render: (row) => h(MoneyText, { value: row.amount_due, currency: 'USD' }) }
+    { title: t('merchant.siteCodeLabel'), key: 'merchant_name', align: 'right' },
+    { title: () => renderHeaderWithTooltip('GGR', 'tips.ggr_formula'), key: 'total_ggr', align: 'right', render: (row) => h(MoneyText, { value: row.total_ggr, currency: 'USD' }) },
+    { title: t('finance.commissionRate'), key: 'commission_rate', align: 'right', render: (row) => row.commission_rate + '%' },
+    { title: t('finance.amountDue'), key: 'amount_due', align: 'right', render: (row) => h(MoneyText, { value: row.amount_due, currency: 'USD' }) }
 ]
 
 // Actions
@@ -362,10 +363,6 @@ onMounted(() => {
                                     <MoneyText :value="selectedInvoice.amount_due" currency="USD" />
                                 </template>
                             </n-statistic>
-                            <StatusBadge 
-                                :status="selectedInvoice.status === 'paid' ? 'Active' : 'Suspended'"
-                                size="medium"
-                            />
                         </div>
                         <div class="mt-3 text-sm text-gray-400">
                             {{ t('finance.period') }}: <span class="text-white">{{ selectedInvoice.period }}</span> • 
