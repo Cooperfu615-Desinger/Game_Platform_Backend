@@ -75,7 +75,7 @@
         "providerList": "供應商列表",
         "gameInventory": "遊戲庫存",
         "financeSettlement": "財務與清算",
-        "platformPnL": "平台損益表",
+        "platformPnL": "財務報表",
         "invoiceManagement": "對帳單管理",
         "riskSystem": "風控與系統",
         "betQuery": "投注明細",
@@ -765,14 +765,14 @@
     "report": {
         "title": "財務報表",
         "byDate": "依日期",
-        "byAgent": "依代理",
+        "byAgent": "依商戶",
         "exportStarted": "開始匯出 CSV...",
         "revenueTrend": "營收走勢 (GGR vs 流量)",
         "totalBet": "總投注",
         "totalWin": "總派彩",
         "betCount": "注數",
         "rounds": "局數",
-        "agentName": "代理名稱",
+        "agentName": "商戶名稱",
         "date": "日期"
     },
     "table": {

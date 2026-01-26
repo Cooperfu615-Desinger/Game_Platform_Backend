@@ -75,7 +75,7 @@
         "providerList": "Provider List",
         "gameInventory": "Game Inventory",
         "financeSettlement": "Finance & Settlement",
-        "platformPnL": "Platform P&L",
+        "platformPnL": "Financial Report",
         "invoiceManagement": "Invoice Manager",
         "riskSystem": "Risk & System",
         "betQuery": "Bet Details",
@@ -589,14 +589,14 @@
     "report": {
         "title": "Financial Report",
         "byDate": "By Date",
-        "byAgent": "By Agent",
+        "byAgent": "By Merchant",
         "exportStarted": "Export CSV started...",
         "revenueTrend": "Revenue Trend (GGR vs Traffic)",
         "totalBet": "Total Bet",
         "totalWin": "Total Win",
         "betCount": "Bet Count",
         "rounds": "Rounds",
-        "agentName": "Agent Name",
+        "agentName": "Merchant Name",
         "date": "Date"
     },
     "table": {
