@@ -51,7 +51,7 @@ const columns = computed<DataTableColumns<Staff>>(() => [
         render: (row) => h(
             NTag, 
             { type: row.status === 'active' ? 'success' : 'error', bordered: false }, 
-            { default: () => row.status.toUpperCase() }
+            { default: () => row.status === 'active' ? t('status.active') : t('status.disabled') }
         )
     },
     {
@@ -177,7 +177,7 @@ onMounted(async () => {
                 <n-form-item :label="t('finance.status')" v-if="formModel.id">
                     <n-select 
                         v-model:value="formModel.status" 
-                        :options="[{label:'Active', value:'active'}, {label:'Disabled', value:'disabled'}]" 
+                        :options="[{label: t('status.active'), value:'active'}, {label: t('status.disabled'), value:'disabled'}]" 
                     />
                 </n-form-item>
             </n-form>
