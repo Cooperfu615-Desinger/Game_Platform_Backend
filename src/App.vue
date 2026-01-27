@@ -20,7 +20,7 @@ const themeOverrides = {
     primaryColorSuppl: '#2a483e'
   },
   Button: {
-    textColorPrimary: '#ffffff' // White Text as requested
+    textColorPrimary: '#1a3b32' // Deep Green for better contrast on Light Green bg
   }
 }
 

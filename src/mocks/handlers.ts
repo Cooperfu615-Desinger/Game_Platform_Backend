@@ -971,8 +971,8 @@ export const handlers = [
                 credit_limit: 100000,
                 balance: 23456.78,
                 outstanding_amount: 15800.50,
-                currency: 'CNY',
-                exchange_rate: 7.15,
+                currency: 'TWD',
+                exchange_rate: 32.50,
                 credit_request_status: 'none' // 'none' | 'pending' | 'rejected'
             }
         })

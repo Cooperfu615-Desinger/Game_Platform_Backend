@@ -88,7 +88,7 @@ const columns = computed<DataTableColumns<Invoice>>(() => [
             }
             return h(MoneyText, { 
                 value: row.amount_due, 
-                currency: 'USD' 
+                currency: wallet.value.currency 
             })
         }
     },
