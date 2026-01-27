@@ -101,6 +101,7 @@ import {
     NCard, NButton, NDataTable, NTag, NModal, NForm, NFormItem, 
     NInputNumber, NInput, useMessage
 } from 'naive-ui'
+import type { DataTableColumns } from 'naive-ui'
 import type { FundManagementRow } from '../../../types/table'
 
 const { t } = useI18n()
@@ -134,16 +135,18 @@ const statusMap: Record<string, TagType> = {
 }
 
 // Columns
-const columns = [
+const columns: DataTableColumns<FundManagementRow> = [
     {
         title: t('common.createdAt'),
         key: 'created_at',
-        render: (row: FundManagementRow) => new Date(row.created_at).toLocaleString()
+        align: 'right',
+        render: (row: FundManagementRow) => h('span', { class: 'text-xs' }, new Date(row.created_at).toLocaleString())
     },
     {
         title: t('merchant.fundRecord.type'),
         key: 'type',
-        render: (row: FundManagementRow) => h(NTag, { type: typeMap[row.type] || 'default', bordered: false }, 
+        align: 'right',
+        render: (row: FundManagementRow) => h(NTag, { type: typeMap[row.type] || 'default', bordered: false, size: 'small' }, 
             { default: () => {
                 const map: Record<string, string> = { 'top-up': 'topUp', 'credit-limit': 'credit', 'manual-adjust': 'manual' }
                 return t(`merchant.fundRecord.types.${map[row.type] || 'manual'}`)
@@ -153,11 +156,13 @@ const columns = [
     {
         title: t('merchant.fundRecord.amount'),
         key: 'amount',
+        align: 'right',
         render: (row: FundManagementRow) => h('span', { class: 'font-mono' }, row.amount.toLocaleString())
     },
     {
         title: t('merchant.fundRecord.status'),
         key: 'status',
+        align: 'right',
         render: (row: FundManagementRow) => h(NTag, { type: statusMap[row.status] || 'default', size: 'small' },
             { default: () => t(`merchant.fundRecord.statusLabel.${row.status}`) }
         )
@@ -165,12 +170,13 @@ const columns = [
     {
         title: t('merchant.fundRecord.remarks'),
         key: 'remarks',
+        align: 'right',
         render: (row: FundManagementRow) => {
             // Priority: Admin Reply > Reason > '-'
             if (row.reason && (row.status === 'rejected' || row.type === 'manual-adjust')) {
-                return h(NTag, { type: 'error', bordered: false }, { default: () => `${t('merchant.fundRecord.adminNote')}: ${row.reason}` })
+                return h(NTag, { type: 'error', bordered: false, size: 'small' }, { default: () => `${t('merchant.fundRecord.adminNote')}: ${row.reason}` })
             }
-            return row.reason || '-'
+            return h('span', { class: 'text-xs text-gray-400' }, row.reason || '-')
         }
     }
 ]

@@ -2,11 +2,14 @@
 import { ref, onMounted, computed, h } from 'vue'
 import { NDataTable, NButton, NSpace, NCard, NStatistic, NGrid, NGridItem } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
+import { useI18n } from 'vue-i18n'
 import DateRangePicker from '../../../components/Common/DateRangePicker.vue'
 import MoneyText from '../../../components/Common/MoneyText.vue'
 import { renderHeaderWithTooltip } from '../../../utils/renderHelpers'
 
 
+
+const { t } = useI18n()
 
 interface DailyReport {
     date: string
@@ -34,18 +37,20 @@ const summary = computed(() => {
 
 const columns = computed<DataTableColumns<DailyReport>>(() => [
     { 
-        title: 'Date', 
+        title: t('report.date'), 
         key: 'date', 
         width: 120,
+        align: 'right',
         sorter: (a, b) => a.date.localeCompare(b.date)
     },
     { 
-        title: 'Currency', 
+        title: t('merchant.currency'), 
         key: 'currency', 
-        width: 100 
+        width: 100,
+        align: 'right'
     },
     { 
-        title: () => renderHeaderWithTooltip('Total Bet', 'tips.turnover_def'), 
+        title: () => renderHeaderWithTooltip(t('merchantDashboard.kpi.bet'), 'tips.turnover_def', 'right'), 
         key: 'total_bet',
         width: 140,
         align: 'right',
@@ -53,14 +58,14 @@ const columns = computed<DataTableColumns<DailyReport>>(() => [
         render: (row) => h(MoneyText, { value: row.total_bet, currency: row.currency })
     },
     { 
-        title: () => renderHeaderWithTooltip('Total Win', 'tips.payout_def'), 
+        title: () => renderHeaderWithTooltip(t('merchantDashboard.kpi.win'), 'tips.payout_def', 'right'), 
         key: 'total_win',
         width: 140,
         align: 'right',
         render: (row) => h(MoneyText, { value: row.total_win, currency: row.currency })
     },
     { 
-        title: () => renderHeaderWithTooltip('GGR', 'tips.ggr_formula'), 
+        title: () => renderHeaderWithTooltip('GGR', 'tips.ggr_formula', 'right'), 
         key: 'ggr',
         width: 140,
         align: 'right',
@@ -70,14 +75,14 @@ const columns = computed<DataTableColumns<DailyReport>>(() => [
         ])
     },
     { 
-        title: 'Rounds', 
+        title: t('report.rounds'), 
         key: 'round_count',
         width: 100,
         align: 'right',
         render: (row) => row.round_count.toLocaleString()
     },
     { 
-        title: 'Players', 
+        title: t('merchantDashboard.kpi.players'), 
         key: 'player_count',
         width: 100,
         align: 'right',
@@ -115,7 +120,7 @@ onMounted(() => fetchData())
     <div class="p-6 space-y-4">
         <div class="flex justify-between items-center">
             <h1 class="text-2xl font-bold flex items-center gap-2">
-                <span>📅</span> Daily Report
+                <span>📅</span> {{ t('merchantReports.title') }}
             </h1>
         </div>
 
@@ -125,10 +130,10 @@ onMounted(() => fetchData())
                 <DateRangePicker v-model:value="dateRange" />
                 <n-space>
                     <n-button type="primary" @click="fetchData" :loading="loading">
-                        🔍 Search
+                        🔍 {{ t('common.search') }}
                     </n-button>
                     <n-button @click="handleExport" secondary>
-                        📥 Export CSV
+                        📥 {{ t('common.exportCSV') }}
                     </n-button>
                 </n-space>
             </div>
@@ -138,28 +143,28 @@ onMounted(() => fetchData())
         <n-grid :x-gap="12" :y-gap="12" :cols="4">
             <n-grid-item>
                 <n-card size="small">
-                    <n-statistic label="Total Bet">
+                    <n-statistic :label="t('merchantDashboard.kpi.bet')">
                         <MoneyText :value="summary.total_bet" currency="USD" />
                     </n-statistic>
                 </n-card>
             </n-grid-item>
             <n-grid-item>
                 <n-card size="small">
-                    <n-statistic label="Total Win">
+                    <n-statistic :label="t('merchantDashboard.kpi.win')">
                         <MoneyText :value="summary.total_win" currency="USD" />
                     </n-statistic>
                 </n-card>
             </n-grid-item>
             <n-grid-item>
                 <n-card size="small">
-                    <n-statistic label="Total GGR">
+                    <n-statistic label="GGR">
                         <MoneyText :value="summary.total_ggr" currency="USD" />
                     </n-statistic>
                 </n-card>
             </n-grid-item>
             <n-grid-item>
                 <n-card size="small">
-                    <n-statistic label="Total Rounds" :value="summary.total_rounds" />
+                    <n-statistic :label="t('report.rounds')" :value="summary.total_rounds" />
                 </n-card>
             </n-grid-item>
         </n-grid>

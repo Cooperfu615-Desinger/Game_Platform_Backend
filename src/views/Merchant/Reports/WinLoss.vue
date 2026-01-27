@@ -3,6 +3,8 @@ import { ref, onMounted, computed, h } from 'vue'
 import { NCard, NDataTable, NDatePicker, NSpace, NButton } from 'naive-ui'
 import { useI18n } from 'vue-i18n'
 
+import type { DataTableColumns } from 'naive-ui'
+
 const { t } = useI18n()
 
 interface BetLog {
@@ -18,18 +20,20 @@ const loading = ref(false)
 const list = ref<BetLog[]>([])
 const dateRange = ref<[number, number] | null>(null)
 
-const columns = computed(() => [
-    { title: t('betLog.time'), key: 'time' },
-    { title: t('betLog.roundId'), key: 'id' },
-    { title: t('betLog.game'), key: 'game_name' },
+const columns = computed<DataTableColumns<BetLog>>(() => [
+    { title: t('betLog.time'), key: 'time', align: 'right' },
+    { title: t('betLog.roundId'), key: 'id', align: 'right' },
+    { title: t('betLog.game'), key: 'game_name', align: 'right' },
     { 
         title: t('betLog.bet'), 
         key: 'bet',
+        align: 'right',
         render: (row: BetLog) => row.bet.toFixed(2)
     },
     { 
         title: t('betLog.win'), 
         key: 'win',
+        align: 'right',
         render: (row: BetLog) => h(
             'span',
             { class: row.win > 0 ? 'text-green-600 font-bold' : 'text-gray-500' },
@@ -39,6 +43,7 @@ const columns = computed(() => [
     {
         title: t('betLog.payout'),
         key: 'payout',
+        align: 'right',
         render: (row: BetLog) => {
             const p = row.win / (row.bet || 1)
             return p.toFixed(2) + 'x'

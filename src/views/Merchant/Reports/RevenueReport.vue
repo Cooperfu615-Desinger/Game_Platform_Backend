@@ -67,6 +67,7 @@ const columns: DataTableColumns<DailyReportItem> = [
         title: t('merchantReports.dailySummary'), // Date or Category
         key: 'date',
         width: 180,
+        align: 'right',
         render: (row) => {
             if (row.children) {
                 return row.date 
@@ -117,6 +118,7 @@ const columns: DataTableColumns<DailyReportItem> = [
         title: t('merchantReports.details'),
         key: 'actions',
         width: 100,
+        align: 'right',
         render: (row) => {
             // Only show Action for Date rows
             if (row.children) {

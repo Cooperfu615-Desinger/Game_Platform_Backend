@@ -5,21 +5,21 @@
       <n-card class="border-l-4 border-green-500">
         <div class="text-sm text-gray-400 mb-1">{{ t('merchantDashboard.kpi.bet') }}</div>
         <div class="text-2xl font-bold"><MoneyText :value="stats.today_kpi.total_bet" :currency="stats.wallet.currency" /></div>
-        <div class="text-xs text-gray-400 mt-1">{{ formatPct(stats.today_kpi.comparison.bet_pct) }}</div>
+        <TrendValue :value="stats.today_kpi.comparison.bet_pct" class="mt-1" />
       </n-card>
       <n-card class="border-l-4 border-red-500">
         <div class="text-sm text-gray-400 mb-1">{{ t('merchantDashboard.kpi.win') }}</div>
         <div class="text-2xl font-bold"><MoneyText :value="stats.today_kpi.net_win" :currency="stats.wallet.currency" /></div>
-        <div class="text-xs text-gray-400 mt-1">{{ formatPct(stats.today_kpi.comparison.win_pct) }}</div>
+        <TrendValue :value="stats.today_kpi.comparison.win_pct" class="mt-1" />
       </n-card>
       <n-card class="border-l-4 border-purple-500">
         <div class="text-sm text-gray-400 mb-1">{{ t('merchantDashboard.kpi.players') }}</div>
-        <div class="text-2xl font-bold">{{ stats.today_kpi.active_players }}</div>
-        <div class="text-xs text-gray-400 mt-1">{{ formatPct(stats.today_kpi.comparison.player_pct) }}</div>
+        <div class="text-2xl font-bold">{{ stats.today_kpi.active_players.toLocaleString() }}</div>
+        <TrendValue :value="stats.today_kpi.comparison.player_pct" class="mt-1" />
       </n-card>
       <n-card class="border-l-4 border-amber-500">
         <div class="text-sm text-gray-400 mb-1">{{ t('merchantDashboard.kpi.tx') }}</div>
-        <div class="text-2xl font-bold">{{ stats.today_kpi.tx_count }}</div>
+        <div class="text-2xl font-bold">{{ stats.today_kpi.tx_count.toLocaleString() }}</div>
       </n-card>
     </div>
 
@@ -46,11 +46,15 @@
         </div>
       </n-card>
       <n-card :title="t('merchantDashboard.topGames')">
+        <div class="flex justify-between items-center px-4 py-2 bg-gray-50 dark:bg-gray-800 text-xs text-gray-400 font-medium rounded-t border-b dark:border-gray-700">
+          <div>遊戲名稱</div>
+          <div>總投注 / 總盈虧</div>
+        </div>
         <n-list>
           <n-list-item v-for="game in stats.top_games" :key="game.name">
             <div class="flex justify-between items-center">
-              <div>{{ game.name }}</div>
-              <div class="text-sm text-gray-500">
+              <div class="font-medium">{{ game.name }}</div>
+              <div class="text-sm">
                 <MoneyText :value="game.bet" :currency="stats.wallet.currency" /> / <MoneyText :value="game.win" :currency="stats.wallet.currency" />
               </div>
             </div>
@@ -67,6 +71,7 @@ import { useI18n } from 'vue-i18n'
 import { NCard, NButton, NAlert, NList, NListItem, NSkeleton } from 'naive-ui'
 import VChart from 'vue-echarts'
 import MoneyText from '../../../components/Common/MoneyText.vue'
+import TrendValue from '../../../components/Common/TrendValue.vue'
 
 const { t } = useI18n()
 
@@ -92,11 +97,6 @@ const chartOption = computed(() => ({
     { name: t('merchantDashboard.kpi.win'), type: 'line', data: stats.value.trend_7d.map((i: any) => i.net_win) }
   ]
 }))
-
-function formatPct(value: number) {
-  const sign = value > 0 ? '+' : ''
-  return `${sign}${value.toFixed(2)}%`
-}
 
 function onProcessAlert(alert: any) {
   // Placeholder for alert processing navigation

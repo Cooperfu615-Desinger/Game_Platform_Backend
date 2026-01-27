@@ -64,17 +64,20 @@ const columns = computed<DataTableColumns<Invoice>>(() => [
         title: t('invoices.invoiceNo'),
         key: 'id',
         width: 150,
+        align: 'right',
         render: (row) => h('span', { class: 'font-mono text-sm' }, row.id)
     },
     {
         title: t('invoices.period'),
         key: 'period',
-        width: 120
+        width: 120,
+        align: 'right'
     },
     {
         title: () => renderHeaderWithTooltip(
             t('invoices.amountDue'), 
-            'tips.invoice_amount'
+            'tips.invoice_amount',
+            'right'
         ),
         key: 'amount_due',
         width: 150,
@@ -93,6 +96,7 @@ const columns = computed<DataTableColumns<Invoice>>(() => [
         title: t('invoices.status'),
         key: 'status',
         width: 120,
+        align: 'right',
         render: (row) => {
             // 判斷驗證狀態
             if (row.verification_status === 'verifying') {
@@ -112,6 +116,7 @@ const columns = computed<DataTableColumns<Invoice>>(() => [
         title: t('common.action'),
         key: 'actions',
         width: 200,
+        align: 'right',
         render: (row) => {
             // 審核中狀態不顯示付款按鈕
             if (row.verification_status === 'verifying') {

@@ -51,7 +51,9 @@
         "write": "寫入",
         "createdAt": "建立時間",
         "submit": "送出",
-        "reason": "原因/理由"
+        "reason": "原因/理由",
+        "confirmStatusChange": "⚠️ 確認變更狀態",
+        "confirmStatusMsg": "確定嗎？此操作可能會影響到所有下游商戶。"
     },
     "menu": {
         "dashboard": "儀表板",
@@ -132,7 +134,7 @@
         "action": "操作"
     },
     "agent": {
-        "title": "代理管理",
+        "title": "下級代理管理",
         "myBalance": "我的餘額",
         "todaysGGR": "今日盈虧",
         "activePlayers": "活躍玩家",
@@ -147,7 +149,7 @@
         "balance": "帳戶餘額",
         "state": "狀態",
         "modalTitleCreate": "新增下級代理",
-        "modalTitleEdit": "編輯代理",
+        "modalTitleEdit": "編輯下級代理",
         "siteCode": "站點代碼",
         "level": "層級",
         "percent": "占成",
@@ -210,8 +212,8 @@
             }
         },
         "agent": {
-            "title": "下級代理管理",
-            "addAgent": "新增代理",
+            "title": "下級代理",
+            "addAgent": "新增下級代理",
             "commissionRate": "返佣比例 (%)",
             "playerCount": "下級玩家",
             "monthlyPerformance": "本月業績",
@@ -219,10 +221,10 @@
             "transfer": "轉帳/資金",
             "transferAmount": "轉帳金額",
             "copySuccess": "連結已複製",
-            "editTitle": "編輯代理",
-            "createTitle": "新增代理",
-            "transferTitle": "代理資金操作",
-            "account": "代理帳號",
+            "editTitle": "編輯下級代理",
+            "createTitle": "新增下級代理",
+            "transferTitle": "下級代理資金操作",
+            "account": "下級代理帳號",
             "password": "密碼",
             "status": "狀態",
             "balance": "餘額",
@@ -236,6 +238,7 @@
         "creditUsage": "額度使用率",
         "todayStats": "今日營運概況",
         "compareYesterday": "較昨日",
+        "compareYesterdayPeriod": "較昨日同期",
         "revenueTrend": "近 7 日營收趨勢",
         "alerts": "待辦事項與警報",
         "topGames": "今日熱門遊戲",
@@ -244,7 +247,7 @@
             "topUp": "立即充值",
             "requestCredit": "申請調額",
             "payBills": "支付帳單",
-            "addAgent": "新增代理",
+            "addAgent": "新增下級代理",
             "processAlert": "前往處理"
         },
         "kpi": {
@@ -772,7 +775,7 @@
         "revenueTrend": "營收走勢 (GGR vs 流量)",
         "totalBet": "總投注",
         "totalWin": "總派彩",
-        "betCount": "注數",
+        "betCount": "注單數",
         "rounds": "局數",
         "agentName": "商戶名稱",
         "date": "日期"

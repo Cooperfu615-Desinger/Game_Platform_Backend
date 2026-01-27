@@ -51,7 +51,9 @@
         "write": "Write",
         "createdAt": "Created At",
         "submit": "Submit",
-        "reason": "Reason"
+        "reason": "Reason",
+        "confirmStatusChange": "⚠️ Confirm Status Change",
+        "confirmStatusMsg": "Are you sure? This action may impact all downstream merchants."
     },
     "menu": {
         "dashboard": "Dashboard",

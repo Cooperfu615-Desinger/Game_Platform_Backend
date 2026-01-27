@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { NSwitch, NModal, NIcon } from 'naive-ui'
 import { WarningRound } from '@vicons/material'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 interface Props {
     value: boolean
@@ -10,11 +13,7 @@ interface Props {
     disabled?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
-    warningMessage: 'Are you sure? This action may impact all downstream merchants.',
-    warningTitle: '⚠️ Confirm Status Change',
-    disabled: false
-})
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
     (e: 'update:value', value: boolean): void
@@ -31,6 +30,9 @@ const localValue = ref(props.value)
 watch(() => props.value, (newVal) => {
     localValue.value = newVal
 })
+
+const displayTitle = computed(() => props.warningTitle || t('common.confirmStatusChange'))
+const displayMessage = computed(() => props.warningMessage || t('common.confirmStatusMsg'))
 
 const handleChange = (newValue: boolean) => {
     // If turning OFF (true -> false), show confirmation modal
@@ -79,9 +81,9 @@ const handleCancel = () => {
             v-model:show="showConfirmModal"
             preset="dialog"
             type="warning"
-            :title="warningTitle"
-            :positive-text="'Confirm'"
-            :negative-text="'Cancel'"
+            :title="displayTitle"
+            :positive-text="t('common.confirm')"
+            :negative-text="t('common.cancel')"
             @positive-click="handleConfirm"
             @negative-click="handleCancel"
             @close="handleCancel"
@@ -91,7 +93,7 @@ const handleCancel = () => {
                     <WarningRound />
                 </n-icon>
             </template>
-            <p class="text-gray-300">{{ warningMessage }}</p>
+            <p class="text-gray-300">{{ displayMessage }}</p>
         </n-modal>
     </div>
 </template>

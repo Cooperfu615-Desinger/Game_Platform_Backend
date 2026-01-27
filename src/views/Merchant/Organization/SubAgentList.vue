@@ -93,7 +93,7 @@ const columns = computed(() => [
                 size: 'small',
                 onUpdateValue: (val) => handleStatusChange(row, val)
             }),
-            h('span', { class: 'text-xs text-gray-400' }, row.state === 'active' ? 'Active' : 'Disabled') 
+            h('span', { class: 'text-xs text-gray-400' }, row.state === 'active' ? t('common.enabled') : t('common.disabled')) 
         ])
     },
     { 
@@ -316,7 +316,10 @@ onMounted(fetchData)
                         <span class="ml-4 w-12 text-right font-bold">{{ agentForm.commission_rate }}%</span>
                     </n-form-item>
                     <n-form-item :label="t('merchant.agent.status')">
-                        <n-switch v-model:value="agentForm.status" />
+                        <n-switch v-model:value="agentForm.status">
+                            <template #checked>{{ t('common.enabled') }}</template>
+                            <template #unchecked>{{ t('common.disabled') }}</template>
+                        </n-switch>
                     </n-form-item>
                     <n-form-item :label="t('merchant.agent.note')">
                         <n-input v-model:value="agentForm.note" type="textarea" />

@@ -35,24 +35,28 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
         title: t('betQuery.time'), 
         key: 'time',
         width: 160,
+        align: 'right',
         render: (row) => h('span', { class: 'text-sm' }, new Date(row.time).toLocaleString())
     },
     { 
         title: t('betQuery.roundId'), 
         key: 'id',
         width: 140,
+        align: 'right',
         render: (row) => h('span', { class: 'font-mono text-xs' }, row.id)
     },
     { 
         title: t('betQuery.player'), 
         key: 'player_id',
         width: 120,
+        align: 'right',
         render: (row) => h('span', { class: 'font-mono' }, row.player_id)
     },
     { 
         title: t('betQuery.game'), 
         key: 'game_name',
         width: 150,
+        align: 'right',
         ellipsis: { tooltip: true }
     },
     { 
@@ -73,12 +77,13 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
         title: t('betQuery.status'),
         key: 'status',
         width: 90,
+        align: 'right',
         render: (row) => {
             const typeMap: Record<string, any> = {
                 win: 'success', loss: 'error', refund: 'warning'
             }
             return h(NTag, { type: typeMap[row.status], size: 'small', bordered: false }, 
-                { default: () => row.status.toUpperCase() }
+                { default: () => t(`status.${row.status}`) }
             )
         }
     },
@@ -86,6 +91,7 @@ const columns = computed<DataTableColumns<BetLog>>(() => [
         title: '',
         key: 'action',
         width: 60,
+        align: 'right',
         render: (row) => h(NButton, { 
             size: 'tiny', 
             quaternary: true,
@@ -190,7 +196,7 @@ onMounted(() => fetchData())
                         <div>
                             <div class="text-xs text-gray-400">{{ t('betQuery.status') }}</div>
                             <n-tag :type="selectedLog.status === 'win' ? 'success' : 'error'" size="small">
-                                {{ selectedLog.status.toUpperCase() }}
+                                {{ t(`status.${selectedLog.status}`) }}
                             </n-tag>
                         </div>
                     </div>
