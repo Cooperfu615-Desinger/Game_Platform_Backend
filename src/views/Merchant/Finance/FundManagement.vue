@@ -139,13 +139,15 @@ const columns: DataTableColumns<FundManagementRow> = [
     {
         title: t('common.createdAt'),
         key: 'created_at',
-        align: 'right',
+        width: 200,
+        align: 'center',
         render: (row: FundManagementRow) => h('span', { class: 'text-xs' }, new Date(row.created_at).toLocaleString())
     },
     {
         title: t('merchant.fundRecord.type'),
         key: 'type',
-        align: 'right',
+        width: 120,
+        align: 'center',
         render: (row: FundManagementRow) => h(NTag, { type: typeMap[row.type] || 'default', bordered: false, size: 'small' }, 
             { default: () => {
                 const map: Record<string, string> = { 'top-up': 'topUp', 'credit-limit': 'credit', 'manual-adjust': 'manual' }
@@ -156,13 +158,15 @@ const columns: DataTableColumns<FundManagementRow> = [
     {
         title: t('merchant.fundRecord.amount'),
         key: 'amount',
+        width: 150,
         align: 'right',
         render: (row: FundManagementRow) => h('span', { class: 'font-mono' }, row.amount.toLocaleString())
     },
     {
         title: t('merchant.fundRecord.status'),
         key: 'status',
-        align: 'right',
+        width: 100,
+        align: 'center',
         render: (row: FundManagementRow) => h(NTag, { type: statusMap[row.status] || 'default', size: 'small' },
             { default: () => t(`merchant.fundRecord.statusLabel.${row.status}`) }
         )
@@ -170,7 +174,7 @@ const columns: DataTableColumns<FundManagementRow> = [
     {
         title: t('merchant.fundRecord.remarks'),
         key: 'remarks',
-        align: 'right',
+        align: 'left',
         render: (row: FundManagementRow) => {
             // Priority: Admin Reply > Reason > '-'
             if (row.reason && (row.status === 'rejected' || row.type === 'manual-adjust')) {
